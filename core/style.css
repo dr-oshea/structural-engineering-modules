@@ -1,0 +1,153 @@
+/* ===== Base ===== */
+body {
+  margin: 0;
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #333;
+}
+
+/* ===== Slide container ===== */
+.slide {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 40px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+/* ===== Splash styling ===== */
+.splash {
+  padding: 40px 20px;
+
+  border-left: 5px solid #ffdc00; /* UNSW yellow */
+
+  background: linear-gradient(
+    135deg,
+    #ffdc00 0%,
+    #ffe652 35%,
+    #fff3a6 65%,
+    #ffffff 100%
+  );
+  border-radius: 10px;
+}
+
+
+/* Full-screen splash container */
+.splash-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f4f6f9;
+}
+
+
+/* Title */
+.splash h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: #000;
+}
+
+/* Subtitle */
+.splash p {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #333;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Button */
+button {
+  margin-top: 30px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  background-color: #3f61c4; /* UNSW blue */
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #2f4ea8;
+  transform: translateY(-1px);
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: 220px;
+  background: #1f3264;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar h3 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  background: rgba(255,255,255,0.05);
+}
+
+.sidebar li.active {
+  background: #3f61c4;
+}
+
+/* ===== Main area ===== */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* ===== Slide content ===== */
+.slide {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.slide-image {
+  margin-top: 20px;
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+
+/* ===== Footer nav ===== */
+.nav-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Disable button */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
