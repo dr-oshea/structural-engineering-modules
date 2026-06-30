@@ -1,134 +1,215 @@
+/* ===== Variables ===== */
+
+:root {
+  --sidebar-width: 240px;
+  --footer-height: 64px;
+  --unsw-teal: #00A9CE;
+}
+
+
 /* ===== Base ===== */
+
 body {
   margin: 0;
   font-family: 'Roboto', Arial, sans-serif;
-  background-color: #f4f6f9;
+
+  /* Deep UNSW-style background */
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05), transparent 40%),
+    linear-gradient(135deg, #1f3264, #0f1e3d);
+
   color: #333;
 }
 
-/* ===== Slide container ===== */
-.slide {
-  max-width: 900px;
-  margin: 60px auto;
-  padding: 40px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
-  text-align: center;
-}
 
-/* ===== Splash styling ===== */
-.splash {
-  padding: 40px 20px;
+/* ===== Splash ===== */
 
-  border-left: 5px solid #ffdc00; /* UNSW yellow */
-
-  background: linear-gradient(
-    135deg,
-    #ffdc00 0%,
-    #ffe652 35%,
-    #fff3a6 65%,
-    #ffffff 100%
-  );
-  border-radius: 10px;
-}
-
-
-/* Full-screen splash container */
 .splash-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f4f6f9;
+  padding: 20px;
 }
 
+.splash {
+  padding: 50px 50px 40px;
+  max-width: 800px;
+  width: 100%;
+  border-left: 6px solid #000000;
+  background: linear-gradient(
+    135deg,
+    #ffdc00 0%,
+    #ffe652 40%,
+    #fff3a6 75%,
+    #ffffff 100%
+  );
+  border-radius: 12px;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.25),
+    0 2px 8px rgba(0,0,0,0.15);
+}
 
-/* Title */
+.splash:hover {
+  box-shadow:
+    0 12px 50px rgba(255,255,255,0.3),
+    0 4px 12px rgba(255,255,255,0.2);
+}
+
 .splash h1 {
   margin: 0;
-  font-size: 2.4rem;
+  font-size: 2.6rem;
   font-weight: 400;
-  color: #000;
+  color: #000000;
+  letter-spacing: -0.01em;
 }
 
-/* Subtitle */
 .splash p {
-  margin-top: 10px;
-  font-size: 1rem;
-  color: #333;
-  letter-spacing: 0.05em;
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #333333;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-/* Button */
+
+/* ===== Buttons ===== */
+
 button {
-  margin-top: 30px;
-  padding: 12px 24px;
+  margin-top: 35px;
+  padding: 14px 26px;
   font-size: 1rem;
   font-weight: 600;
   border: none;
   border-radius: 9999px;
-  background-color: #3f61c4; /* UNSW blue */
+  background-color: #3f61c4;
   color: white;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease, transform 0.1s ease;
 }
 
 button:hover {
   background-color: #2f4ea8;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
+button:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
 /* ===== Layout ===== */
+
 .layout {
   display: flex;
   min-height: 100vh;
 }
 
+
 /* ===== Sidebar ===== */
+
 .sidebar {
-  width: 220px;
-  background: #1f3264;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;                             /* full viewport height */
+  width: var(--sidebar-width);
+  overflow-y: auto;
+  z-index: 200;
+  background: linear-gradient(180deg, #1f3264 0%, #16274f 100%);
   color: white;
-  padding: 20px;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.08);
 }
 
 .sidebar h3 {
-  font-size: 1rem;
-  margin-bottom: 10px;
-  opacity: 0.8;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  opacity: 0.75;
 }
 
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .sidebar li {
-  padding: 8px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
   margin-bottom: 6px;
-  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  background: rgba(255,255,255,0.04);
+  transition: all 0.2s ease;
+}
+
+/* Merged two duplicate :hover blocks into one */
+.sidebar li:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateX(4px);
+  border-left: 3px solid rgba(255,220,0,0.6);
 }
 
 .sidebar li.active {
-  background: #3f61c4;
+  position: relative;
+  background: rgba(255,255,255,0.12);
+  font-weight: 600;
 }
+
+.sidebar li.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  border-radius: 4px;
+  background: #ffdc00; /* UNSW Yellow */
+}
+
 
 /* ===== Main area ===== */
+
 .main {
+  margin-left: var(--sidebar-width);            /* offset for fixed sidebar */
   flex: 1;
-  padding: 30px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 40px calc(var(--footer-height) + 24px);
 }
 
-/* ===== Slide content ===== */
+
+/* ===== Slide ===== */
+
+/* Merged three duplicate .slide blocks into one,
+   preserving the final cascade result exactly */
 .slide {
+  width: 100%;
+  max-width: 900px;
+  min-height: 60vh;
+  padding: 40px 50px;
+  margin: 0 auto;
   background: white;
-  padding: 30px;
-  border-radius: 10px;
   border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .slide {
+    max-width: 100%;
+  }
 }
 
 .slide-image {
@@ -139,15 +220,664 @@ button:hover {
 }
 
 
+/* ===== Info slide: styled content blocks ===== */
+
+.info-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+/* Text block — same visual language as the MCQ/Worked-Example question box */
+.info-block {
+  text-align: left;
+  background: #f8fafc;
+  border-left: 4px solid #3f61c4;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #2d3748;
+}
+
+.info-block p:first-child { margin-top: 0; }
+.info-block p:last-child  { margin-bottom: 0; }
+
+/* Equation block — centred, lighter, monospace-friendly */
+.info-block-equation {
+  text-align: center;
+  border-left-color: var(--unsw-teal);
+  font-size: 1.05rem;
+  background: #f7fbfd;
+}
+
+/* Image within the info body — centred, not full-bleed */
+.info-block-image {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  width: auto;
+  margin: 4px auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+
+/* ===== Cards intro block (matches question styling) ===== */
+
+.cards-intro {
+  text-align: left;
+  background: #f8fafc;
+  border-left: 4px solid #3f61c4;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #2d3748;
+}
+
+
+/* ===== Cards ===== */
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.card {
+  height: 150px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;        /* padding stays inside the card, preserving the gap */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card-front {
+  background: white;
+  font-weight: 600;
+}
+
+.card-back {
+  background: linear-gradient(135deg, #3f61c4, #5a78d6);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+
+/* ===== Sidebar logo ===== */
+
+.sidebar-logo-wrapper {
+  margin-top: auto;                      /* pins logo to bottom of sidebar */
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-logo-box {
+  background: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-logo {
+  display: block;
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+}
+
+
 /* ===== Footer nav ===== */
+
 .nav-buttons {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }
 
-/* Disable button */
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.nav-footer {
+  position: fixed;
+  bottom: 0;
+  left: 275px;            /* starts at sidebar edge, not full width */
+  right: 0;
+  height: var(--footer-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;                       /* symmetric — Back is 24px from sidebar edge, Next 24px from right */
+  background: #16274f;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  z-index: 1000;
+}
+
+.nav-footer button {
+  margin-top: 0;                         /* override global button { margin-top: 35px } */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+/* Forward button in its "Confirm?" state — amber to signal a deliberate action */
+.nav-footer button.nav-confirm {
+  background-color: #d97706;
+}
+
+.nav-footer button.nav-confirm:hover {
+  background-color: #b45309;
+}
+
+/* ===== Footer centre: page label + progress bar ===== */
+
+.footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  padding: 0 20px;
+}
+
+.footer-page-label {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.footer-progress-bar {
+  width: 180px;
+  max-width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.footer-progress-fill {
+  height: 100%;
+  background: #ffdc00;                   /* UNSW Yellow */
+  border-radius: 2px;
+  transition: width 0.35s ease;
+}
+
+/* ===== Steps (worked example) type ===== */
+
+/* Figure shown above the problem statement (steps) or question (mcq) */
+.problem-image {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  width: auto;
+  margin: 0 auto 24px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+}
+
+/* Optional figure inside an individual step (e.g. a hint diagram) */
+.step-image {
+  display: block;
+  max-width: 100%;
+  max-height: 240px;
+  width: auto;
+  margin: 4px 0 14px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.problem-statement {
+  text-align: left;
+  background: #f8fafc;
+  border-left: 4px solid #3f61c4;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #2d3748;
+}
+
+.steps-container {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px 24px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Step states: inactive → active → complete
+   Removing step-inactive triggers the opacity transition automatically */
+.step {
+  transition: opacity 0.4s ease;
+}
+
+.step-inactive {
+  opacity: 0.35;
+}
+
+/* Block all interaction with inactive steps */
+.step-inactive .step-input,
+.step-inactive .check-btn {
+  pointer-events: none;
+}
+
+.step-badge {
+  display: inline-block;
+  background: #3f61c4;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  margin-bottom: 12px;
+}
+
+.step-instruction {
+  margin: 0 0 14px 0;
+  font-size: 0.95rem;
+  color: #2d3748;
+  line-height: 1.55;
+}
+
+.step-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.step-input {
+  width: 120px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 2px solid #cbd5e0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+  -moz-appearance: textfield; /* hide number spinners in Firefox */
+}
+
+.step-input::-webkit-outer-spin-button,
+.step-input::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* hide number spinners in Chrome/Safari */
+}
+
+.step-input:focus {
+  border-color: #3f61c4;
+  box-shadow: 0 0 0 3px rgba(63,97,196,0.15);
+}
+
+.step-input.step-correct {
+  border-color: #38a169;
+  background: #f0fff4;
+  color: #276749;
+  font-weight: 600;
+}
+
+.step-unit {
+  font-size: 0.9rem;
+  color: #718096;
+  font-weight: 500;
+  min-width: 30px;
+}
+
+/* Check button — override the global button styles */
+.check-btn {
+  margin-top: 0;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  background: #3f61c4;
+}
+
+.check-btn:disabled {
+  background: #38a169;
+  opacity: 1;
+  cursor: default;
+  transform: none;
+}
+
+/* Step explanation — revealed on correct answer */
+.step-explanation {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #276749;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.step-explanation-hidden {
+  display: none;
+}
+
+.explanation-tick {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Completion banner */
+.steps-complete {
+  margin-top: 8px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #ebf8ff, #e9f5f0);
+  border: 1px solid #90cdf4;
+  border-radius: 10px;
+  color: #2b6cb0;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.steps-complete-hidden {
+  display: none;
+}
+
+/* ── Buzz animation (wrong answer) ───────────────────────────────── */
+
+@keyframes buzz {
+  0%   { transform: translateX(0); }
+  15%  { transform: translateX(-7px); }
+  30%  { transform: translateX(7px); }
+  45%  { transform: translateX(-5px); }
+  60%  { transform: translateX(5px); }
+  75%  { transform: translateX(-3px); }
+  90%  { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+.buzz {
+  animation: buzz 0.45s ease;
+  border-color: #fc8181 !important;
+  background: #fff5f5 !important;
+}
+
+/* ── Reveal animation (new step unlocked) ────────────────────────── */
+
+@keyframes stepReveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step-reveal {
+  animation: stepReveal 0.4s ease forwards;
+}
+
+
+/* ===== Sidebar: non-navigable and locked items ===== */
+
+/* Splash entry — visible but never clickable */
+.sidebar-item-no-nav {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.sidebar-item-no-nav:hover {
+  background: rgba(255,255,255,0.04) !important;
+  transform: none !important;
+  border-left: none !important;
+}
+
+/* Future slides locked behind an incomplete steps slide */
+.sidebar-item-locked {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.sidebar-item-locked:hover {
+  background: rgba(255,255,255,0.04) !important;
+  transform: none !important;
+  border-left: none !important;
+}
+
+/* ===== Sidebar: quiz items use UNSW Teal instead of Yellow ===== */
+
+/* Teal active-bar for the current quiz slide */
+.sidebar li.sidebar-item-quiz.active::before {
+  background: var(--unsw-teal);
+}
+
+/* Teal hover border for accessible (non-locked) quiz items */
+.sidebar li.sidebar-item-quiz:not(.sidebar-item-locked):hover {
+  border-left-color: rgba(0, 169, 206, 0.6);
+}
+
+/* ===== Multiple Choice (MCQ) type ===== */
+
+.mcq-question {
+  text-align: left;
+  background: #f8fafc;
+  border-left: 4px solid var(--unsw-teal);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #2d3748;
+}
+
+/* Grid layout — column count set by mcq-cols-N class on the container */
+.mcq-options {
+  display: grid;
+  gap: 16px;
+  margin: 0 auto 20px;
+}
+
+.mcq-cols-2 {
+  grid-template-columns: 1fr 1fr;
+  max-width: 640px;
+}
+
+.mcq-cols-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+  max-width: 760px;
+}
+
+/* Option buttons — override global button styles completely */
+.mcq-option {
+  margin-top: 0;
+  border-radius: 10px;
+  background: white;
+  color: #2d3748;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  border: 2px solid #e2e8f0;
+  padding: 20px 16px;
+  min-height: 90px;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.mcq-option:hover:not(:disabled) {
+  border-color: var(--unsw-teal);
+  background: #f0fafd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,169,206,0.15);
+}
+
+/* Correct answer — green */
+.mcq-option.mcq-option-correct {
+  border-color: #38a169 !important;
+  background: #f0fff4 !important;
+  color: #276749 !important;
+  font-weight: 700;
+}
+
+/* Wrong answer after buzz — faded out, can't be clicked again */
+.mcq-option.mcq-option-wrong {
+  opacity: 0.35;
+}
+
+/* All other options once correct is chosen — subtly dimmed */
+.mcq-option.mcq-option-done {
+  opacity: 0.45;
+}
+
+.mcq-option:disabled {
+  cursor: default;
+  transform: none !important;
+}
+
+/* Image inside an MCQ option */
+.mcq-option-img {
+  max-width: 100%;
+  max-height: 130px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Explanation revealed after correct answer */
+.mcq-explanation {
+  text-align: left;
+  margin: 8px auto 8px;
+  padding: 12px 16px;
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #276749;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+  max-width: 640px;
+}
+
+.mcq-explanation-hidden {
+  display: none;
+}
+
+
+/* ===== Final (completion) slide ===== */
+
+.final-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.final-trophy {
+  font-size: 3.2rem;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+/* Star rating */
+.final-rating {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.final-rating-label {
+  font-size: 0.85rem;
+  color: #333;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.final-stars {
+  display: flex;
+  gap: 6px;
+}
+
+.final-star {
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: rgba(0,0,0,0.18);            /* empty star */
+  transition: color 0.15s ease, transform 0.1s ease;
+  user-select: none;
+}
+
+.final-star:hover {
+  transform: scale(1.15);
+}
+
+.final-star-filled {
+  color: #d4a300;                     /* filled — deep gold, readable on yellow card */
+}
+
+/* Save and Close button */
+.final-save-btn {
+  margin-top: 30px;
+}
+
+/* Bug report link */
+.final-bug-link {
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: #1f3264;
+  text-decoration: underline;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.final-bug-link:hover {
+  opacity: 1;
 }
