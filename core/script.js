@@ -10,19 +10,22 @@ const slideState = {};             // persists answer state per slide index, e.g
 // ─── Quiz-slide helpers ───────────────────────────────────────────────────
 
 // A slide is a "quiz" if it requires completion before the student can advance.
-// Default: "steps" and "mcq" types are quiz. Override explicitly with quiz: true/false in config.
+// Default: "steps", "mcq", and "hotspot" types are quiz. Override with quiz: true/false.
 function isQuizSlide(index) {
   const s = moduleData[index];
   if (s.quiz !== undefined) return s.quiz;
-  return s.type === "steps" || s.type === "mcq";
+  return s.type === "steps" || s.type === "mcq" || s.type === "hotspot";
 }
 
 // Returns the sidebar icon for a slide based on its type.
 function getSlideIcon(s) {
-  if (s.type === "splash") return "🏁";
-  if (s.type === "steps")  return "🧮";
-  if (s.type === "mcq")    return "❓";
-  if (s.type === "final")  return "🏆";
+  if (s.type === "splash")  return "🏁";
+  if (s.type === "steps")   return "🧮";
+  if (s.type === "mcq")     return "❓";
+  if (s.type === "hotspot") return "🎯";
+  if (s.type === "embed")   return "🎚️";
+  if (s.type === "reveal")  return "💡";
+  if (s.type === "final")   return "🏆";
   return "📖"; // info, cards, and any future informational types
 }
 
@@ -324,6 +327,163 @@ function renderSlide() {
   restoreMCQState();   // replay a previously-chosen correct answer
   }
 
+  // EMBED SLIDE — GeoGebra / Desmos / video / any iframe-able interactive
+
+  if (slide.type === "embed") {
+  renderLayout(`
+    <h2>${slide.title}</h2>
+
+    ${slide.intro ? `<div class="info-block">${slide.intro}</div>` : ""}
+
+    <div class="embed-frame-wrapper" style="${slide.aspectRatio ? `aspect-ratio:${slide.aspectRatio};` : ""}${slide.maxWidth ? `max-width:${slide.maxWidth};` : ""}">
+      <iframe
+        class="embed-frame"
+        src="${slide.src}"
+        title="${slide.title}"
+        loading="lazy"
+        allow="fullscreen; autoplay"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    ${slide.caption ? `<p class="embed-caption">${slide.caption}</p>` : ""}
+  `);
+  }
+
+  // REVEAL SLIDE — a prompt with a "Show solution" toggle (no input required)
+
+  if (slide.type === "reveal") {
+  renderLayout(`
+    <h2>${slide.title}</h2>
+
+    ${slide.image ? `<img src="${slide.image}" class="problem-image" style="${slide.imageWidth ? `max-width:${slide.imageWidth};` : ""}" alt="${slide.title}">` : ""}
+
+    <div class="problem-statement">
+      ${slide.prompt}
+    </div>
+
+    <button class="reveal-btn" id="reveal-btn" onclick="toggleReveal()">
+      ${slide.buttonText || "Show solution"}
+    </button>
+
+    <div class="reveal-answer reveal-answer-hidden" id="reveal-answer">
+      ${slide.answer}
+    </div>
+  `);
+  }
+
+  // HOTSPOT SLIDE — click the correct region(s) on a diagram
+
+  if (slide.type === "hotspot") {
+  renderLayout(`
+    <h2>${slide.title}</h2>
+
+    <div class="${isQuizSlide(currentSlide) ? "mcq-question" : "info-block"}">
+      ${slide.prompt}
+    </div>
+
+    <div class="hotspot-stage" id="hotspot-stage" style="${slide.maxWidth ? `max-width:${slide.maxWidth};` : ""}">
+      <img src="${slide.image}" class="hotspot-image" alt="${slide.title}">
+      ${slide.hotspots.map((h, i) => `
+        <button
+          class="hotspot-region"
+          id="hotspot-${i}"
+          style="left:${h.x}%; top:${h.y}%; width:${h.w}%; height:${h.h}%;"
+          onclick="checkHotspot(${i})"
+          title="">
+        </button>
+      `).join("")}
+    </div>
+
+    ${slide.explanation ? `
+      <div class="mcq-explanation mcq-explanation-hidden" id="hotspot-explanation">
+        <span class="explanation-tick">✓</span>
+        <span>${slide.explanation}</span>
+      </div>
+    ` : ""}
+
+    <div class="steps-complete steps-complete-hidden" id="hotspot-complete">
+      🎉 Correct — well done!
+    </div>
+  `);
+
+  restoreHotspotState();
+  }
+
+}
+
+// ─── Reveal: toggle the solution ──────────────────────────────────────────
+
+function toggleReveal() {
+  const answer = document.getElementById("reveal-answer");
+  const btn    = document.getElementById("reveal-btn");
+  const slide  = moduleData[currentSlide];
+
+  const isHidden = answer.classList.contains("reveal-answer-hidden");
+  answer.classList.toggle("reveal-answer-hidden");
+  btn.textContent = isHidden
+    ? (slide.hideText || "Hide solution")
+    : (slide.buttonText || "Show solution");
+  if (isHidden) {
+    answer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+}
+
+// ─── Hotspot: check a clicked region ──────────────────────────────────────
+
+function checkHotspot(index) {
+  const slide   = moduleData[currentSlide];
+  const hotspot = slide.hotspots[index];
+  const btn     = document.getElementById(`hotspot-${index}`);
+
+  if (hotspot.correct) {
+
+    // ── CORRECT ──
+    btn.classList.add("hotspot-correct");
+    // Lock all regions
+    document.querySelectorAll(".hotspot-region").forEach(b => b.disabled = true);
+
+    const expl = document.getElementById("hotspot-explanation");
+    if (expl) expl.classList.remove("mcq-explanation-hidden");
+
+    // Persist (only meaningful if this slide is a quiz)
+    slideState[currentSlide] = { type: "hotspot", chosen: index };
+
+    setTimeout(() => {
+      if (isQuizSlide(currentSlide)) {
+        completedSlides.add(currentSlide);
+        updateLockState();
+      }
+      const done = document.getElementById("hotspot-complete");
+      if (done) {
+        done.classList.remove("steps-complete-hidden");
+        done.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }, 600);
+
+  } else {
+
+    // ── INCORRECT ──
+    triggerBuzz(btn);
+    btn.classList.add("hotspot-wrong");
+    setTimeout(() => btn.classList.remove("hotspot-wrong"), 600);
+
+  }
+}
+
+function restoreHotspotState() {
+  const state = slideState[currentSlide];
+  if (!state || state.type !== "hotspot") return;
+
+  const btn = document.getElementById(`hotspot-${state.chosen}`);
+  if (btn) btn.classList.add("hotspot-correct");
+  document.querySelectorAll(".hotspot-region").forEach(b => b.disabled = true);
+
+  const expl = document.getElementById("hotspot-explanation");
+  if (expl) expl.classList.remove("mcq-explanation-hidden");
+
+  const done = document.getElementById("hotspot-complete");
+  if (done) done.classList.remove("steps-complete-hidden");
 }
 
 // ─── MCQ: check answer ────────────────────────────────────────────────────
@@ -532,31 +692,36 @@ function setRating(n) {
   paintStars(n);
 }
 
-// Stub for future database integration.
-// The payload below is everything you'd POST to your backend later.
-function saveAndClose() {
-  const payload = {
-    module:    (typeof moduleMeta !== "undefined" && moduleMeta.id) ? moduleMeta.id : "unknown",
-    completed: true,
-    rating:    selectedRating || null,
-    timestamp: new Date().toISOString()
-  };
+// Saves completion via the backend (api.js). Tracking is OPTIONAL — if api.js
+// isn't loaded, or no backend is configured, this still updates the button and
+// the student is unaffected.
+async function saveAndClose() {
+  const moduleId = (typeof moduleMeta !== "undefined" && moduleMeta.id)
+                   ? moduleMeta.id : "unknown";
 
-  // TODO: replace this with a real fetch() to your completion-tracking endpoint, e.g.
-  //   fetch("/api/module-completion", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(payload)
-  //   });
-  console.log("Module completion payload (stub):", payload);
-
-  // Simple confirmation for now
   const btn = document.querySelector(".final-save-btn");
   if (btn) {
-    btn.textContent = "✓ Saved";
+    btn.textContent = "Saving…";
     btn.disabled = true;
   }
+
+  // recordCompletion lives in core/api.js. It returns true if it actually sent.
+  // If api.js isn't present (modules used standalone), fall back gracefully.
+  let sent = false;
+  if (typeof recordCompletion === "function") {
+    sent = await recordCompletion({ moduleId, rating: selectedRating || null });
+  } else {
+    console.log("[module] api.js not loaded — completion not tracked (this is fine).");
+  }
+
+  if (btn) {
+    btn.textContent = sent ? "✓ Saved" : "✓ Done";
+  }
+
+  // OPTIONAL: if you later want to auto-close or return to the homepage, you
+  // could do it here, e.g. window.location.href = "../homepage/index.html?...".
 }
+
 
 
 

@@ -183,6 +183,64 @@ const moduleData = [
   //   explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
   // },
 
+    // EXAMPLE GEOGEBRA
+    {
+    type:  "embed",
+    label: "Interactive: Mohr's Circle",
+    title: "Drag the slider to transform the stresses",
+  
+    intro: `<p>Please wait a moment for the applet to load. Try rotating the element and observing how the values of stress change. When are the normal stresses maximum and minimum?</p>`,
+  
+    src:         "https://www.geogebra.org/material/iframe/id/xjmmtgqt/width/1203/height/768/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false",
+    aspectRatio: "16 / 10",          // optional — default is 16/9
+    maxWidth:    "820px",            // optional
+    caption:     "GeoGebra applet — interact directly above."
+  },
+
+  // EXAMPLE REVEAL
+  {
+    type:   "reveal",
+    label:  "Try it: Reaction at B",
+    title:  "Quick Check — Reaction at B",
+
+    // image:     "images/module-01_01.svg",   // optional figure above the prompt
+    // imageWidth:"480px",
+
+    prompt: `<p>For the beam from the worked example (6 m span, 12 kN load at 2 m
+             from A), have a go at finding the reaction at <strong>B</strong> on
+             paper. When you're ready, reveal the worked solution to check your
+             method.</p>`,
+
+    buttonText: "Show solution",     // optional (default "Show solution")
+    hideText:   "Hide solution",     // optional (default "Hide solution")
+
+    answer: `<p><strong>Taking moments about A (ΣM<sub>A</sub> = 0):</strong></p>
+             <p>R<sub>B</sub> × 6 = 12 × 2 = 24</p>
+             <p>R<sub>B</sub> = 24 ÷ 6 = <strong>4 kN</strong></p>`
+  },
+
+  // EXAMPLE HOTSPOT
+  {
+    type:  "hotspot",
+    label: "Find the Maximum Moment",
+    title: "Where is the Bending Moment greatest?",
+  
+    prompt: `<p>Click the point on the beam where the <strong>bending moment is
+            maximum</strong>.</p>`,
+  
+    image:    "images/module-01_01.svg",
+    maxWidth: "700px",               // optional
+  
+    hotspots: [
+      { x: 10, y: 40, w: 12, h: 20 },                 // a wrong region
+      { x: 44, y: 35, w: 14, h: 28, correct: true },  // the correct region
+      { x: 78, y: 40, w: 12, h: 20 }                  // another wrong region
+    ],
+  
+    explanation: `The maximum bending moment occurs under the point load, where
+                  the shear force passes through zero.`
+  },
+
 
   // FINAL SLIDE:   Module completion
   {
