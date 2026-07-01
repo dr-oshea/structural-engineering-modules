@@ -1044,3 +1044,248 @@ button:disabled {
   box-shadow: none;
   animation: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   QUIZ (Test Your Knowledge) type
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Intro sub-page ── */
+.quiz-intro {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.quiz-intro p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2d3748;
+  max-width: 600px;
+  margin: 0 auto 12px;
+}
+
+.quiz-intro-meta {
+  font-size: 0.82rem !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #718096 !important;
+}
+
+.quiz-start-btn {
+  margin-top: 24px;
+  background: var(--unsw-teal);
+}
+
+.quiz-start-btn:hover {
+  background: #0089a6;
+}
+
+/* ── Question progress bar ── */
+.quiz-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.quiz-progress-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #718096;
+  font-weight: 600;
+}
+
+.quiz-progress-bar {
+  width: 100%;
+  max-width: 420px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: var(--unsw-teal);
+  border-radius: 3px;
+  transition: width 0.35s ease;
+}
+
+.quiz-input-row {
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* Single-attempt feedback colours (no retry within a quiz question) */
+.mcq-option.mcq-option-wrong-final {
+  border-color: #fc8181 !important;
+  background: #fff5f5 !important;
+  color: #c53030 !important;
+}
+
+.step-input.step-incorrect-final {
+  border-color: #fc8181;
+  background: #fff5f5;
+  color: #c53030;
+  font-weight: 600;
+}
+
+/* ── Results sub-page ── */
+.quiz-results {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.quiz-score-ring {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  border: 6px solid var(--unsw-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7fbfd;
+}
+
+.quiz-score-num {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #1f3264;
+}
+
+.quiz-score-den {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #718096;
+}
+
+.quiz-score-msg {
+  font-size: 1.05rem;
+  color: #2d3748;
+  margin: 0 auto 20px;
+  max-width: 520px;
+}
+
+.quiz-results-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.quiz-review-btn {
+  background: #3f61c4;
+}
+
+.quiz-retry-btn {
+  background: #718096;
+}
+
+.quiz-retry-btn:hover {
+  background: #5a6b80;
+}
+
+/* ── Review table ── */
+.quiz-review {
+  margin-top: 24px;
+  overflow-x: auto;
+}
+
+.quiz-review-hidden {
+  display: none;
+}
+
+.quiz-review-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+.quiz-review-table th,
+.quiz-review-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.quiz-review-table th {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #718096;
+  background: #f8fafc;
+}
+
+.quiz-review-table td:first-child,
+.quiz-review-table th:first-child {
+  text-align: center;
+  width: 40px;
+}
+
+.quiz-row-correct td {
+  background: #f0fff4;
+}
+
+.quiz-row-correct td:first-child {
+  color: #38a169;
+  font-weight: 700;
+}
+
+.quiz-row-wrong td {
+  background: #fff5f5;
+}
+
+.quiz-row-wrong td:first-child {
+  color: #e53e3e;
+  font-weight: 700;
+}
+
+
+/* ===== Context / motivation slide ===== */
+
+.context-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 10px 0;
+}
+
+.context-image {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+}
+
+.context-text {
+  max-width: 640px;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: #2d3748;
+  text-align: center;
+}
+
+.context-text p {
+  margin: 0 0 10px;
+}
+
+.context-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== Quiz results: finish instruction ===== */
+
+.quiz-finish-hint {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+  color: #4a5568;
+}

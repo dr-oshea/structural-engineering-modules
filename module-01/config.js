@@ -12,6 +12,16 @@ const moduleData = [
     buttonText: "Start Module"
   },
 
+  {
+    type: "context",
+    label: "Why This Matters",
+    title: "Drawing Bending Moment Diagrams",
+    image: "images/context-beam-engineer.jpg",
+    text: `<p>Drawing bending moment diagrams lets engineers locate and calculate the maximum
+          deflections and bending stresses in a member.</p>
+          <p> It is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
+  },
+
 
   // INFO SLIDE:   What is a bending moment? 
   {
@@ -239,6 +249,71 @@ const moduleData = [
   
     explanation: `The maximum bending moment occurs under the point load, where
                   the shear force passes through zero.`
+  },
+
+  /* ============================================================================
+   QUIZ ("Test Your Knowledge") — a multi-question sub-sequence in one slide.
+
+   Appears ONCE in the sidebar. Internally runs: intro → N questions → results.
+   - One attempt per question; advances on answer (right or wrong).
+   - Results page shows score, a review table, and a Retry button.
+   - Completing it (reaching results) gates the module, regardless of score.
+
+   Each question has a "kind": "mcq" or "input".
+     mcq   → options array, one with correct:true (same shape as the mcq slide)
+     input → numeric answer + tolerance + optional unit (like a Worked Example step)
+
+   Any question may include an optional image / imageWidth (shown above it).
+   ============================================================================ */
+
+  {
+    type:  "quiz",
+    label: "Test Your Knowledge",
+    title: "Test Your Knowledge",
+
+    intro:     "Answer the following questions to complete the module. You have one attempt per question, but you can retry the whole quiz as many times as you like.",
+    startText: "Start Quiz",          // optional (default "Start Quiz")
+
+    questions: [
+
+      // ── An MCQ question ──
+      {
+        kind:     "mcq",
+        question: `<p>The maximum bending moment in a simply supported beam under a
+                  central point load <strong>P</strong> over span <strong>L</strong> is:</p>`,
+        options: [
+          { text: "PL / 2" },
+          { text: "PL / 4", correct: true },
+          { text: "PL / 8" },
+          { text: "PL" }
+        ]
+      },
+
+      // ── An input (numeric) question ──
+      {
+        kind:      "input",
+        question:  `<p>A simply supported beam of span <strong>4 m</strong> carries a
+                    UDL of <strong>6 kN/m</strong>. What is the maximum bending
+                    moment (in kNm)?</p>
+                    <p><em>Recall M<sub>max</sub> = wL²/8</em></p>`,
+        answer:    12,
+        tolerance: 0.1,
+        unit:      "kNm"
+      },
+
+      // ── An image-based MCQ question ──
+      {
+        kind:     "mcq",
+        // image:    "images/some-diagram.svg",   // optional figure above the question
+        question: `<p>Which support condition provides a reaction moment?</p>`,
+        options: [
+          { text: "Pin" },
+          { text: "Roller" },
+          { text: "Fixed", correct: true }
+        ]
+      }
+
+    ]
   },
 
 
