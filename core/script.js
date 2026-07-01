@@ -25,15 +25,15 @@ function isQuizSlide(index) {
 // Returns the sidebar icon for a slide based on its type.
 function getSlideIcon(s) {
   if (s.type === "splash")  return "🏁";
-  if (s.type === "steps")   return "🧮";
+  if (s.type === "steps")   return "❓";
   if (s.type === "mcq")     return "❓";
-  if (s.type === "hotspot") return "🎯";
-  if (s.type === "embed")   return "🎚️";
-  if (s.type === "reveal")  return "💡";
+  if (s.type === "hotspot") return "❓";
+  if (s.type === "embed")   return "▶️";
+  if (s.type === "reveal")  return "❓";
   if (s.type === "context") return "🌏";
-  if (s.type === "quiz")    return "📝";
+  if (s.type === "quiz")    return "🧩";
   if (s.type === "final")   return "🏆";
-  return "📖"; // info, cards, and any future informational types
+  return "📒"; // info, cards, and any future informational types
 }
 
 // Returns the index of the first incomplete quiz slide — the current "gate".

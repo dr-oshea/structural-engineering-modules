@@ -14,7 +14,7 @@ const moduleData = [
 
   {
     type: "context",
-    label: "Why This Matters",
+    label: "Context/Motivation",
     title: "Drawing Bending Moment Diagrams",
     image: "images/context-beam-engineer.jpg",
     text: `<p>Drawing bending moment diagrams lets engineers locate and calculate the maximum
