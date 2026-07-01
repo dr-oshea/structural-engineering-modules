@@ -176,6 +176,23 @@ button:disabled {
   background: #ffdc00; /* UNSW Yellow */
 }
 
+/* Block divider — a thin static yellow line, like the progress bar at 100%.
+   Scoped under .sidebar to out-specify the base ".sidebar li" rule, and
+   explicitly resets the list-item box so no grey background/padding leaks in.
+   pointer-events:none makes it completely non-interactive. */
+.sidebar li.sidebar-divider {
+  height: 3px;
+  min-height: 3px;
+  padding: 0;
+  margin: 12px 6px;
+  background: #ffdc00;              /* UNSW Yellow */
+  border: none;
+  border-radius: 2px;
+  box-shadow: none;
+  list-style: none;
+  pointer-events: none;            /* not interactive — purely visual */
+}
+
 
 /* ===== Main area ===== */
 
@@ -991,4 +1008,39 @@ button:disabled {
 
 .hotspot-region:disabled {
   cursor: default;
+}
+
+/* Pulsing marker dot — centred in each region so students can see where to click */
+.hotspot-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e02020;
+  box-shadow: 0 0 0 rgba(224,32,32,0.6);
+  transform: translate(-50%, -50%);
+  pointer-events: none;                /* clicks pass through to the button */
+  animation: hotspotPulse 1.6s ease-out infinite;
+}
+
+@keyframes hotspotPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(224,32,32,0.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(224,32,32,0); }
+  100% { box-shadow: 0 0 0 0 rgba(224,32,32,0); }
+}
+
+/* Once the region is answered/disabled, stop the pulse and hide the marker */
+.hotspot-region:disabled .hotspot-marker {
+  animation: none;
+  display: none;
+}
+
+/* On a correct region, keep a static solid dot to confirm the location */
+.hotspot-region.hotspot-correct .hotspot-marker {
+  display: block;
+  background: #38a169;
+  box-shadow: none;
+  animation: none;
 }

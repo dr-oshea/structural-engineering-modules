@@ -20,13 +20,13 @@ function isQuizSlide(index) {
 // Returns the sidebar icon for a slide based on its type.
 function getSlideIcon(s) {
   if (s.type === "splash")  return "🏁";
-  if (s.type === "steps")   return "🧮";
+  if (s.type === "steps")   return "🧩";
   if (s.type === "mcq")     return "❓";
   if (s.type === "hotspot") return "🎯";
-  if (s.type === "embed")   return "🎚️";
-  if (s.type === "reveal")  return "💡";
+  if (s.type === "embed")   return "💻";
+  if (s.type === "reveal")  return "🧩";
   if (s.type === "final")   return "🏆";
-  return "📖"; // info, cards, and any future informational types
+  return "📒"; // info, cards, and any future informational types
 }
 
 // Returns the index of the first incomplete quiz slide — the current "gate".
@@ -72,6 +72,26 @@ function renderLayout(contentHTML) {
             const isActive    = i === currentSlide;
             const isQuiz      = isQuizSlide(i);
             const isClickable = !isNoNav && !isActive;
+
+            // Divider logic:
+            // - Normal case: show AFTER the gate slide (last accessible), if
+            //   there are locked slides beyond it.
+            // - Final case: once all quizzes are done (gate past the content),
+            //   show the divider just BEFORE the final slide.
+            const hasFinal      = moduleData[moduleData.length - 1] &&
+                                  moduleData[moduleData.length - 1].type === "final";
+            const finalIndex    = hasFinal ? moduleData.length - 1 : -1;
+            const gatePastEnd   = lockedFromIndex >= moduleData.length - 1;
+
+            let showDivider = false;
+            if (gatePastEnd && hasFinal) {
+              // all quizzes complete — divider sits before the final slide
+              showDivider = (i === finalIndex - 1);
+            } else {
+              // divider after the gate, if locked slides follow
+              showDivider = (i === lockedFromIndex) && (i < moduleData.length - 1);
+            }
+
             return `
               <li
                 data-slide="${i}"
@@ -80,6 +100,7 @@ function renderLayout(contentHTML) {
               >
                 ${getSlideIcon(s)} ${s.label || `Slide ${i}`}
               </li>
+              ${showDivider ? `<li class="sidebar-divider" aria-hidden="true"></li>` : ""}
             `;
           }).join("")}
         </ul>
@@ -386,11 +407,12 @@ function renderSlide() {
       <img src="${slide.image}" class="hotspot-image" alt="${slide.title}">
       ${slide.hotspots.map((h, i) => `
         <button
-          class="hotspot-region"
+          class="hotspot-region${slide.showMarkers === false ? "" : " hotspot-region-marked"}"
           id="hotspot-${i}"
           style="left:${h.x}%; top:${h.y}%; width:${h.w}%; height:${h.h}%;"
           onclick="checkHotspot(${i})"
           title="">
+          ${slide.showMarkers === false ? "" : `<span class="hotspot-marker"></span>`}
         </button>
       `).join("")}
     </div>
@@ -755,6 +777,32 @@ function updateLockState() {
     const i = parseInt(li.dataset.slide);
     li.classList.toggle("sidebar-item-locked", i > lockedFromIndex);
   });
+
+  // Move the block divider to sit after the new gate slide (or before Final
+  // once all quizzes are complete). Mirrors the logic in renderLayout.
+  const existingDivider = document.querySelector(".sidebar-divider");
+  if (existingDivider) existingDivider.remove();
+
+  const hasFinal    = moduleData[moduleData.length - 1] &&
+                      moduleData[moduleData.length - 1].type === "final";
+  const gatePastEnd = lockedFromIndex >= moduleData.length - 1;
+
+  let dividerAfterIndex = -1;
+  if (gatePastEnd && hasFinal) {
+    dividerAfterIndex = moduleData.length - 2;   // before the final slide
+  } else if (lockedFromIndex < moduleData.length - 1) {
+    dividerAfterIndex = lockedFromIndex;         // after the gate slide
+  }
+
+  if (dividerAfterIndex >= 0) {
+    const gateLi = document.querySelector(`.sidebar li[data-slide="${dividerAfterIndex}"]`);
+    if (gateLi) {
+      const divider = document.createElement("li");
+      divider.className = "sidebar-divider";
+      divider.setAttribute("aria-hidden", "true");
+      gateLi.insertAdjacentElement("afterend", divider);
+    }
+  }
 }
 
 
