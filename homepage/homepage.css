@@ -1,0 +1,109 @@
+/* ============================================================================
+   homepage/homepage.css — dashboard styling.
+   (Dark UNSW background and fonts come from the shared core/style.css.)
+   ============================================================================ */
+
+#homepage-app {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+/* Header */
+.hp-header {
+  color: white;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hp-header h1 {
+  font-size: 2.2rem;
+  font-weight: 400;
+  margin: 0 0 8px;
+}
+
+.hp-header p {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Grid of module cards */
+.hp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+.hp-loading {
+  color: rgba(255,255,255,0.7);
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+/* A module card (also a link) */
+.hp-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 150px;
+  padding: 24px;
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  text-decoration: none;
+  color: #1f3264;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+}
+
+/* Completed cards get a green accent */
+.hp-card-done {
+  border-left: 5px solid #38a169;
+}
+
+.hp-card-status {
+  font-size: 1.4rem;
+  color: #38a169;
+  font-weight: 700;
+  height: 28px;
+}
+
+.hp-card-title {
+  flex: 1;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 4px 0 12px;
+}
+
+.hp-card-foot {
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.hp-card-done .hp-card-foot {
+  color: #276749;
+  opacity: 0.9;
+}
+
+/* Fallback message when no course is specified */
+.hp-message {
+  color: white;
+  text-align: center;
+  max-width: 600px;
+  margin: 80px auto;
+  line-height: 1.6;
+}
+
+.hp-message h1 {
+  font-weight: 400;
+}

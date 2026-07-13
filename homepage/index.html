@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revision Modules</title>
+
+  <link rel="stylesheet" href="../core/style.css">
+  <link rel="stylesheet" href="homepage.css">
+</head>
+
+<body>
+
+  <div id="homepage-app"></div>
+
+  <!-- Load order matters: each file uses things defined in the one above it -->
+  <script src="../core/context.js"></script>   <!-- getStudentContext()      -->
+  <script src="../core/api.js"></script>       <!-- fetchProgress()          -->
+  <script src="courses.js"></script>           <!-- COURSES                  -->
+  <script src="homepage.js"></script>          <!-- uses all of the above    -->
+
+</body>
+</html>
