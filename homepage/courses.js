@@ -14,8 +14,9 @@
 
 const COURSES = {
 
-  "CVEN2301": {
-    courseName: "Mechanics of Solids",
+  // Testing sandpit page
+  "CVEN2303_Summer_SP": {
+    courseName: "CVEN2303 Structural Analysis (Testing Page)",
     modules: [
       { id: "module-01-bending-moments", folder: "module-01",
         title: "Drawing Bending Moment Diagrams" },
@@ -24,12 +25,15 @@ const COURSES = {
     ]
   },
 
-  // "CVEN3304": {
-  //   courseName: "Structural Analysis & Design",
-  //   modules: [
-  //     { id: "module-01-bending-moments", folder: "module-01",
-  //       title: "Drawing Bending Moment Diagrams" },   // same module, other course
-  //   ]
-  // },
+  // T3 2026
+  "CVEN2303-CVEN2303-5269_00716": {
+    courseName: "CVEN2303 Structural Analysis (T3 2026)",
+    modules: [
+      { id: "module-01-bending-moments", folder: "module-01",
+        title: "Drawing Bending Moment Diagrams" },
+      // { id: "module-02-shear-force",  folder: "module-02",
+      //   title: "Shear Force Diagrams" },
+    ]
+  },
 
 };
