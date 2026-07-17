@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Setup Tool — Revision Modules</title>
+  <link rel="stylesheet" href="../core/style.css">
+  <style>
+    /* Self-contained tool styling (admin-facing, not student-facing) */
+    #tool { max-width: 860px; margin: 40px auto 80px; background: white;
+            border-radius: 14px; padding: 36px 44px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+    #tool h1 { font-size: 1.6rem; color: #1f3264; margin: 0 0 6px; }
+    #tool .sub { color: #718096; font-size: 0.9rem; margin-bottom: 26px; }
+    #tool label { font-weight: 600; color: #2d3748; display: block;
+                  margin: 18px 0 6px; font-size: 0.9rem; }
+    #tool select, #tool input[type=text] {
+      padding: 10px 14px; font-size: 0.95rem; border: 2px solid #cbd5e0;
+      border-radius: 8px; min-width: 320px; }
+    .cat-block { margin: 18px 0 4px; }
+    .cat-block h3 { font-size: 0.8rem; letter-spacing: 0.08em;
+                    text-transform: uppercase; color: #3f61c4;
+                    border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+    .mod-row { display: flex; align-items: center; gap: 10px;
+               padding: 6px 4px; font-size: 0.95rem; color: #2d3748; }
+    .mod-row input { width: 17px; height: 17px; }
+    .mod-extra { opacity: 0.75; }
+    #output { width: 100%; min-height: 220px; font-family: monospace;
+              font-size: 0.82rem; border: 2px solid #cbd5e0; border-radius: 8px;
+              padding: 14px; box-sizing: border-box; margin-top: 8px; }
+    .tool-btn { margin-top: 18px; }
+    .hint { font-size: 0.82rem; color: #718096; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+  <div id="tool">
+    <h1>Course Setup Tool</h1>
+    <p class="sub">Pick a course → adjust the module set → copy the generated
+       block into <code>homepage/courses.js</code>. The default set is every
+       module from the course's prerequisite chain, computed automatically.</p>
+
+    <label for="course-select">Course</label>
+    <select id="course-select" onchange="toolRefresh()"></select>
+
+    <label for="term-input">Term suffix (keeps each term's completion data separate)</label>
+    <input type="text" id="term-input" placeholder="e.g. 26T3" oninput="toolGenerate()">
+    <p class="hint">The courses.js key becomes e.g. <code>CVEN2303_26T3</code> —
+       use the same value in the Moodle URL's <code>&amp;course=</code> parameter.</p>
+
+    <div id="module-picker"></div>
+
+    <button class="tool-btn" onclick="toolGenerate()">Generate courses.js block</button>
+    <textarea id="output" readonly
+      placeholder="The generated block appears here — copy and paste it into homepage/courses.js"></textarea>
+  </div>
+
+  <!-- Data + logic (shared with the homepage — single source of truth) -->
+  <script src="../homepage/catalog.js"></script>
+  <script src="../homepage/prerequisites.js"></script>
+
+  <script>
+    // ── Populate the course dropdown from the graph ──
+    const sel = document.getElementById("course-select");
+    Object.keys(COURSE_GRAPH).forEach(code => {
+      const o = document.createElement("option");
+      o.value = code;
+      o.textContent = `${code} — ${COURSE_GRAPH[code].name}`;
+      sel.appendChild(o);
+    });
+    sel.value = "CVEN2303";   // sensible default
+
+    // ── Render the tickbox picker for the selected course ──
+    function toolRefresh() {
+      const code       = sel.value;
+      const defaultIds = new Set(getDefaultModuleIds(code));
+
+      // Group ALL catalog modules by category, in catalog order
+      const cats = CATALOG.categories.slice().sort((a,b)=>a.order-b.order);
+      const picker = document.getElementById("module-picker");
+
+      picker.innerHTML = cats.map(cat => {
+        const mods = CATALOG.modules
+          .filter(m => m.category === cat.id)
+          .sort((a,b)=>a.order-b.order);
+        if (!mods.length) return "";
+        return `
+          <div class="cat-block">
+            <h3>${cat.name}</h3>
+            ${mods.map(m => {
+              const isDefault = defaultIds.has(m.id);
+              return `
+                <label class="mod-row ${isDefault ? "" : "mod-extra"}">
+                  <input type="checkbox" value="${m.id}"
+                         ${isDefault ? "checked" : ""} onchange="toolGenerate()">
+                  ${m.title}
+                  ${isDefault ? "" : "<em>(beyond default prerequisites)</em>"}
+                </label>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }).join("") || "<p class='hint'>No modules exist in the catalog yet.</p>";
+
+      toolGenerate();
+    }
+
+    // ── Emit the courses.js block ──
+    function toolGenerate() {
+      const code = sel.value;
+      const term = document.getElementById("term-input").value.trim();
+      const key  = term ? `${code}_${term}` : code;
+
+      const ticked = [...document.querySelectorAll("#module-picker input:checked")]
+                       .map(cb => cb.value);
+      const ordered = sortModuleIds(ticked);   // catalog order, always
+
+      const block =
+`  "${key}": {
+    courseName: "${COURSE_GRAPH[code].name}",
+    modules: [
+${ordered.map(id => `      "${id}"`).join(",\n")}
+    ]
+  },`;
+
+      document.getElementById("output").value = block;
+    }
+
+    toolRefresh();
+  </script>
+
+</body>
+</html>

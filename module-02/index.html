@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 02</title>
+
+  <link rel="stylesheet" href="../core/style.css">
+</head>
+
+<body>
+
+  <div id="app"></div>
+
+  <!-- ═══ LOAD ORDER MATTERS ═══ -->
+
+  <!-- 0. Tracking (OPTIONAL — harmless if BACKEND_URL is empty) -->
+  <script src="../core/context.js"></script>
+  <script src="../core/api.js"></script>
+
+  <!-- 1. The engine -->
+  <script src="../core/engine.js"></script>
+
+  <!-- 2. Content types -->
+  <script src="../core/types/splash.js"></script>
+  <script src="../core/types/context.js"></script>
+  <script src="../core/types/info.js"></script>
+  <script src="../core/types/cards.js"></script>
+  <script src="../core/types/steps.js"></script>
+  <script src="../core/types/mcq.js"></script>
+  <script src="../core/types/hotspot.js"></script>
+  <script src="../core/types/embed.js"></script>
+  <script src="../core/types/reveal.js"></script>
+  <script src="../core/types/quiz.js"></script>
+  <script src="../core/types/final.js"></script>
+
+  <!-- 3. This module's content -->
+  <script src="config.js"></script>
+
+</body>
+</html>

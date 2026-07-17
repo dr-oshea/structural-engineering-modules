@@ -1,13 +1,13 @@
 // Optional module metadata — used by the final slide's save payload
 const moduleMeta = {
-  id: "module-01-free-body"
+  id: "module-02-reactions"
 };
 
 const moduleData = [
   {
     type: "splash",
     label: "Home page",
-    title: "Drawing Free Body Diagrams",
+    title: "Calculating Reactions",
     subtitle: "Interactive Revision Modules for structural engineering",
     buttonText: "Start Module"
   },
@@ -15,9 +15,9 @@ const moduleData = [
   {
     type: "context",
     label: "Context/Motivation",
-    title: "Drawing Free Body Diagrams",
+    title: "Calculating Reactions",
     image: "images/context-beam-engineer.jpg",
-    text: `<p>Insert mcontext/motivation line.</p>
+    text: `<p>Support reactions fix a structure in place. How much force is required in reaction to applied loads to achieve this?</p>
           <p> Calculating support reactions is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
   },
 

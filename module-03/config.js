@@ -1,13 +1,13 @@
 // Optional module metadata — used by the final slide's save payload
 const moduleMeta = {
-  id: "module-01-free-body"
+  id: "module-03-bending-moments"
 };
 
 const moduleData = [
   {
     type: "splash",
     label: "Home page",
-    title: "Drawing Free Body Diagrams",
+    title: "Drawing Bending Moment Diagrams",
     subtitle: "Interactive Revision Modules for structural engineering",
     buttonText: "Start Module"
   },
@@ -15,26 +15,27 @@ const moduleData = [
   {
     type: "context",
     label: "Context/Motivation",
-    title: "Drawing Free Body Diagrams",
+    title: "Drawing Bending Moment Diagrams",
     image: "images/context-beam-engineer.jpg",
-    text: `<p>Insert mcontext/motivation line.</p>
-          <p> Calculating support reactions is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
+    text: `<p>Drawing bending moment diagrams lets engineers locate and calculate the maximum
+          deflections and bending stresses in a member.</p>
+          <p> It is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
   },
 
 
-  // INFO SLIDE:   What is a reaction? 
+  // INFO SLIDE:   What is a bending moment? 
   {
     type: "info",
-    label: "What is a Reaction Force?",
-    title: "What is a Reaction Force?",
+    label: "What is a bending moment?",
+    title: "What is a Bending Moment?",
 
     content: `
-      <p>Reaction forces arise in response to applid loads</p>
+      <p>Beams bend!</p>
 
       <ul>
-        <li>Pin support</li>
-        <li>Roller support</li>
-        <li>Fixed support</li>
+        <li>Equilibrium</li>
+        <li>Internal forces</li>
+        <li>Load paths</li>
       </ul>
     `,
 

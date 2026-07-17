@@ -13,11 +13,13 @@
 
   <div id="homepage-app"></div>
 
-  <!-- Load order matters: each file uses things defined in the one above it -->
-  <script src="../core/context.js"></script>   <!-- getStudentContext()      -->
-  <script src="../core/api.js"></script>       <!-- fetchProgress()          -->
-  <script src="courses.js"></script>           <!-- COURSES                  -->
-  <script src="homepage.js"></script>          <!-- uses all of the above    -->
+  <!-- Load order matters: each file uses things defined above it -->
+  <script src="../core/context.js"></script>   <!-- getStudentContext()          -->
+  <script src="../core/api.js"></script>       <!-- fetchProgress()              -->
+  <script src="catalog.js"></script>           <!-- CATALOG + lookup helpers     -->
+  <script src="prerequisites.js"></script>     <!-- COURSE_GRAPH + default suite -->
+  <script src="courses.js"></script>           <!-- COURSES (live offerings)     -->
+  <script src="homepage.js"></script>          <!-- renders the dashboard        -->
 
 </body>
 </html>
