@@ -11,7 +11,7 @@
 
 /* Header */
 .hp-header {
-  color: white;
+  color: #1a1a1a;
   text-align: center;
   margin-bottom: 40px;
 }
@@ -38,7 +38,7 @@
 }
 
 .hp-loading {
-  color: rgba(255,255,255,0.7);
+  color: #666666;
   grid-column: 1 / -1;
   text-align: center;
 }
@@ -97,7 +97,7 @@
 
 /* Fallback message when no course is specified */
 .hp-message {
-  color: white;
+  color: #1a1a1a;
   text-align: center;
   max-width: 600px;
   margin: 80px auto;
@@ -116,12 +116,12 @@
 }
 
 .hp-section-title {
-  color: #ffdc00;                     /* UNSW Yellow */
+  color: #000000;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   margin: 0 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255,220,0,0.35);
+  border-bottom: 3px solid #ffdc00;   /* UNSW Yellow rule */
 }
