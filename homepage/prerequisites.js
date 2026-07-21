@@ -49,16 +49,30 @@ const COURSE_GRAPH = {
   // ── Level 4 ──
   "CVEN4300": { name: "Structures Practicum",
                 requires: ["CVEN3304", "CVEN2303", "CVEN3303"], teaches: [] },
-  "CVEN4300": { name: "Advanced Concrete Structures",
+  "CVEN4301": { name: "Advanced Concrete Structures",
                 requires: ["CVEN2303", "CVEN3304"],             teaches: [] },
   "CVEN4309": { name: "Timber Engineering",
                 requires: ["CVEN2303"],             teaches: [] },
   "CVEN4308": { name: "Structural Dynamics",
                 requires: ["CVEN2002", "CVEN2303"],             teaches: [] },
 
-  // Level 9                
+  // ── Level 9                
   "CVEN9822": { name: "Steel and Composite Structures",
                 requires: ["CVEN2303", "CVEN3304", "CVEN3303"], teaches: [] },
+  "CVEN9809": { name: "Reinforced Concrete Design",
+                requires: ["CVEN3304"], teaches: [] },
+  "CVEN9806": { name: "Prestressed Concrete Design",
+                requires: ["CVEN3304"], teaches: [] },
+  "CVEN9818": { name: "Bridge Engineering",
+                requires: ["CVEN2303", "CVEN3304", "CVEN3303"], teaches: [] },
+  "CVEN9820": { name: "Computational Structural Mechanics",
+                requires: ["CVEN2303", "CVEN2002"], teaches: [] },
+  "CVEN9840": { name: "Structural Health Monitoring Fundamentals and Practices",
+                requires: ["CVEN2303", "CVEN2002"], teaches: [] },
+  "CVEN9824": { name: "Advanced Materials Technology",
+                requires: ["MATS1101", "ENGG2400"], teaches: [] },
+  "CVEN9826": { name: "Advanced Mechanics of Structures and Materials ",
+                requires: ["MATH2018, ENGG2400"], teaches: [] },              
 
 };
 
