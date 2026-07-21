@@ -100,8 +100,45 @@ async function saveAndClose() {
     btn.textContent = sent ? "✓ Saved" : "✓ Done";
   }
 
-  // OPTIONAL: to auto-return to the homepage later, do it here, e.g.
-  //   window.location.href = "../homepage/index.html?...";
+  // ── Return to the homepage, carrying the student & course forward ──
+  // Works when context.js is loaded and a student/course are known. Falls back
+  // to an on-screen "you may close this window" message otherwise.
+  const slide = moduleData[currentSlide];
+  let homeUrl = null;
+
+  if (slide.homeUrl) {
+    homeUrl = slide.homeUrl;                 // author-provided override
+  } else if (typeof getStudentContext === "function") {
+    const ctx = getStudentContext();
+    if (ctx.student || ctx.course) {
+      const params = new URLSearchParams();
+      if (ctx.student) params.set("sid", ctx.student);
+      if (ctx.course)  params.set("course", ctx.course);
+      homeUrl = `../homepage/index.html?${params.toString()}`;
+    }
+  }
+
+  showSaveConfirmation(homeUrl);
+}
+
+// Shows a brief confirmation, then redirects to the homepage if we have a URL;
+// otherwise leaves a clear "you may close this window" message on screen.
+function showSaveConfirmation(homeUrl) {
+  const card = document.querySelector(".final-card");
+  if (card) {
+    card.innerHTML = `
+      <div class="final-trophy">✅</div>
+      <h1>Completion saved</h1>
+      <p>${homeUrl
+            ? "Returning you to your module homepage…"
+            : "Your completion has been saved. You may now close this window."}</p>
+    `;
+  }
+
+  if (homeUrl) {
+    // Brief pause so the student sees the confirmation, then redirect.
+    setTimeout(() => { window.location.href = homeUrl; }, 1400);
+  }
 }
 
 registerSlideType("final", {

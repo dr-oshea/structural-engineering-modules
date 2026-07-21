@@ -11,7 +11,7 @@
    After setting up the Google Apps Script backend (see the roadmap §3),
    paste its Web app URL (ending in /exec) between the quotes.
    Leave empty to run with tracking off.                                       */
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbzGi7-qsGVSzFu9hp4JsQkWeM4ZldlZ5OB3TbqU2nmH5MtVEDIXtY5bCGiHVInSjR_s/exec";
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwN8fDdrGFwSwAt3CS6kDA29OIUKSRCdWF1S6AaqXov7EBrWfM24bz5FwcwhDcqWjXG/exec";
 /* ──────────────────────────────────────────────────────────────────────────── */
 
 
@@ -60,7 +60,9 @@ async function recordCompletion({ moduleId, rating }) {
 async function fetchProgress() {
   if (!trackingEnabled()) {
     console.log("[api] Tracking off — no progress to fetch (this is fine).");
-    return [];
+    const empty = [];
+    empty.dates = {};
+    return empty;
   }
 
   const ctx = getStudentContext();
@@ -71,9 +73,15 @@ async function fetchProgress() {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    return Array.isArray(data.completed) ? data.completed : [];
+    // Return the completed IDs as an array (so existing .includes() still works),
+    // with the per-module completion dates attached as a .dates property.
+    const completed = Array.isArray(data.completed) ? data.completed : [];
+    completed.dates = (data.dates && typeof data.dates === "object") ? data.dates : {};
+    return completed;
   } catch (err) {
     console.warn("[api] Could not fetch progress (ignored):", err);
-    return [];
+    const empty = [];
+    empty.dates = {};
+    return empty;
   }
 }

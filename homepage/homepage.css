@@ -65,12 +65,18 @@
 
 /* Completed cards get a green accent */
 .hp-card-done {
-  border-left: 5px solid #38a169;
+  border-left: 5px solid #1ac987;                  /* UNSW brand green */
+  background: rgba(26,201,135,0.10);               /* translucent green fill */
+  border-color: rgba(26,201,135,0.35);
+}
+
+.hp-card-done:hover {
+  background: rgba(26,201,135,0.16);
 }
 
 .hp-card-status {
   font-size: 1.4rem;
-  color: #38a169;
+  color: #12a06a;
   font-weight: 700;
   height: 28px;
 }
@@ -91,8 +97,8 @@
 }
 
 .hp-card-done .hp-card-foot {
-  color: #276749;
-  opacity: 0.9;
+  color: #0f7a52;
+  opacity: 0.95;
 }
 
 /* Fallback message when no course is specified */

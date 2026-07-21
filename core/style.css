@@ -918,24 +918,27 @@ button:disabled {
 
 .final-stars {
   display: flex;
-  gap: 6px;
+  gap: 12px;
 }
 
 .final-star {
-  font-size: 2rem;
+  font-size: 3.2rem;
   line-height: 1;
   cursor: pointer;
-  color: rgba(0,0,0,0.18);            /* empty star */
-  transition: color 0.15s ease, transform 0.1s ease;
+  color: rgba(0,0,0,0.15);            /* empty star */
+  transition: color 0.15s ease, transform 0.12s ease, text-shadow 0.15s ease;
   user-select: none;
 }
 
 .final-star:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
 }
 
 .final-star-filled {
-  color: #d4a300;                     /* filled — deep gold, readable on yellow card */
+  color: var(--unsw-yellow);          /* filled — bright UNSW Yellow */
+  transform: scale(1.12);             /* selected stars sit slightly larger */
+  text-shadow: 0 2px 6px rgba(0,0,0,0.28),   /* depth so yellow reads on white */
+               0 0 1px rgba(0,0,0,0.45);     /* thin outline for definition */
 }
 
 /* Save and Close button */
