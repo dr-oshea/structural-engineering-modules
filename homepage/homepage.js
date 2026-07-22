@@ -59,15 +59,19 @@ async function renderHomepage() {
       <div class="hp-grid">
         ${g.modules.map(m => {
           const isDone = completed.includes(m.id);
+          const doneDate = (completed.dates && completed.dates[m.id]) || null;
           const params = new URLSearchParams();
           if (ctx.student) params.set("sid", ctx.student);
           if (ctx.course)  params.set("course", ctx.course);
           const moduleUrl = `../${m.folder}/index.html?${params.toString()}`;
+          const footText = isDone
+            ? (doneDate ? `Completed ${formatDoneDate(doneDate)}` : "Completed")
+            : "Not yet completed";
           return `
             <a class="hp-card ${isDone ? "hp-card-done" : ""}" href="${moduleUrl}">
               <div class="hp-card-status">${isDone ? "✓" : ""}</div>
               <div class="hp-card-title">${m.title}</div>
-              <div class="hp-card-foot">${isDone ? "Completed" : "Not yet completed"}</div>
+              <div class="hp-card-foot">${footText}</div>
             </a>
           `;
         }).join("")}
@@ -77,3 +81,16 @@ async function renderHomepage() {
 }
 
 renderHomepage();
+
+// Format a "YYYY-MM-DD" string as e.g. "14 Mar 2026" (falls back to raw string).
+function formatDoneDate(iso) {
+  try {
+    const [y, m, d] = iso.split("-").map(Number);
+    const months = ["Jan","Feb","Mar","Apr","May","Jun",
+                    "Jul","Aug","Sep","Oct","Nov","Dec"];
+    if (!y || !m || !d) return iso;
+    return `${d} ${months[m - 1]} ${y}`;
+  } catch (e) {
+    return iso;
+  }
+}
