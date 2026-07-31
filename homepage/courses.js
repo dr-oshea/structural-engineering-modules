@@ -26,7 +26,7 @@ const COURSES = {
 
   // T3 2026
   "CVEN2303-CVEN2303-5269_00716": {
-    courseName: "Structural Analysis and Modelling",
+    courseName: "Structural Analysis and Modelling (T3 2026)",
     modules: [
       "module-01-free-body",
       "module-02-reactions",

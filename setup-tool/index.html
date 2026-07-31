@@ -44,13 +44,13 @@
     <select id="course-select" onchange="toolRefresh()"></select>
 
     <label for="term-input">Term suffix (keeps each term's completion data separate)</label>
-    <input type="text" id="term-input" placeholder="e.g. 26T3" oninput="toolGenerate()">
+    <input type="text" id="term-input" placeholder="e.g. 26T3"
+           oninput="toolGenerate(); toolGenerateMoodle();">
     <p class="hint">The courses.js key becomes e.g. <code>CVEN2303_26T3</code> —
        use the same value in the Moodle URL's <code>&amp;course=</code> parameter.</p>
 
     <div id="module-picker"></div>
 
-    <button class="tool-btn" onclick="toolGenerate()">Generate courses.js block</button>
     <textarea id="output" readonly
       placeholder="The generated block appears here — copy and paste it into homepage/courses.js"></textarea>
 
@@ -67,9 +67,8 @@
            oninput="toolGenerateMoodle()">
     <p class="hint">Each module links to <code>&lt;base&gt;&lt;folder&gt;/index.html</code>.</p>
 
-    <button class="tool-btn" onclick="toolGenerateMoodle()">Generate Moodle HTML</button>
     <button class="tool-btn" onclick="toolCopyMoodle()"
-            style="background:#007882;margin-left:8px;">Copy to clipboard</button>
+            style="background:#007882;">Copy to clipboard</button>
     <span id="mp-copied" style="margin-left:10px;color:#1ac987;font-weight:600;
           font-size:.85rem;display:none;">Copied ✓</span>
     <textarea id="moodle-output" readonly

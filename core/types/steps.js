@@ -5,36 +5,78 @@
    A correct answer activates the next step. Completing all steps unlocks
    module navigation (this is a quiz-gating type).
 
-   Config fields:
-     title        Heading
-     image        Optional figure above the problem (imageWidth to size it)
-     problem      HTML problem statement (blue-accent box)
-     steps        Array of step objects:
-       instruction   HTML question/prompt
-       image         Optional per-step hint figure
-       unit          Optional unit label beside the input, e.g. "kN"
-       answer        Correct numerical value
-       tolerance     Accepted margin (default 0.01)
-       explanation   Revealed on a correct answer
-     label        Sidebar label
+   SLIDE FIELDS
+     title          Heading
+     problem        HTML problem statement (blue-accent box)
+     image          Optional figure accompanying the problem
+     imageWidth     e.g. "620px" or "80%"   — max width, aspect preserved
+     imageHeight    e.g. "260px"            — max height, aspect preserved
+     imageScale     e.g. 0.7                — 70% of the content width
+     imagePosition  "above" (default) or "below" — figure vs. problem text
+     steps          Array of step objects (below)
+     label          Sidebar label
+
+   STEP FIELDS
+     instruction    HTML question/prompt
+     image          Optional per-step figure
+     imageWidth     \
+     imageHeight     >  same meaning as above, per step
+     imageScale     /
+     imagePosition  "below" (default) or "above" — figure vs. instruction
+     unit           Optional unit label beside the input, e.g. "kN"
+     answer         Correct numerical value
+     tolerance      Accepted margin (default 0.01)
+     explanation    Revealed on a correct answer
+
+   SIZING NOTES
+     • Aspect ratio is always preserved — set ONE of width/height/scale and the
+       other dimension follows.
+     • Setting a width (or scale) lifts the stylesheet's default height cap
+       (320px for the problem figure, 240px for step figures), so a larger
+       width genuinely renders larger.
+     • imageWidth wins if both imageWidth and imageScale are given.
    ============================================================================ */
 
 function renderStepsSlide(slide) {
+
+  // Problem figure — sized via the shared helper, placed above or below
+  const problemFigure = slide.image
+    ? `<img src="${slide.image}" class="problem-image"
+            style="${imageSizeStyle(slide)}" alt="${slide.title}">`
+    : "";
+
+  const problemText = `
+    <div class="problem-statement">
+      ${slide.problem}
+    </div>`;
+
+  const problemBlock = (slide.imagePosition === "below")
+    ? problemText + problemFigure
+    : problemFigure + problemText;
+
   renderLayout(`
     <h2>${slide.title}</h2>
 
-    ${slide.image ? `<img src="${slide.image}" class="problem-image" style="${slide.imageWidth ? `max-width:${slide.imageWidth};` : ""}" alt="${slide.title}">` : ""}
-
-    <div class="problem-statement">
-      ${slide.problem}
-    </div>
+    ${problemBlock}
 
     <div class="steps-container" id="steps-container">
-      ${slide.steps.map((step, i) => `
+      ${slide.steps.map((step, i) => {
+
+        const stepFigure = step.image
+          ? `<img src="${step.image}" class="step-image"
+                  style="${imageSizeStyle(step)}" alt="Step ${i + 1} figure">`
+          : "";
+
+        const stepText = `<p class="step-instruction">${step.instruction}</p>`;
+
+        const stepBlock = (step.imagePosition === "above")
+          ? stepFigure + stepText
+          : stepText + stepFigure;
+
+        return `
         <div class="step ${i > 0 ? "step-inactive" : ""}" id="step-${i}">
           <span class="step-badge">Step ${i + 1} of ${slide.steps.length}</span>
-          <p class="step-instruction">${step.instruction}</p>
-          ${step.image ? `<img src="${step.image}" class="step-image" alt="Step ${i + 1} figure">` : ""}
+          ${stepBlock}
           <div class="step-input-row">
             <input
               type="number"
@@ -53,8 +95,8 @@ function renderStepsSlide(slide) {
             <span class="explanation-tick">✓</span>
             <span>${step.explanation}</span>
           </div>
-        </div>
-      `).join("")}
+        </div>`;
+      }).join("")}
     </div>
 
     <div class="steps-complete steps-complete-hidden" id="steps-complete">

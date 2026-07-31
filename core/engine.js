@@ -61,18 +61,55 @@ function typeDef(slide) {
 // A slide's own  quiz: true/false  in config overrides its type's default.
 function isQuizSlide(index) {
   const s = moduleData[index];
-  if (s.quiz !== undefined) return s.quiz;
-  return Boolean(typeDef(s).isQuiz);
+  if (s.quiz !== undefined) return s.quiz;      // explicit config override wins
+  const def = typeDef(s);
+  // isQuiz may be a boolean, or a function of the slide for types whose
+  // gating depends on their config (e.g. explore + requireAll).
+  return typeof def.isQuiz === "function"
+    ? Boolean(def.isQuiz(s))
+    : Boolean(def.isQuiz);
 }
 
 function getSlideIcon(s) {
   return typeDef(s).icon || "📖";
 }
 
+// ─── Gating on/off (development aid) ───────────────────────────────────────
+//
+// Quiz gating can be switched off so you can jump straight to any slide while
+// building a module. Two ways, checked in this order:
+//
+//   1. URL parameter — add ?dev=1 to the module's address:
+//        …/module-01/index.html?dev=1
+//      Nothing to edit, nothing to remember to undo, and it can never ship
+//      by accident. This is the recommended way to develop.
+//
+//   2. Config override — in config.js, set:
+//        const moduleMeta = { id: "…", gating: false };
+//      Use this only if a module should genuinely never gate for students.
+//
+// When gating is off a "DEV MODE" badge appears, so it's obvious at a glance.
+let _gatingCache = null;   // computed once, on first use
+
+function gatingEnabled() {
+  if (_gatingCache === null) {
+    const params  = new URLSearchParams(window.location.search);
+    const devMode = params.get("dev") === "1" || params.has("nogate");
+    const cfgOff  = (typeof moduleMeta !== "undefined" && moduleMeta.gating === false);
+    _gatingCache  = !(devMode || cfgOff);
+    if (!_gatingCache) {
+      console.log("[engine] Gating DISABLED — all slides are freely navigable.");
+    }
+  }
+  return _gatingCache;
+}
+
 // Returns the index of the first incomplete quiz slide — the current "gate".
 // Slides at indices ≤ this value are accessible; everything beyond is locked.
-// Returns moduleData.length (past the end) when all quizzes are complete.
+// Returns moduleData.length (past the end) when all quizzes are complete,
+// or immediately when gating is switched off.
 function getFirstLockedIndex() {
+  if (!gatingEnabled()) return moduleData.length;   // nothing is locked
   for (let i = 0; i < moduleData.length; i++) {
     if (isQuizSlide(i) && !completedSlides.has(i)) return i;
   }
@@ -98,7 +135,9 @@ function renderLayout(contentHTML) {
 
   // The gate: first incomplete quiz slide. Slides ≤ gate are accessible.
   const lockedFromIndex     = getFirstLockedIndex();
-  const isCurrentQuizLocked = isQuizSlide(currentSlide) && !completedSlides.has(currentSlide);
+  const isCurrentQuizLocked = gatingEnabled()
+                              && isQuizSlide(currentSlide)
+                              && !completedSlides.has(currentSlide);
 
   // If the next slide is the module's end slide, the forward button reads "Finish"
   const next         = moduleData[currentSlide + 1];
@@ -107,7 +146,7 @@ function renderLayout(contentHTML) {
 
   // A type may lock module navigation while mid-interaction (e.g. quiz questions)
   const curDef    = typeDef(moduleData[currentSlide]);
-  const navLocked = curDef.navLocked
+  const navLocked = (gatingEnabled() && curDef.navLocked)
                     ? Boolean(curDef.navLocked(moduleData[currentSlide], currentSlide))
                     : false;
 
@@ -135,7 +174,9 @@ function renderLayout(contentHTML) {
             const gatePastEnd = lockedFromIndex >= moduleData.length - 1;
 
             let showDivider = false;
-            if (gatePastEnd && hasEnd) {
+            if (!gatingEnabled()) {
+              showDivider = false;          // nothing is gated — no boundary to mark
+            } else if (gatePastEnd && hasEnd) {
               showDivider = (i === endIndex - 1);
             } else {
               showDivider = (i === lockedFromIndex) && (i < moduleData.length - 1);
@@ -183,6 +224,8 @@ function renderLayout(contentHTML) {
       <button data-nav="next" onclick="handleForward()" ${currentSlide === moduleData.length - 1 || isCurrentQuizLocked ? "disabled" : ""}>${nextBtnLabel}</button>
     </div>
   `;
+
+  typesetMath(app);   // render any LaTeX in the freshly-inserted HTML
 }
 
 
@@ -213,7 +256,8 @@ function navigateToSlide(index) {
 
   // Don't allow leaving a slide whose type has locked navigation (quiz mid-flow)
   const curDef = typeDef(moduleData[currentSlide]);
-  if (curDef.navLocked && curDef.navLocked(moduleData[currentSlide], currentSlide)) return;
+  if (gatingEnabled() && curDef.navLocked
+      && curDef.navLocked(moduleData[currentSlide], currentSlide)) return;
 
   // Block navigation to any slide beyond the current gate
   if (index > getFirstLockedIndex()) return;
@@ -225,7 +269,9 @@ function navigateToSlide(index) {
 // slide is completed — WITHOUT a full re-render (keeps the student's context).
 function updateLockState() {
   const lockedFromIndex     = getFirstLockedIndex();
-  const isCurrentQuizLocked = isQuizSlide(currentSlide) && !completedSlides.has(currentSlide);
+  const isCurrentQuizLocked = gatingEnabled()
+                              && isQuizSlide(currentSlide)
+                              && !completedSlides.has(currentSlide);
 
   const nextBtn = document.querySelector("[data-nav='next']");
   if (nextBtn) {
@@ -317,6 +363,69 @@ function triggerBuzz(element) {
   element.classList.add("buzz");
 }
 
+// Render LaTeX inside `container` using KaTeX, if KaTeX is loaded.
+//
+// Delimiters supported anywhere in slide content (info blocks, questions,
+// step instructions, explanations, quiz questions, …):
+//     \[ ... \]  or  $$ ... $$   → display maths (centred, own line)
+//     \( ... \)  or   $ ... $    → inline maths (within a sentence)
+//
+// NOTE on literal dollar signs: because $ … $ is enabled, a pair of real
+// dollar signs in one sentence (e.g. "costs $50, or $80 installed") would be
+// read as maths. KaTeX's auto-render has no backslash escape for this, so to
+// show literal dollars wrap them in class="nomath":
+//     <span class="nomath">$50 per m³</span>
+// (\( … \) is an alternative delimiter if you'd rather avoid $ entirely.)
+//
+// If KaTeX isn't loaded (e.g. offline, or the CDN is blocked), this is a
+// silent no-op and the raw LaTeX shows as plain text — content stays readable.
+function typesetMath(container) {
+  if (typeof renderMathInElement !== "function") return;   // KaTeX not present
+  try {
+    renderMathInElement(container, {
+      delimiters: [
+        // $$ must be listed before $ so display maths matches first
+        { left: "\\[", right: "\\]", display: true  },
+        { left: "$$",  right: "$$",  display: true  },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "$",   right: "$",   display: false }
+      ],
+      throwOnError: false,      // a bad expression shows in red, never breaks the page
+      ignoredTags:    ["script", "noscript", "style", "textarea", "pre", "code"],
+      ignoredClasses: ["nomath"]   // opt-out hatch for literal $ signs
+    });
+  } catch (err) {
+    console.warn("[engine] Math typesetting skipped:", err);
+  }
+}
+
+// Build an inline style string for sizing a figure, from an object that may
+// carry any of: imageScale, imageWidth, imageHeight.
+//
+//   imageScale   0.7      → 70% of the available content width
+//   imageWidth   "480px"  → explicit max width (also accepts "70%")
+//   imageHeight  "260px"  → explicit max height
+//
+// Aspect ratio is always preserved (the stylesheet sets height:auto).
+// If a width or scale is given without a height, the stylesheet's default
+// max-height cap is lifted, so the width you set is the width you get.
+// imageWidth takes precedence over imageScale if both are supplied.
+function imageSizeStyle(o) {
+  if (!o) return "";
+  const parts = [];
+
+  if (o.imageScale)  parts.push(`max-width:${Math.round(o.imageScale * 100)}%`);
+  if (o.imageWidth)  parts.push(`max-width:${o.imageWidth}`);
+
+  if (o.imageHeight) {
+    parts.push(`max-height:${o.imageHeight}`);
+  } else if (o.imageScale || o.imageWidth) {
+    parts.push("max-height:none");   // let the chosen width govern
+  }
+
+  return parts.length ? parts.join(";") + ";" : "";
+}
+
 // Fisher-Yates shuffle; returns a new array (doesn't mutate the input).
 function shuffleArray(arr) {
   const a = arr.slice();
@@ -328,8 +437,25 @@ function shuffleArray(arr) {
 }
 
 
+// Shows a small fixed badge whenever gating is switched off, so a dev-mode
+// session is never mistaken for broken gating (or demoed by accident).
+// Attached to <body>, not #app, so it survives full-screen slide renders.
+function showDevBadge() {
+  if (gatingEnabled()) return;
+  if (document.getElementById("dev-mode-badge")) return;   // already shown
+  const badge = document.createElement("div");
+  badge.id = "dev-mode-badge";
+  badge.textContent = "DEV MODE · gating off";
+  badge.title = "Quiz gating is disabled. Remove ?dev=1 from the URL to test the student experience.";
+  document.body.appendChild(badge);
+}
+
+
 // ─── Boot ──────────────────────────────────────────────────────────────────
 // DOMContentLoaded fires after all synchronous <script> tags have executed,
 // so every type is registered and moduleData exists by the time this runs.
 
-document.addEventListener("DOMContentLoaded", renderSlide);
+document.addEventListener("DOMContentLoaded", () => {
+  showDevBadge();
+  renderSlide();
+});

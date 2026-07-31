@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 636.99 222.02">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        stroke-width: 2px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #231f20;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-3, .cls-4 {
+        fill: none;
+      }
+
+      .cls-5, .cls-6, .cls-7, .cls-8 {
+        fill: #231f20;
+        font-size: 25.08px;
+      }
+
+      .cls-5, .cls-9, .cls-10 {
+        font-family: TimesNewRomanPSMT, 'Times New Roman';
+      }
+
+      .cls-2 {
+        fill: #f1f2f2;
+      }
+
+      .cls-11, .cls-6, .cls-7, .cls-12, .cls-13 {
+        font-family: TimesNewRomanPS-ItalicMT, 'Times New Roman';
+        font-style: italic;
+      }
+
+      .cls-14 {
+        fill: #ed1c24;
+      }
+
+      .cls-6, .cls-12 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-9 {
+        letter-spacing: 0em;
+      }
+
+      .cls-3 {
+        stroke-width: .5px;
+      }
+
+      .cls-13 {
+        letter-spacing: 0em;
+      }
+
+      .cls-4 {
+        stroke: #ed1c24;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <line class="cls-1" x1="16.89" y1="110.49" x2="618.7" y2="110.49"/>
+      <polygon class="cls-2" points="18.66 114.67 1.63 148.1 35.7 148.1 18.66 114.67"/>
+      <polygon class="cls-2" points="616.93 114.67 599.89 138.06 633.96 138.06 616.93 114.67"/>
+      <circle class="cls-2" cx="608.07" cy="148.1" r="9.4"/>
+      <circle class="cls-2" cx="626.58" cy="148.39" r="9.4"/>
+      <g>
+        <line class="cls-4" x1="148.54" y1="35.26" x2="148.54" y2="106.96"/>
+        <polygon class="cls-14" points="148.54 110.49 146.5 105.51 148.54 106.69 150.57 105.51 148.54 110.49"/>
+      </g>
+      <g>
+        <line class="cls-4" x1="317.79" y1="35.26" x2="317.79" y2="106.96"/>
+        <polygon class="cls-14" points="317.79 110.49 315.76 105.51 317.79 106.69 319.83 105.51 317.79 110.49"/>
+      </g>
+      <g>
+        <line class="cls-4" x1="468.25" y1="35.26" x2="468.25" y2="106.96"/>
+        <polygon class="cls-14" points="468.25 110.49 466.21 105.51 468.25 106.69 470.28 105.51 468.25 110.49"/>
+      </g>
+      <g>
+        <line class="cls-4" x1="393.02" y1="35.26" x2="393.02" y2="106.96"/>
+        <polygon class="cls-14" points="393.02 110.49 390.99 105.51 393.02 106.69 395.05 105.51 393.02 110.49"/>
+      </g>
+      <line class="cls-4" x1="317.79" y1="35.26" x2="468.25" y2="35.26"/>
+      <text class="cls-6" transform="translate(12.54 98.95)"><tspan x="0" y="0">A</tspan></text>
+      <text class="cls-7" transform="translate(157.25 100.57)"><tspan x="0" y="0">B</tspan></text>
+      <text class="cls-7" transform="translate(289.36 101.49)"><tspan x="0" y="0">C</tspan></text>
+      <text class="cls-7" transform="translate(479.04 101.87)"><tspan x="0" y="0">D</tspan></text>
+      <text class="cls-7" transform="translate(609.15 98.95)"><tspan x="0" y="0">E</tspan></text>
+      <text class="cls-8" transform="translate(104.97 22.22)"><tspan class="cls-12" x="0" y="0">P</tspan><tspan class="cls-13" x="14.86" y="0" xml:space="preserve"> = </tspan><tspan class="cls-9" x="44.32" y="0">12 kN</tspan></text>
+      <text class="cls-8" transform="translate(333.72 20.84)"><tspan class="cls-11" x="0" y="0">w = </tspan><tspan class="cls-10" x="46.18" y="0">4 kN/m</tspan></text>
+      <line class="cls-3" x1="16.89" y1="186.06" x2="618.7" y2="186.06"/>
+      <line class="cls-3" x1="618.7" y1="179.6" x2="618.7" y2="192.75"/>
+      <line class="cls-3" x1="317.79" y1="179.48" x2="317.79" y2="192.64"/>
+      <line class="cls-3" x1="148.54" y1="179.48" x2="148.54" y2="192.64"/>
+      <line class="cls-3" x1="468.25" y1="179.48" x2="468.25" y2="192.64"/>
+      <line class="cls-3" x1="16.89" y1="179.48" x2="16.89" y2="192.64"/>
+      <text class="cls-5" transform="translate(60.35 212.65)"><tspan x="0" y="0">2 m</tspan></text>
+      <text class="cls-5" transform="translate(212.93 212.65)"><tspan x="0" y="0">3 m</tspan></text>
+      <text class="cls-5" transform="translate(373.99 212.93)"><tspan x="0" y="0">3 m</tspan></text>
+      <text class="cls-5" transform="translate(531.15 214.33)"><tspan x="0" y="0">2 m</tspan></text>
+    </g>
+  </g>
+</svg>

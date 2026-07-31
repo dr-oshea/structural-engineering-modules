@@ -16,7 +16,7 @@ function renderRevealSlide(slide) {
   renderLayout(`
     <h2>${slide.title}</h2>
 
-    ${slide.image ? `<img src="${slide.image}" class="problem-image" style="${slide.imageWidth ? `max-width:${slide.imageWidth};` : ""}" alt="${slide.title}">` : ""}
+    ${slide.image ? `<img src="${slide.image}" class="problem-image" style="${imageSizeStyle(slide)}" alt="${slide.title}">` : ""}
 
     <div class="problem-statement">
       ${slide.prompt}

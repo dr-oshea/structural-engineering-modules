@@ -120,7 +120,7 @@ function renderQuizQuestion() {
       </div>
     </div>
 
-    ${q.image ? `<img src="${q.image}" class="problem-image" style="${q.imageWidth ? `max-width:${q.imageWidth};` : ""}" alt="Question ${num}">` : ""}
+    ${q.image ? `<img src="${q.image}" class="problem-image" style="${imageSizeStyle(q)}" alt="Question ${num}">` : ""}
 
     <div class="mcq-question">
       ${q.question}

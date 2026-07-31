@@ -88,7 +88,6 @@ button, .card-back, .step-badge {
      plus a thin black sliver along its edge. Hard-stop gradients = crisp edges. */
   background:
     linear-gradient(112deg, var(--unsw-yellow) 0 34%, transparent 34.05%),
-    /*linear-gradient(112deg, var(--unsw-black) 0 34.55%, transparent 34.6%),*/
     var(--unsw-white);
 }
 
@@ -1349,4 +1348,249 @@ button:disabled {
   border-top: 1px solid #e2e8f0;
   font-size: 0.95rem;
   color: #4a5568;
+}
+
+/* ===== Info blocks: image captions ===== */
+
+.info-block-figure {
+  margin: 4px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-block-caption {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+
+/* ===== LaTeX (KaTeX) ===== */
+
+/* Display maths sits centred with breathing room */
+.katex-display {
+  margin: 0.4em 0 !important;
+}
+
+/* Keep equation blocks readable if KaTeX fails to load (raw LaTeX shows) */
+.info-block-equation .katex {
+  font-size: 1.15em;
+}
+
+/* Long equations scroll rather than overflowing the slide */
+.katex-display > .katex {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 0;
+}
+
+
+/* ===== PowerPoint / imported slide type ===== */
+
+.pptslide-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.pptslide-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.10);
+  background: var(--surface-card);
+}
+
+.pptslide-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.10);
+  background: var(--surface-card);
+}
+
+.pptslide-pdf {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.pptslide-caption {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+
+/* ===== Dev-mode badge (shown only when quiz gating is switched off) ===== */
+
+#dev-mode-badge {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 5000;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: var(--unsw-orange);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.22);
+  pointer-events: none;          /* never intercepts clicks */
+  user-select: none;
+}
+
+
+/* ===== Explore type (annotated diagram with an explanation panel) ===== */
+
+.explore-stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 860px;
+  margin: 8px auto 4px;
+  line-height: 0;
+}
+
+.explore-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+}
+
+/* Numbered/lettered marker, centred on its (x, y) point */
+.explore-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--unsw-white);
+  background: var(--unsw-indigo);
+  color: var(--unsw-white);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+  transition: transform 0.12s ease, background 0.15s ease;
+  animation: exploreNudge 2.4s ease-in-out infinite;
+}
+
+.explore-marker:hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  background: #2f4ea8;
+}
+
+/* Gentle pulse draws the eye to points not yet opened */
+@keyframes exploreNudge {
+  0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 0 rgba(63,97,196,0.5); }
+  60%      { box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 10px rgba(63,97,196,0); }
+}
+
+/* Already opened — calmer, so remaining points stand out */
+.explore-marker-visited {
+  background: var(--unsw-teal);
+  animation: none;
+}
+
+/* Currently shown in the panel */
+.explore-marker-active {
+  background: var(--unsw-black);
+  border-color: var(--unsw-yellow);
+  box-shadow: 0 0 0 4px rgba(255,220,0,0.55), 0 2px 8px rgba(0,0,0,0.3);
+  animation: none;
+}
+
+/* ── Explanation panel ── */
+
+.explore-panel {
+  text-align: left;
+  max-width: 860px;
+  margin: 22px auto 0;
+  padding: 18px 22px;
+  min-height: 96px;
+  background: #f8fafc;
+  border: 1px solid var(--border-soft);
+  border-left: 4px solid var(--unsw-indigo);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #2d3748;
+}
+
+.explore-panel-prompt {
+  margin: 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.explore-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.explore-panel-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--unsw-black);
+  color: var(--unsw-white);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.explore-panel-title {
+  font-weight: 700;
+  color: var(--unsw-black);
+  font-size: 1rem;
+}
+
+.explore-panel-body p:first-child { margin-top: 0; }
+.explore-panel-body p:last-child  { margin-bottom: 0; }
+
+/* ── Progress line ── */
+
+.explore-progress {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.explore-progress-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.explore-progress-done {
+  color: #0f7a52;
+  font-weight: 500;
 }

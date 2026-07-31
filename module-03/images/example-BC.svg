@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 289.86 112.52">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-5 {
+        stroke: #231f20;
+      }
+
+      .cls-1, .cls-3 {
+        stroke-width: 2px;
+      }
+
+      .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14 {
+        fill: #231f20;
+      }
+
+      .cls-7, .cls-8, .cls-15, .cls-16, .cls-11, .cls-14 {
+        font-family: TimesNewRomanPS-ItalicMT, 'Times New Roman';
+        font-style: italic;
+      }
+
+      .cls-7, .cls-12, .cls-14 {
+        font-size: 12px;
+      }
+
+      .cls-7, .cls-17 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-8, .cls-9, .cls-11, .cls-13 {
+        font-size: 12.31px;
+      }
+
+      .cls-8, .cls-16 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-2 {
+        stroke-dasharray: 2.03 2.03;
+      }
+
+      .cls-2, .cls-5 {
+        stroke-width: .5px;
+      }
+
+      .cls-18 {
+        fill: #ed1c24;
+      }
+
+      .cls-3 {
+        stroke: #27aae1;
+      }
+
+      .cls-4 {
+        stroke: #39b54a;
+        stroke-width: 1.5px;
+      }
+
+      .cls-19 {
+        fill: #39b54a;
+      }
+
+      .cls-20 {
+        fill: #27aae1;
+      }
+
+      .cls-13, .cls-21, .cls-22 {
+        font-family: TimesNewRomanPSMT, 'Times New Roman';
+      }
+
+      .cls-21 {
+        letter-spacing: 0em;
+      }
+
+      .cls-6 {
+        stroke: #ed1c24;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <line class="cls-5" x1="164.6" y1="11.03" x2="164.6" y2="12.03"/>
+      <line class="cls-2" x1="164.6" y1="14.05" x2="164.6" y2="94.12"/>
+      <line class="cls-5" x1="164.6" y1="95.13" x2="164.6" y2="96.13"/>
+    </g>
+    <line class="cls-1" x1="16.83" y1="53.58" x2="164.6" y2="53.58"/>
+    <g>
+      <line class="cls-6" x1="81.48" y1="16.64" x2="81.48" y2="50.05"/>
+      <polygon class="cls-18" points="81.48 53.58 79.44 48.6 81.48 49.78 83.51 48.6 81.48 53.58"/>
+    </g>
+    <text class="cls-8" transform="translate(14.69 47.91)"><tspan x="0" y="0">A</tspan></text>
+    <text class="cls-11" transform="translate(85.76 48.71)"><tspan x="0" y="0">B</tspan></text>
+    <text class="cls-9" transform="translate(60.08 10.23)"><tspan class="cls-16" x="0" y="0">P</tspan><tspan class="cls-15" x="7.3" y="0" xml:space="preserve"> = </tspan><tspan class="cls-21" x="21.77" y="0">12 kN</tspan></text>
+    <line class="cls-5" x1="16.83" y1="95.69" x2="81.48" y2="95.69"/>
+    <line class="cls-5" x1="81.48" y1="92.46" x2="81.48" y2="98.92"/>
+    <line class="cls-5" x1="16.83" y1="92.46" x2="16.83" y2="98.92"/>
+    <text class="cls-13" transform="translate(38.17 108.75)"><tspan x="0" y="0">2 m</tspan></text>
+    <g>
+      <line class="cls-5" x1="16.83" y1="86.75" x2="161.07" y2="86.75"/>
+      <polygon class="cls-10" points="164.6 86.75 159.62 88.78 160.8 86.75 159.62 84.72 164.6 86.75"/>
+    </g>
+    <line class="cls-5" x1="16.77" y1="83.52" x2="16.77" y2="89.98"/>
+    <text class="cls-11" transform="translate(145.15 83.52)"><tspan x="0" y="0">x</tspan></text>
+    <g>
+      <line class="cls-3" x1="16.99" y1="81.83" x2="16.99" y2="62.98"/>
+      <polygon class="cls-20" points="16.99 55.91 21.06 65.86 16.99 63.5 12.93 65.86 16.99 55.91"/>
+    </g>
+    <text class="cls-14" transform="translate(.27 78.74)"><tspan x="0" y="0">R</tspan></text>
+    <text class="cls-7" transform="translate(7.6 82.73) scale(.58)"><tspan x="0" y="0">A</tspan></text>
+    <g>
+      <path class="cls-4" d="M170.16,67.09c4.42-2.69,7.08-7.54,6.92-12.66-.11-3.51-1.51-6.24-3.02-8.19"/>
+      <polygon class="cls-19" points="170.16 42.65 177.64 45.65 174.24 46.61 173.39 50.03 170.16 42.65"/>
+    </g>
+    <text class="cls-14" transform="translate(187.25 57.69)"><tspan x="0" y="0">M(x) = R</tspan></text>
+    <text class="cls-14" transform="translate(231.99 61.68) scale(.58)"><tspan class="cls-17" x="0" y="0">A</tspan><tspan x="7.11" y="0"> </tspan></text>
+    <text class="cls-12" transform="translate(237.89 57.69)"><tspan class="cls-15" x="0" y="0">x </tspan><tspan class="cls-22" x="8.33" y="0">- </tspan><tspan class="cls-15" x="15.32" y="0">P(x - 2)</tspan></text>
+  </g>
+</svg>

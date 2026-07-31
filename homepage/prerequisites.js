@@ -71,8 +71,8 @@ const COURSE_GRAPH = {
                 requires: ["CVEN2303", "CVEN2002"], teaches: [] },
   "CVEN9824": { name: "Advanced Materials Technology",
                 requires: ["MATS1101", "ENGG2400"], teaches: [] },
-  "CVEN9826": { name: "Advanced Mechanics of Structures and Materials ",
-                requires: ["MATH2018, ENGG2400"], teaches: [] },              
+  "CVEN9826": { name: "Advanced Mechanics of Structures and Materials",
+                requires: ["MATH2018", "ENGG2400"], teaches: [] },              
 
 };
 
@@ -104,6 +104,23 @@ function getPrerequisiteCategories(courseCode) {
    Every catalog module whose category is taught by any prior course.        */
 function getDefaultModuleIds(courseCode) {
   const cats = new Set(getPrerequisiteCategories(courseCode));
+  const ids  = CATALOG.modules.filter(m => cats.has(m.category)).map(m => m.id);
+  return sortModuleIds(ids);
+}
+
+/* ── Direct children: courses that list `courseCode` in their requires ─────
+   The forward edges of the graph. Used by the "Before You Begin" Moodle panel
+   to show where a course leads next.                                        */
+function getDirectDescendants(courseCode) {
+  return Object.keys(COURSE_GRAPH)
+    .filter(code => (COURSE_GRAPH[code].requires || []).includes(courseCode));
+}
+
+/* ── Modules taught by a SINGLE course, in catalog order ───────────────────
+   (the categories that course teaches -> their catalog modules). Used to list
+   the refresh modules under each individual prerequisite in the Moodle panel. */
+function getModuleIdsTaughtBy(courseCode) {
+  const cats = new Set((COURSE_GRAPH[courseCode] || {}).teaches || []);
   const ids  = CATALOG.modules.filter(m => cats.has(m.category)).map(m => m.id);
   return sortModuleIds(ids);
 }

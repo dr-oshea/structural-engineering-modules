@@ -1,19 +1,37 @@
 /* ============================================================================
    types/info.js — informational content slide.
 
-   Two supported formats:
+   Build a slide from any number of BLOCKS, in any order. Mix freely, e.g.
+   text → image → text → image → image → equation.
 
-   NEW (styled blocks):
      blocks: [
-       { type: "text",     html: `<p>...</p>` },          // blue-accent box
-       { type: "equation", html: `V(x) = dM/dx` },        // teal, centred
-       { type: "image",    src: "images/x.svg", width: "400px", alt: "..." }
+       { type: "text",     html: `<p>…</p>` },
+       { type: "image",    src: "images/beam.svg", width: "420px",
+                           alt: "Simply supported beam", caption: "Figure 1" },
+       { type: "equation", latex: String.raw`M_{max} = \frac{wL^2}{8}` },
+       { type: "text",     html: `<p>More explanation…</p>` }
      ]
 
-   LEGACY (still works):
-     content: `<p>...</p>`        // wrapped in a single styled text block
-     image:   "images/x.svg"      // optional figure below the content
-     imageWidth: "480px"          // optional
+   BLOCK TYPES
+     text      html      HTML string (paragraphs, lists, <strong>, …)
+                         Inline maths allowed: \( … \) or $ … $
+     image     src       path relative to the module folder, e.g. "images/x.svg"
+               width     optional max-width, e.g. "420px"
+               alt       optional alt text (accessibility)
+               caption   optional caption shown under the image
+     equation  latex     LaTeX, rendered centred as display maths (preferred)
+               html      legacy: plain HTML instead of LaTeX (still supported)
+
+   WRITING LATEX IN config.js
+     Use String.raw`…` so backslashes survive:
+         { type: "equation", latex: String.raw`\frac{wL^2}{8}` }
+     With a normal template literal you must double every backslash
+     (`\\frac`), because \f, \n, \t etc. are JavaScript escape characters.
+
+   LEGACY FORMAT (still works, no need to convert existing slides):
+     content:    `<p>…</p>`      single HTML string, wrapped in one text block
+     image:      "images/x.svg"  optional figure below the content
+     imageWidth: "480px"
 
    Other fields: title, label
    ============================================================================ */
@@ -24,17 +42,34 @@ function renderInfoSlide(slide) {
 
   if (Array.isArray(slide.blocks)) {
     bodyHTML = slide.blocks.map(block => {
+
+      // ── Image block ──
       if (block.type === "image") {
-        return `<img src="${block.src}" class="info-block-image"
-                     style="${block.width ? `max-width:${block.width};` : ""}"
-                     alt="${block.alt || ""}">`;
+        const img = `<img src="${block.src}" class="info-block-image"
+                          style="${block.width ? `max-width:${block.width};` : ""}"
+                          alt="${block.alt || ""}">`;
+        return block.caption
+          ? `<figure class="info-block-figure">${img}
+               <figcaption class="info-block-caption">${block.caption}</figcaption>
+             </figure>`
+          : img;
       }
+
+      // ── Equation block ──
+      // `latex` is wrapped in \[ … \] so the engine's typesetMath() renders it
+      // as centred display maths. `html` remains supported for legacy slides.
       if (block.type === "equation") {
-        return `<div class="info-block info-block-equation">${block.html}</div>`;
+        const body = block.latex !== undefined
+          ? `\\[${block.latex}\\]`
+          : (block.html || "");
+        return `<div class="info-block info-block-equation">${body}</div>`;
       }
-      // default: text block (question-style box)
-      return `<div class="info-block">${block.html}</div>`;
+
+      // ── Text block (default) ──
+      return `<div class="info-block">${block.html || ""}</div>`;
+
     }).join("");
+
   } else {
     // Legacy single content string — wrap it in one styled block
     bodyHTML = `<div class="info-block">${slide.content || ""}</div>`;

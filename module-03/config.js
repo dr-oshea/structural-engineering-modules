@@ -18,8 +18,7 @@ const moduleData = [
     title: "Drawing Bending Moment Diagrams",
     image: "images/context-beam-engineer.jpg",
     text: `<p>Drawing bending moment diagrams lets engineers locate and calculate the maximum
-          deflections and bending stresses in a member.</p>
-          <p> It is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
+          deflections and bending stresses in a member. It is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
   },
 
 
@@ -29,17 +28,43 @@ const moduleData = [
     label: "What is a bending moment?",
     title: "What is a Bending Moment?",
 
-    content: `
-      <p>Beams bend!</p>
+    blocks: [
+      { type: "text",
+        html: `<p>Transverse loadings on a member cause bending. An internal bending moment measures the <strong>resistance of a material to changes in curvature</strong>, at a given location in the structure.</p>`},
+      
+      { type: "image",
+        src:  "images/bm-01.svg",
+        width:  "800px",
+        alt:  "Taking bending moments",
+        caption:  "(A) A structure with transverse loads, (B) Sectioning the structure at X-X, (C) Bending moment diagram"},
 
-      <ul>
-        <li>Equilibrium</li>
-        <li>Internal forces</li>
-        <li>Load paths</li>
-      </ul>
+      { type: "text",
+        html: `<p>A <strong>bending moment diagram (BMD)</strong> shows the magnitude of internal bending moment at all locations in a structure.</p>`}
+  ]
+  },
+
+  // MCQ SLIDE:   Quiz on calculating bending moment
+  {
+    type:  "mcq",
+    label: "Quiz: Find Bending Moment",
+    title: "Multiple Choice: Calculating Bending Moment",
+
+    image: "images/mcq-01.svg",
+
+    question: `
+      <p>
+        A simply supported beam of span <strong>8 m</strong> carries a
+        <strong>uniformly distributed load of 10 kN/m</strong> over its entire length. The reactions are shown on the figure. <strong>What is the bending moment at Point C?</strong></p>
     `,
 
-    image: "images/truss.svg"
+    options: [
+      { text: "40 kNm"  },
+      { text: "80 kNm",  correct: true },
+      { text: "160 kNm" },
+      { text: "320 kNm" }
+    ],
+
+    explanation: `Take a cut at point C, and use equilibrium on either the left section or right section.`
   },
 
 
@@ -52,193 +77,45 @@ const moduleData = [
     blocks: [
       {
         type: "text",
-        html: `<p>Shear force is the derivative of the bending moment. This means
-               the slope of the bending moment diagram at any point equals the
-               shear force at that point.</p>`
+        html: `<p>Note that Shear Force is the derivative of the bending moment. This means
+               the <strong>slope of the bending moment diagram at any point equals the
+               shear force at that point</strong>.</p>`
       },
       {
         type: "equation",
-        html: `V(x) = dM(x) / dx`
+        latex: String.raw`V(x) = \frac{dM(x)}{dx}`
       },
       {
         type: "text",
-        html: `<p>We use this relationship to:</p>
+        html: `<p>The change in Bending Moment between two points A and B can be found using the <strong>area beneath the SFD</strong></p>`
+      },
+      {
+        type: "equation",
+        latex: String.raw`M_B = M_A + \int_{x_A}^{x_B} V(x){dx}`
+      },
+      {
+        type: "text",
+        html: `<p>We can use these relationships to:</p>
                <ul>
                  <li>Locate maximum bending moments (where V = 0)</li>
-                 <li>Sketch one diagram from the other</li>
+                 <li>Sketch the BMD diagram from the SFD</li>
                  <li>Check the consistency of our results</li>
                </ul>`
       }
     ]
   },
 
-  {
-    type:  "steps",
-    label: "Worked Example: Beam Reactions",
-    title: "Simply Supported Beam — Finding Reactions",
 
-    image: "images/module-01_01.svg",   // beam figure shown above the problem
-  
-    problem: `
-      <p>
-        A simply supported beam <strong>AB</strong> has a span of <strong>6 m</strong>.
-        A point load of <strong>12 kN</strong> acts vertically downward at a point
-        <strong>2 m from A</strong>.
-      </p>
-      <p>Work through the steps below to find the support reactions and the
-      maximum bending moment.</p>
-    `,
-  
-    steps: [
-  
-      {
-        instruction: `Taking moments about <strong>A</strong>, find the vertical
-                      reaction at <strong>B</strong>.
-                      <br><em>Hint: ΣM<sub>A</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      4,
-        tolerance:   0.05,
-        explanation: `ΣM_A = 0 → R_B × 6 = 12 × 2 = 24 → R_B = 24 ÷ 6 = <strong>4 kN</strong>`
-      },
-  
-      {
-        instruction: `Using vertical equilibrium, find the reaction at <strong>A</strong>.
-                      <br><em>Hint: ΣF<sub>y</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      8,
-        tolerance:   0.05,
-        explanation: `ΣF_y = 0 → R_A + R_B = 12 → R_A = 12 − 4 = <strong>8 kN</strong>`
-      },
-  
-      {
-        instruction: `Calculate the bending moment at the point load
-                      (i.e. at <strong>x = 2 m</strong> from A).
-                      <br><em>Hint: consider only the forces to the left of the section.</em>`,
-        image:       "images/module-01_step3_cut.svg",  // optional per-step hint figure
-        unit:        "kNm",
-        answer:      16,
-        tolerance:   0.05,
-        explanation: `M(x=2) = R_A × 2 = 8 × 2 = <strong>16 kNm</strong>
-                      — this is also the peak of the bending moment diagram.`
-      }
- 
-    ]
-  },
-
-  
-  // CARDS:   Extra Info on Bending Moment
-  {
-    type: "cards",
-    label: "Key Concepts",
-    title: "Key Concepts",
-
-    intro: `<p>Here are three foundational concepts that underpin bending moment
-            analysis. <strong>Click each card</strong> to reveal its definition.</p>`,
-
-    cards: [
-      {
-        front: "📐 Equilibrium",
-        back: "Sum of forces = 0 and sum of moments = 0"
-      },
-      {
-        front: "🧩 Free Body Diagrams",
-        back: "Used to isolate and understand forces in structures"
-      },
-      {
-        front: "🏗️ Load Paths",
-        back: "Describes how forces travel through structures"
-      }
-    ]
-  },
-
-
-  // MCQ SLIDE:   Quiz on max bending moment
-  {
-    type:  "mcq",
-    label: "Quiz: Max Bending Moment",
-    title: "Multiple Choice: Bending Moment",
-
-    question: `
-      <p>
-        A simply supported beam of span <strong>8 m</strong> carries a
-        <strong>uniformly distributed load of 10 kN/m</strong> over its entire length.
-      </p>
-      <p>What is the <strong>maximum bending moment</strong> in the beam?</p>
-    `,
-
-    options: [
-      { text: "40 kNm"  },
-      { text: "80 kNm",  correct: true },
-      { text: "160 kNm" },
-      { text: "320 kNm" }
-    ],
-
-    explanation: `M_max = wL² / 8 = 10 × 8² / 8 = <strong>80 kNm</strong>, occurring at midspan.`
-  },
-
-
-  // ── EXAMPLE: image-based MCQ (uncomment & supply SVGs to use) ──────────────
-  // {
-  //   type:  "mcq",
-  //   label: "Quiz: Identify the BMD",
-  //   title: "Which is the correct Bending Moment Diagram?",
-  //   image: "images/module-01_bmd_question.svg",   // the beam + loading shown above options
-  //   question: `<p>For the beam shown above, select the correct bending moment diagram.</p>`,
-  //   options: [
-  //     { image: "images/bmd_option_a.svg" },
-  //     { image: "images/bmd_option_b.svg", correct: true },
-  //     { image: "images/bmd_option_c.svg" },
-  //     { image: "images/bmd_option_d.svg" }
-  //   ],
-  //   explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
-  // },
-
-    // EXAMPLE GEOGEBRA
-    {
-    type:  "embed",
-    label: "Interactive: Mohr's Circle",
-    title: "Drag the slider to transform the stresses",
-  
-    intro: `<p>Please wait a moment for the applet to load. Try rotating the element and observing how the values of stress change. When are the normal stresses maximum and minimum?</p>`,
-  
-    src:         "https://www.geogebra.org/material/iframe/id/xjmmtgqt/width/1203/height/768/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false",
-    aspectRatio: "16 / 10",          // optional — default is 16/9
-    maxWidth:    "820px",            // optional
-    caption:     "GeoGebra applet — interact directly above."
-  },
-
-  // EXAMPLE REVEAL
-  {
-    type:   "reveal",
-    label:  "Try it: Reaction at B",
-    title:  "Quick Check — Reaction at B",
-
-    // image:     "images/module-01_01.svg",   // optional figure above the prompt
-    // imageWidth:"480px",
-
-    prompt: `<p>For the beam from the worked example (6 m span, 12 kN load at 2 m
-             from A), have a go at finding the reaction at <strong>B</strong> on
-             paper. When you're ready, reveal the worked solution to check your
-             method.</p>`,
-
-    buttonText: "Show solution",     // optional (default "Show solution")
-    hideText:   "Hide solution",     // optional (default "Hide solution")
-
-    answer: `<p><strong>Taking moments about A (ΣM<sub>A</sub> = 0):</strong></p>
-             <p>R<sub>B</sub> × 6 = 12 × 2 = 24</p>
-             <p>R<sub>B</sub> = 24 ÷ 6 = <strong>4 kN</strong></p>`
-  },
-
-  // EXAMPLE HOTSPOT
+  // HOTSPOT: Location of maximum moment
   {
     type:  "hotspot",
-    label: "Find the Maximum Moment",
+    label: "Find the Location of Maximum Moment",
     title: "Where is the Bending Moment greatest?",
   
-    prompt: `<p>Click the point on the beam where the <strong>bending moment is
-            maximum</strong>.</p>`,
+    prompt: `<p>The SFD for the beam is shown below. Click the point on the beam where the <strong>bending moment is
+            maximum value</strong>.</p>`,
   
-    image:    "images/module-01_01.svg",
+    image:    "images/hotspot-01.svg",
     maxWidth: "700px",               // optional
   
     hotspots: [
@@ -247,10 +124,266 @@ const moduleData = [
       { x: 78, y: 40, w: 12, h: 20 }                  // another wrong region
     ],
   
-    explanation: `The maximum bending moment occurs under the point load, where
-                  the shear force passes through zero.`
+    explanation: `Using M = dV / dx, the maximum bending moment occurs where
+                  the shear force diagram passes through zero. <strong>Using V(x) = 0 can solve for the location of this maximum moment.</strong>`
+  },
+  
+
+  // INFO SLIDE:   Bending moment on the tension side
+  {
+    type: "info",
+    label: "BMD on Tension Side",
+    title: "Drawing the Bending Moment Diagram on the Tension Side",
+
+    blocks: [
+      {
+        type: "text",
+        html: `<p>It is conventional for structural engineers to sketch the BMD on the <strong>tension side</strong> of a structure.</p>
+        <p>When a beam bends, one side is in tension, the other in compression. Drawing the BMD with positive values on the tension side gives allows engineers a quick visual tool to understanding regions of tension and compression.</p>
+        <p>This for example, helps to locate where tensile steel reinforcement might be needed in a concrete member.</p>`
+      }
+    ]
   },
 
+  //  EXAMPLE: image-based MCQ (uncomment & supply SVGs to use) ──────────────
+  {
+    type:  "mcq",
+    label: "Quiz: Identify the BMD",
+    title: "Which is the correct Bending Moment Diagram?",
+    image: "images/module-01_bmd_question.svg",   // the beam + loading shown above options
+    question: `<p>For the beam shown above, select the correct bending moment diagram.</p>`,
+    options: [
+      { image: "images/bmd_option_a.svg" },
+      { image: "images/bmd_option_b.svg", correct: true },
+      { image: "images/bmd_option_c.svg" },
+      { image: "images/bmd_option_d.svg" }
+    ],
+    explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
+  },
+
+  
+  // INFO SLIDE:   Drawing BMS: Method 1
+  {
+    type: "info",
+    label: "Method 1: Algebraic",
+    title: "Drawing the BMD using BM Functions",
+
+    blocks: [
+      {
+        type: "text",
+        html: `<p>There are two main ways to draw a BMD. The first is to determine the bending moment function $M(x)$ for ranges of $x$ that divide different members or where loading type changes. These functions can then be plotted to form the BMD.</p>
+        <p> For the beam below, we would need to find bending moment functions for the ranges</p>
+        <ul>
+        <li> A to B </li>
+        <li> B to C (function changes after B since point load is introduced)</li>
+        <li> C to D (function changes after C since UDL is introduced)</li>
+        <li> C to E (function changes after D since UDL finishes)</li>`
+      },
+      
+      {
+        type: "image",
+        src: "images/example-01.svg",
+        width:  "1200px",
+        alt:  "Beam with UDL and point load",
+        caption:  "Fig. 1 - An example beam with UDL and point load",
+      },
+
+      {
+        type: "text",
+        html: `<p><strong>Note:</strong> For each region, we can define $x$ as left-to-right, or right-to-left, it does not matter, so long as we use a consistent definition of positive internal bending moment, and take care when plotting all functions on a single BMD</p>`
+      },
+      
+    ]
+  },
+
+  // Worked example (simple)
+  {
+    type:  "steps",
+    label: "Worked Example: Using Method 1",
+    title: "Drawing the BMD using Method 1",
+
+    image: "images/example-01.svg",   // beam figure shown above the problem
+    imageScale: 0.6,
+    imagePosition: "below",
+  
+    problem: `
+      <p>
+        A simply supported beam <strong>AB</strong> has a span of <strong>10 m</strong>.
+        A point load of <strong>12 kN</strong> acts vertically downward at a point B
+        and a unifromly distributed load with intensity <strong> 4 kN/m </strong> acts downwards between C and D.
+      </p>
+      <p>Work through the steps below to draw the bending moment diagram.</p>
+    `,
+  
+    steps: [
+  
+      {
+        instruction: `Taking moments about <strong>A</strong>, find the vertical
+                      reaction at <strong>E</strong>.
+                      <br><em>Hint: ΣM<sub>A</sub> = 0</em>`,
+        unit:        "kN",
+        answer:      10.2,
+        tolerance:   0.05,
+        explanation: `$\\Sigma\ M_A = 0,\\qquad \\therefore \ \ R_E \\times 10 = 12 \\times 2 + 4 \\times 3 \\times (5 + 3/2),\\qquad  \\therefore \ \ R_B = 10.2$ kN`
+      },
+  
+      {
+        instruction: `Using vertical equilibrium, find the vertical reaction at <strong>A</strong>.
+                      <br><em>Hint: ΣF<sub>y</sub> = 0</em>`,
+        unit:        "kN",
+        answer:      13.8,
+        tolerance:   0.05,
+        explanation: `$\\Sigma\ F_y = 0, \\qquad \\therefore \ \ R_A + R_B = 12 + 4 \\times 3, \\qquad \\therefore \ \  R_A = 13.8$ kN`
+      },
+  
+      {
+        instruction: `Taking a cut between A and B, we can determine the function $M(x)$. Find this function, then calculate the bending moment at the end point B`,
+        image:       "images/example-AB.svg",  // optional per-step hint figure
+        imageScale:   0.3,
+        unit:        "kNm",
+        answer:      27.6,
+        tolerance:   0.05,
+        explanation: `$M(x=2) = R_A \\times 2 = 27.6$ kNm.`
+      },
+
+      {
+        instruction: `Taking a cut between B and C, we can determine the function $M(x)$. Find this function, then calculate the bending moment at the end point C`,
+        image:       "images/example-BC.svg",  // optional per-step hint figure
+        imageScale: 0.5,
+        unit:        "kNm",
+        answer:      33,
+        tolerance:   0.05,
+        explanation: `$M(x=5) = R_A \\times 2 - P \\times (5 - 2) = 33$ kNm.`
+      },
+
+      {
+        instruction: `Taking a cut between C and D, we can determine the function $M(x)$. Find this function, then calculate the bending moment at the end point D`,
+        image:       "images/example-CD.svg",  // optional per-step hint figure
+        imageScale: 0.7,
+        unit:        "kNm",
+        answer:      20.4,
+        tolerance:   0.05,
+        explanation: `$M(x=8) = R_A \\times 2  - P \\times (8 - 2) - 3 \\times (8 - 5)^2 / 2 = 20.4$ kNm`
+      },
+
+      {
+        instruction: `Taking a cut between D and E, we can determine the function $M(x)$. Find this function, then calculate the bending moment at the end point E`,
+        image:       "images/example-DE.svg",  // optional per-step hint figure
+        imageScale: 0.8,
+        unit:        "kNm",
+        answer:      0,
+        tolerance:   0,
+        explanation: `$M(x=10) = R_A \\times 2  - P \\times (10 - 2) - 3 \\times 4 \\times (10 - 9 + 3/2) = 0 $ kNm — this is expected at an external roller support.`
+      }
+ 
+    ]
+  },
+
+  
+  // INFO: Drawing BMD: Method 2
+
+  {
+    type: "info",
+    label: "Method 2: Geometric",
+    title: "Drawing the BMD direct from SFD",
+
+    blocks: [
+      {
+        type: "text",
+        html: `<p>Alternatively, we can use the relationship between the SFD and BMD to draw the BMD without requiring algebraic functions to be determined. The following 4 relationships are used, where for common shapes seen in Structural engineering problems (i.e. rectangles, triangles), the integrals are simple to evaluate<\p>`
+      },
+      {
+        type: "equation",
+        latex: String.raw`V(x) = \frac{d w(x)}{d x}, \qquad V_B = V_A + \int_{x_A}^{x_B} w(x){dx}`
+      },
+      {
+        type: "equation",
+        latex: String.raw`M(x) = \frac{d V(x)}{d x}, \qquad M_B = M_A + \int_{x_A}^{x_B} w(x){dx}`
+      },     
+      {
+        type: "image",
+        src: "images/sfd-bmd-01.svg",
+        width:  "1200px",
+        alt:  "Beam, SFD, BMD",
+        caption:  "Fig. 1 - An example beam, SFD and BMD",
+      },
+      {
+        type: "text",
+        html: `<p>First, draw the axes for the SFD and BMD. Then commencing at $V = 0$ at an external point of the structure, follow the current rules:<\p>
+        <ol>
+        <li>Progress along a member, where at a point $x$ the slope is equal to the value of any distributed load at same $x$</li>
+        <li>At a point force, 'Jump' in the direction of the point force on the SFD.</li>
+        <li>Point moments have no effect on the SFD.</li>
+        <li>The difference in value between any two points on the SFD is equal to the area beneath the distrubted load spanning those points.</li>
+        </ol>`
+      },
+      
+      {
+        type: "text",
+        html: `<p>Next, commencing at $M = 0$ at an external point of the structure, follow the current rules:<\p>
+        <ol>
+        <li>Progress along a member, where at a point $x$ the slope is equal to the value of any SFD at same $x$</li>
+        <li>At a point moment, 'Jump' on the BMD hat magnitude.</li>
+        <li>Point forces have no effect on the BMD.</li>
+        <li>The difference in value between any two points on the BMD is equal to the area beneath the SFD spanning those points.</li>
+        </ol>`
+      },
+      
+      
+    ]
+  },
+
+
+  // Worked example (simple and same as before, though different steps)
+
+  {
+  type:  "explore",
+  label: "Explore the SFD and BMD",
+  title: "How the diagrams were determined",
+  intro: `<p>The beam below follows the previous worked example. The reactions are shown for you.</p>
+  <p> Click each marked point to see the reasoning behind it. <strong>See the explanaiton in the box at the bottom of the page</strong></p>`,
+  image: "images/explore-01.svg",
+  imageWidth: "720px",
+  hotspots: [
+    { x: 15, y: 42, marker: "A", title: "Shear Force",
+      content: `<p>Discontinuity in SFD equal to magnitude of point force (reaction at A)</p>` },
+    { x: 32, y: 38, marker: "B", title: "Shear Force",
+      content: `<p>Shear force remains constant until point B, since distributed load is zero.</p>` },
+    { x: 30, y: 50, marker: "C", title: "Shear Force",
+      content: `<p>Discontinuity in SFD equal to magnitude of point force $P$</p>` },
+    { x: 48, y: 50, marker: "D", title: "Shear Force",
+      content: `<p>Shear force remains constant B to C, since distributed load is zero.</p>` },
+    { x: 66, y: 56, marker: "E", title: "Shear Force",
+      content: `<p>Shear force decreases linearly C to D, since distributed load is <strong>constant and negative</strong>.</p>
+      <p>The value is determined by: </p>
+      <p> $V_D = V_C + \\int_{x_C}^{x_D} w(x) dx = 1.8 -$ [Area beneath UDL] $= 1.8 - (4 \\times 3) = -10.2$ <strong> kN</strong>` },
+    { x: 90, y: 58, marker: "F", title: "Shear Force",
+      content: `<p>Shear force remains constant E to F, since distributed load is zero.</p>
+      <p>The SFD has a discontinnuous jump equal to the magnitude of the point force at E (reaction), returning to zero as expected.</p>` },
+
+    { x: 15, y: 80, marker: "G", title: "Bending Moment",
+      content: `<p>The BMD starts at zero, and is njot affected by the point force at A.</p>` },  
+    { x: 30, y: 85, marker: "H", title: "Bending Moment",
+      content: `<p>The BMD increases linearly (notice downwards is positive) between A and B since SFD is <strong>constant and positive</strong>.</p>
+      <p>The value at B is determined by: </p>
+      <p> $M_B = M_A + \\int_{x_A}^{x_B} V(x) dx = 0 + $ [Area beneath SFD] $= 0 + (13.8 \\times 2) = 27.6$ <strong> kNm</strong>` },  
+    { x: 48, y: 88, marker: "I", title: "Bending Moment",
+      content: `<p>The BMD increases linearly (notice downwards is positive) between B and C since SFD is <strong>constant and positive, though smaller than it was between A and B</strong>.</p>
+      <p>The value at C is determined by: </p>
+      <p> $M_C = M_B + \\int_{x_B}^{x_C} V(x) dx = 27.6 + $ [Area beneath SFD] $= 27.6 + (1.8 \\times 3) = 33$ <strong> kNm</strong>` },
+    { x: 68, y: 85, marker: "J", title: "Bending Moment",
+      content: `<p>The BMD is quadratic between C and D with slope initally positive, then gradually getting more and more negative, due to the linear SFD.</p>
+      <p>The value at D is determined by: </p>
+      <p> $M_D = M_C + \\int_{x_C}^{x_D} V(x) dx = 33 + $ [Area beneath SFD] $= 27.6 + (1/2 \\times (1.8-10.2) \\times 3) = 20.4$ <strong> kNm</strong>` },
+    { x: 90, y: 80, marker: "K", title: "Bending Moment",
+      content: `<p>The BMD is linear decreasing between D and E, since the SFD is constant and negative.</p>
+      <p>The value at E is determined by: </p>
+      <p> $M_E = M_D + \\int_{x_D}^{x_E} V(x) dx = 20.4 + $ [Area beneath SFD] $= 20.4 + (-10.2 \\times 2) = 0$ <strong> kNm</strong></p>
+      <p>... returning to zero as expected.</p>` },
+  ]
+},
+  
+      
   /* ============================================================================
    QUIZ ("Test Your Knowledge") — a multi-question sub-sequence in one slide.
 
