@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249.7 102.62">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #231f20;
+        font-family: TimesNewRomanPS-ItalicMT, 'Times New Roman';
+        font-size: 14px;
+        font-style: italic;
+      }
+
+      .cls-3 {
+        fill: #f1f2f2;
+        stroke: #231f20;
+        stroke-width: 2px;
+      }
+
+      .cls-3, .cls-4 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-5 {
+        fill: #ed1c24;
+      }
+
+      .cls-4 {
+        fill: none;
+        stroke: #ed1c24;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <rect class="cls-3" x="10" y="59.95" width="229.55" height="16.23"/>
+    <polygon class="cls-3" points="10 77.21 1.63 93.63 18.36 93.63 10 77.21"/>
+    <polygon class="cls-3" points="239.34 77.3 230.98 88.78 247.71 88.78 239.34 77.3"/>
+    <circle class="cls-3" cx="235" cy="93.71" r="4.62"/>
+    <circle class="cls-3" cx="244.09" cy="93.86" r="4.62"/>
+    <g>
+      <line class="cls-4" x1="146.02" y1="18.72" x2="146.02" y2="52.13"/>
+      <polygon class="cls-5" points="146.02 55.66 143.98 50.68 146.02 51.87 148.05 50.68 146.02 55.66"/>
+    </g>
+    <g>
+      <line class="cls-4" x1="239.34" y1="18.72" x2="239.34" y2="52.13"/>
+      <polygon class="cls-5" points="239.34 55.66 237.31 50.68 239.34 51.87 241.38 50.68 239.34 55.66"/>
+    </g>
+    <g>
+      <line class="cls-4" x1="192.68" y1="18.72" x2="192.68" y2="52.13"/>
+      <polygon class="cls-5" points="192.68 55.66 190.65 50.68 192.68 51.87 194.71 50.68 192.68 55.66"/>
+    </g>
+    <line class="cls-4" x1="10" y1="18.72" x2="239.34" y2="18.72"/>
+    <text class="cls-2" transform="translate(172.54 11.63) scale(1.04 1)"><tspan x="0" y="0">w</tspan></text>
+    <g>
+      <line class="cls-4" x1="10" y1="18.72" x2="10" y2="52.13"/>
+      <polygon class="cls-5" points="10 55.66 7.96 50.68 10 51.87 12.03 50.68 10 55.66"/>
+    </g>
+    <g>
+      <line class="cls-4" x1="103.32" y1="18.72" x2="103.32" y2="52.13"/>
+      <polygon class="cls-5" points="103.32 55.66 101.29 50.68 103.32 51.87 105.35 50.68 103.32 55.66"/>
+    </g>
+    <g>
+      <line class="cls-4" x1="56.66" y1="18.72" x2="56.66" y2="52.13"/>
+      <polygon class="cls-5" points="56.66 55.66 54.63 50.68 56.66 51.87 58.69 50.68 56.66 55.66"/>
+    </g>
+    <text class="cls-1" transform="translate(117.79 98.33)"><tspan x="0" y="0">L</tspan></text>
+  </g>
+</svg>

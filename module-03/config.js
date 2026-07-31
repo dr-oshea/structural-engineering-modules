@@ -34,10 +34,13 @@ const moduleData = [
       
       { type: "image",
         src:  "images/bm-01.svg",
-        width:  "800px",
+        width:  "880px",
         alt:  "Taking bending moments",
         caption:  "(A) A structure with transverse loads, (B) Sectioning the structure at X-X, (C) Bending moment diagram"},
 
+      { type: "text",
+        html: `<p>To find the internal bending moment at a given point $X$, take a section at that location, and use equilibrium on the entire structure on one side of this section (or the other).</p>`},
+      
       { type: "text",
         html: `<p>A <strong>bending moment diagram (BMD)</strong> shows the magnitude of internal bending moment at all locations in a structure.</p>`}
   ]
@@ -113,19 +116,21 @@ const moduleData = [
     title: "Where is the Bending Moment greatest?",
   
     prompt: `<p>The SFD for the beam is shown below. Click the point on the beam where the <strong>bending moment is
-            maximum value</strong>.</p>`,
+            maximum value</strong> between A and B.</p>`,
   
     image:    "images/hotspot-01.svg",
     maxWidth: "700px",               // optional
   
     hotspots: [
-      { x: 10, y: 40, w: 12, h: 20 },                 // a wrong region
-      { x: 44, y: 35, w: 14, h: 28, correct: true },  // the correct region
-      { x: 78, y: 40, w: 12, h: 20 }                  // another wrong region
+      { x: 8, y: 20, w: 2, h: 2 },                 // a wrong region
+      { x: 48.5, y: 20, w: 2, h: 2, correct: true },  // the correct region
+      { x: 74, y: 20, w: 2, h: 2 },                  // another wrong region
+      { x: 97, y: 20, w: 2, h: 2 }                  // another wrong region
     ],
   
-    explanation: `Using M = dV / dx, the maximum bending moment occurs where
-                  the shear force diagram passes through zero. <strong>Using V(x) = 0 can solve for the location of this maximum moment.</strong>`
+    explanation: `<p><strong> Using $M = dV / dx$, the maximum bending moment occurs where
+                  the shear force diagram passes through zero. </strong></p>
+                  <p><strong>Using V(x) = 0, we can then solve for the location of this maximum moment.</strong></p>`
   },
   
 
@@ -139,9 +144,36 @@ const moduleData = [
       {
         type: "text",
         html: `<p>It is conventional for structural engineers to sketch the BMD on the <strong>tension side</strong> of a structure.</p>
-        <p>When a beam bends, one side is in tension, the other in compression. Drawing the BMD with positive values on the tension side gives allows engineers a quick visual tool to understanding regions of tension and compression.</p>
-        <p>This for example, helps to locate where tensile steel reinforcement might be needed in a concrete member.</p>`
-      }
+        <p>When a beam bends, one side is in tension, the other in compression. Drawing the BMD with positive values on the tension side gives allows engineers a quick visual tool to understanding regions of tension and compression.</p>`
+      },
+      {
+        type: "image",
+        src:  "images/tension-01.svg",
+        width:  "1000px",
+        alt:  "Tension side.",
+        caption:  "Fig. 1 - Direction of internal bending moment governs which side of the member is in tension vs compression."
+      },
+      {
+        type: "text",
+        html: `<p>To draw BMD on the tension side:</p>
+        <ol>
+        <li> First, assume a direction of the unknown internal bending moment.</li>
+        <li> By equilibrium, the magnitude and (actual) direction of the internal bending moment is found.</li>
+        <li> The direction of the bending moment can be replaced with an equivalent force couple (as in Fig. 1)</li>
+        <li> The value of bending moment is therefore plotted on the side related to the tensile force.</li></p>`
+      },
+      {
+        type: "text",
+        html: `<p>For a horizontal (beam) member, this means <strong>plotting positive bending moments downwards, when assuming positive bending moments cause elements to bend concave up</strong></p>
+        <p> Extra thought is required determining the tension side of a frame.</p>`
+      },
+      {
+        type: "image",
+        src:  "images/convention-01.png",
+        width:  "300px",
+        alt:  "BM convention.",
+        caption:  "Fig. 2 - Typically positive sign convention for internal bending moment."
+      },
     ]
   },
 
@@ -149,16 +181,17 @@ const moduleData = [
   {
     type:  "mcq",
     label: "Quiz: Identify the BMD",
-    title: "Which is the correct Bending Moment Diagram?",
-    image: "images/module-01_bmd_question.svg",   // the beam + loading shown above options
-    question: `<p>For the beam shown above, select the correct bending moment diagram.</p>`,
+    title: "Bending moment on the tension side",
+    image: "images/simply-supported-udl.svg",   // the beam + loading shown above options
+    imageScale: 0.5,
+    question: `<p>For the beam shown above, Which is the correct BMD, <strong>drawn on the tension side</strong>?</p>`,
     options: [
-      { image: "images/bmd_option_a.svg" },
-      { image: "images/bmd_option_b.svg", correct: true },
-      { image: "images/bmd_option_c.svg" },
-      { image: "images/bmd_option_d.svg" }
+      { image: "images/tension-A.svg" },
+      { image: "images/tension-B.svg", correct: true },
+      { image: "images/tension-C.svg" },
+      { image: "images/tension-D.svg" }
     ],
-    explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
+    explanation: `Option B is correct — the underside of the beam will be in tension, so the peak moment is plotted downwards.`
   },
 
   
@@ -183,7 +216,7 @@ const moduleData = [
       {
         type: "image",
         src: "images/example-01.svg",
-        width:  "1200px",
+        width:  "1400px",
         alt:  "Beam with UDL and point load",
         caption:  "Fig. 1 - An example beam with UDL and point load",
       },
