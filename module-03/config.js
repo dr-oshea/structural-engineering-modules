@@ -34,7 +34,7 @@ const moduleData = [
       
       { type: "image",
         src:  "images/bm-01.svg",
-        width:  "880px",
+        width:  "980px",
         alt:  "Taking bending moments",
         caption:  "(A) A structure with transverse loads, (B) Sectioning the structure at X-X, (C) Bending moment diagram"},
 
@@ -53,21 +53,26 @@ const moduleData = [
     title: "Multiple Choice: Calculating Bending Moment",
 
     image: "images/mcq-01.svg",
+    imageScale: 0.8,
 
     question: `
       <p>
-        A simply supported beam of span <strong>8 m</strong> carries a
-        <strong>uniformly distributed load of 10 kN/m</strong> over its entire length. The reactions are shown on the figure. <strong>What is the bending moment at Point C?</strong></p>
+        A simply supported beam of span <strong>10 m</strong> carries a point load and a uniformly distributed load as shown. The reactions are solved and shown on the figure. </p>
+        <p><strong>What is the magnitude of bending moment at Point D?</strong></p>
     `,
 
     options: [
-      { text: "40 kNm"  },
-      { text: "80 kNm",  correct: true },
-      { text: "160 kNm" },
-      { text: "320 kNm" }
+      { text: "20 kNm"  },
+      { text: "17 kNm",  correct: true },
+      { text: "14 kNm" },
+      { text: "34 kNm" }
     ],
 
-    explanation: `Take a cut at point C, and use equilibrium on either the left section or right section.`
+    explanation: `<p>Take a cut at point D, and use equilibrium on either the left section or right section.</p>
+    <p> On the left:</p>
+    <p> $\\Sigma M_{cut} = 0 = M_D + (2 \\times 3 \\times 3/2) + (15 \\times 6) - 14.5 \\times 8, \\qquad \\therefore M_D = 17\\ \\mathrm{kNm}$</p>
+    <p> On the right:</p>
+    <p> $\\Sigma M_{cut} = 0 = M_D + (2 \\times 2 \\times 2/2) - (10.5 \\times 2), \\qquad \\therefore M_D = 17\\ \\mathrm{kNm}$</p>`
   },
 
 
@@ -216,7 +221,7 @@ const moduleData = [
       {
         type: "image",
         src: "images/example-01.svg",
-        width:  "1400px",
+        scale:  2,
         alt:  "Beam with UDL and point load",
         caption:  "Fig. 1 - An example beam with UDL and point load",
       },
@@ -375,7 +380,7 @@ const moduleData = [
   title: "How the diagrams were determined",
   intro: `<p>The beam below follows the previous worked example. The reactions are shown for you.</p>
   <p> Click each marked point to see the reasoning behind it. <strong>See the explanaiton in the box at the bottom of the page</strong></p>`,
-  image: "images/explore-01.svg",
+  image: "images/explore-02.svg",
   imageWidth: "720px",
   hotspots: [
     { x: 15, y: 42, marker: "A", title: "Shear Force",

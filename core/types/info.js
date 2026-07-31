@@ -16,9 +16,13 @@
      text      html      HTML string (paragraphs, lists, <strong>, …)
                          Inline maths allowed: \( … \) or $ … $
      image     src       path relative to the module folder, e.g. "images/x.svg"
-               width     optional max-width, e.g. "420px"
+               width     optional max width, e.g. "420px" or "80%"
+               height    optional max height, e.g. "260px"
+               scale     optional fraction of the column width, e.g. 0.6
                alt       optional alt text (accessibility)
                caption   optional caption shown under the image
+               Figures FILL the column by default; set width/scale to shrink.
+               Aspect ratio is always preserved.
      equation  latex     LaTeX, rendered centred as display maths (preferred)
                html      legacy: plain HTML instead of LaTeX (still supported)
 
@@ -44,9 +48,16 @@ function renderInfoSlide(slide) {
     bodyHTML = slide.blocks.map(block => {
 
       // ── Image block ──
+      // Sizing reuses the engine's shared helper, so width/height/scale behave
+      // exactly as they do in steps, mcq, reveal and quiz figures.
       if (block.type === "image") {
+        const style = imageSizeStyle({
+          imageWidth:  block.width,
+          imageHeight: block.height,
+          imageScale:  block.scale
+        });
         const img = `<img src="${block.src}" class="info-block-image"
-                          style="${block.width ? `max-width:${block.width};` : ""}"
+                          style="${style}"
                           alt="${block.alt || ""}">`;
         return block.caption
           ? `<figure class="info-block-figure">${img}

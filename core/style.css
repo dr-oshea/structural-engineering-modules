@@ -285,7 +285,9 @@ button:disabled {
 
 .slide-image {
   margin-top: 20px;
+  width: 100%;
   max-width: 100%;
+  height: auto;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
 }
@@ -327,9 +329,9 @@ button:disabled {
 /* Image within the info body — centred, not full-bleed */
 .info-block-image {
   display: block;
-  max-width: 100%;
-  max-height: 320px;
-  width: auto;
+  width: 100%;              /* fill the column; max-width is the author's dial */
+  max-width: 100%;          /* overridden inline by the block's width/scale   */
+  height: auto;             /* aspect ratio always preserved                  */
   margin: 4px auto;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
