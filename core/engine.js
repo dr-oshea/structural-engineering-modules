@@ -116,6 +116,35 @@ function getFirstLockedIndex() {
   return moduleData.length;
 }
 
+// ─── Module "parts" ────────────────────────────────────────────────────────
+//
+// A module is normally broken into 3–5 parts, each a run of teaching slides
+// followed by an activity. The slide that BEGINS a part declares it:
+//
+//     { type: "info", partStart: "What is a Bending Moment", … }
+//
+// Everything downstream — the sidebar dividers and "Part X" labels, and the
+// contents list on the splash page — derives from this one declaration, so
+// they can never disagree. Reordering slides reorders the parts automatically.
+
+// Returns [{ number, title, index }] for each part, in slide order.
+function getModuleParts() {
+  const parts = [];
+  moduleData.forEach((s, i) => {
+    if (s.partStart) {
+      parts.push({ number: parts.length + 1, title: s.partStart, index: i });
+    }
+  });
+  return parts;
+}
+
+// Maps a slide index → the part number it STARTS (or undefined).
+function partNumberByStartIndex() {
+  const map = {};
+  getModuleParts().forEach(p => { map[p.index] = p.number; });
+  return map;
+}
+
 // True when the module ends with a completion slide (isEnd type, e.g. "final").
 function moduleHasEndSlide() {
   const last = moduleData[moduleData.length - 1];
@@ -150,6 +179,9 @@ function renderLayout(contentHTML) {
                     ? Boolean(curDef.navLocked(moduleData[currentSlide], currentSlide))
                     : false;
 
+  // slide index → part number it starts (for the sidebar part headings)
+  const partStarts = partNumberByStartIndex();
+
   app.innerHTML = `
     <div class="layout">
 
@@ -164,25 +196,20 @@ function renderLayout(contentHTML) {
             const isQuiz      = isQuizSlide(i);
             const isClickable = !isNoNav && !isActive;
 
-            // Divider logic:
-            // - Normal case: show AFTER the gate slide (last accessible), if
-            //   there are locked slides beyond it.
-            // - Final case: once all quizzes are done (gate past the content),
-            //   show the divider just BEFORE the end slide.
-            const hasEnd      = moduleHasEndSlide();
-            const endIndex    = hasEnd ? moduleData.length - 1 : -1;
-            const gatePastEnd = lockedFromIndex >= moduleData.length - 1;
-
-            let showDivider = false;
-            if (!gatingEnabled()) {
-              showDivider = false;          // nothing is gated — no boundary to mark
-            } else if (gatePastEnd && hasEnd) {
-              showDivider = (i === endIndex - 1);
-            } else {
-              showDivider = (i === lockedFromIndex) && (i < moduleData.length - 1);
-            }
+            // A slide that starts a part gets a yellow divider + "Part X"
+            // heading ABOVE it. These are permanent structural markers — they
+            // delineate the whole module at a glance, locked parts included.
+            const partNo = partStarts[i];
+            const partHeader = partNo
+              ? `<li class="sidebar-divider" aria-hidden="true"></li>
+                 <li class="sidebar-part-label ${isLocked ? "sidebar-part-locked" : ""}" aria-hidden="true">
+                   <span class="sidebar-part-number">Part ${partNo}</span>
+                   <span class="sidebar-part-title">${s.partStart}</span>
+                 </li>`
+              : "";
 
             return `
+              ${partHeader}
               <li
                 data-slide="${i}"
                 class="${isActive ? "active" : ""}${isNoNav ? " sidebar-item-no-nav" : ""}${isLocked ? " sidebar-item-locked" : ""}${isQuiz && !isNoNav ? " sidebar-item-quiz" : ""}"
@@ -190,7 +217,6 @@ function renderLayout(contentHTML) {
               >
                 ${getSlideIcon(s)} ${s.label || `Slide ${i}`}
               </li>
-              ${showDivider ? `<li class="sidebar-divider" aria-hidden="true"></li>` : ""}
             `;
           }).join("")}
         </ul>
@@ -283,29 +309,14 @@ function updateLockState() {
     li.classList.toggle("sidebar-item-locked", i > lockedFromIndex);
   });
 
-  // Move the block divider (mirrors the placement logic in renderLayout)
-  const existingDivider = document.querySelector(".sidebar-divider");
-  if (existingDivider) existingDivider.remove();
-
-  const hasEnd      = moduleHasEndSlide();
-  const gatePastEnd = lockedFromIndex >= moduleData.length - 1;
-
-  let dividerAfterIndex = -1;
-  if (gatePastEnd && hasEnd) {
-    dividerAfterIndex = moduleData.length - 2;   // before the end slide
-  } else if (lockedFromIndex < moduleData.length - 1) {
-    dividerAfterIndex = lockedFromIndex;         // after the gate slide
-  }
-
-  if (dividerAfterIndex >= 0) {
-    const gateLi = document.querySelector(`.sidebar li[data-slide="${dividerAfterIndex}"]`);
-    if (gateLi) {
-      const divider = document.createElement("li");
-      divider.className = "sidebar-divider";
-      divider.setAttribute("aria-hidden", "true");
-      gateLi.insertAdjacentElement("afterend", divider);
-    }
-  }
+  // Part dividers are permanent structural markers, so nothing to move here.
+  // Just refresh which part headings look locked.
+  document.querySelectorAll(".sidebar-part-label").forEach(labelEl => {
+    const nextItem = labelEl.nextElementSibling;
+    if (!nextItem || !nextItem.dataset) return;
+    const i = parseInt(nextItem.dataset.slide);
+    labelEl.classList.toggle("sidebar-part-locked", i > lockedFromIndex);
+  });
 }
 
 // Forward button handler — implements the two-click "Finish → Confirm" flow

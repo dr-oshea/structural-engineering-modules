@@ -11,7 +11,7 @@
    After setting up the Google Apps Script backend (see the roadmap §3),
    paste its Web app URL (ending in /exec) between the quotes.
    Leave empty to run with tracking off.                                       */
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwN8fDdrGFwSwAt3CS6kDA29OIUKSRCdWF1S6AaqXov7EBrWfM24bz5FwcwhDcqWjXG/exec";
+const BACKEND_URL = "";
 /* ──────────────────────────────────────────────────────────────────────────── */
 
 
@@ -24,7 +24,7 @@ function trackingEnabled() {
 
 /* ── Record that a student completed a module ────────────────────────────────
    Called by saveAndClose() in types/final.js. Never throws.                  */
-async function recordCompletion({ moduleId, rating }) {
+async function recordCompletion({ moduleId, rating, comment }) {
   if (!trackingEnabled()) {
     console.log("[api] Tracking off — completion not sent (this is fine).");
     return false;
@@ -37,6 +37,7 @@ async function recordCompletion({ moduleId, rating }) {
     course:    ctx.course,
     module:    moduleId,
     rating:    rating || null,
+    comment:   comment || "",
     timestamp: new Date().toISOString()
   };
 

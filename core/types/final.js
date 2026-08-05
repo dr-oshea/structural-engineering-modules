@@ -23,7 +23,7 @@ function renderFinalSlide(slide) {
 
         ${slide.showRating !== false ? `
           <div class="final-rating">
-            <span class="final-rating-label">How useful was this module?</span>
+            <span class="final-rating-label">How useful did you find this module?</span>
             <div class="final-stars" id="final-stars">
               ${[1,2,3,4,5].map(n => `
                 <span class="final-star"
@@ -36,13 +36,32 @@ function renderFinalSlide(slide) {
           </div>
         ` : ""}
 
+        ${slide.showFeedback !== false ? `
+          <div class="final-feedback">
+            <label class="final-feedback-label" for="final-comment">
+              ${slide.feedbackPrompt
+                || "Please provide any useful feedback to improve these modules"}
+              <span class="final-feedback-optional">(optional)</span>
+            </label>
+            <textarea id="final-comment"
+                      class="final-feedback-input"
+                      rows="3"
+                      maxlength="${slide.feedbackMaxLength || 500}"
+                      placeholder="What worked well? What was confusing?"
+                      oninput="updateFeedbackCount()"></textarea>
+            <div class="final-feedback-count" id="final-comment-count">
+              0 / ${slide.feedbackMaxLength || 500}
+            </div>
+          </div>
+        ` : ""}
+
         <button class="final-save-btn" onclick="saveAndClose()">
           ${slide.buttonText || "Save and Close"}
         </button>
 
         ${slide.bugReportUrl ? `
           <a class="final-bug-link" href="${slide.bugReportUrl}" target="_blank" rel="noopener">
-            🐞 Report a bug or give feedback
+            🐞 Report a bug
           </a>
         ` : ""}
       </div>
@@ -74,6 +93,28 @@ function setRating(n) {
 }
 
 
+// ─── Free-text feedback ─────────────────────────────────────────────────────
+
+// Live character counter under the feedback box.
+function updateFeedbackCount() {
+  const box   = document.getElementById("final-comment");
+  const count = document.getElementById("final-comment-count");
+  if (!box || !count) return;
+  const max = box.getAttribute("maxlength") || 500;
+  count.textContent = `${box.value.length} / ${max}`;
+  count.classList.toggle("final-feedback-count-full",
+                         box.value.length >= Number(max));
+}
+
+// Current feedback text (trimmed), or null if empty/absent.
+function getFeedbackComment() {
+  const box = document.getElementById("final-comment");
+  if (!box) return null;
+  const text = box.value.trim();
+  return text.length ? text : null;
+}
+
+
 // ─── Save ───────────────────────────────────────────────────────────────────
 
 // Saves completion via the backend (core/api.js). Tracking is OPTIONAL — if
@@ -89,9 +130,15 @@ async function saveAndClose() {
     btn.disabled = true;
   }
 
+  const comment = getFeedbackComment();
+
   let sent = false;
   if (typeof recordCompletion === "function") {
-    sent = await recordCompletion({ moduleId, rating: selectedRating || null });
+    sent = await recordCompletion({
+      moduleId,
+      rating:  selectedRating || null,
+      comment: comment
+    });
   } else {
     console.log("[module] api.js not loaded — completion not tracked (this is fine).");
   }

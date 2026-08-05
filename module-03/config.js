@@ -25,6 +25,7 @@ const moduleData = [
   // INFO SLIDE:   What is a bending moment? 
   {
     type: "info",
+    partStart: "What is a Bending Moment?",
     label: "What is a bending moment?",
     title: "What is a Bending Moment?",
 
@@ -79,6 +80,7 @@ const moduleData = [
   // INFO SLIDE:   Relationship between Shear and Bending
   {
     type: "info",
+    partStart: "Relationship between Shear and Bending Moment",
     label: "Relationship V and M",
     title: "Relationship between Shear Force and Bending Moment",
 
@@ -143,6 +145,7 @@ const moduleData = [
   {
     type: "info",
     label: "BMD on Tension Side",
+    partStart: "Drawing the BMD on the Tension Side",
     title: "Drawing the Bending Moment Diagram on the Tension Side",
 
     blocks: [
@@ -203,6 +206,7 @@ const moduleData = [
   // INFO SLIDE:   Drawing BMS: Method 1
   {
     type: "info",
+    partStart: "Method 1: Algebraic Approach",
     label: "Method 1: Algebraic",
     title: "Drawing the BMD using BM Functions",
 
@@ -322,6 +326,7 @@ const moduleData = [
 
   {
     type: "info",
+    partStart: "Method 2: Geometric Approach",
     label: "Method 2: Geometric",
     title: "Drawing the BMD direct from SFD",
 
@@ -439,6 +444,7 @@ const moduleData = [
 
   {
     type:  "quiz",
+    partStart: "Test Your Knowledge",
     label: "Test Your Knowledge",
     title: "Test Your Knowledge",
 
