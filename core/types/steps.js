@@ -207,7 +207,7 @@ function restoreStepsState() {
 }
 
 registerSlideType("steps", {
-  icon: "🧮",
+  icon: "📝",
   render: renderStepsSlide,
   isQuiz: true
 });

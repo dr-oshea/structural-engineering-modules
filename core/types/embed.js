@@ -38,6 +38,6 @@ function renderEmbedSlide(slide) {
 }
 
 registerSlideType("embed", {
-  icon: "🎚️",
+  icon: "📖",
   render: renderEmbedSlide
 });

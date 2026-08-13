@@ -49,6 +49,6 @@ function toggleReveal() {
 }
 
 registerSlideType("reveal", {
-  icon: "💡",
+  icon: "📝",
   render: renderRevealSlide
 });

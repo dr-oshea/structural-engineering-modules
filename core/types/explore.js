@@ -169,7 +169,7 @@ function exploreSelect(index) {
 
 
 registerSlideType("explore", {
-  icon: "🔍",
+  icon: "📖",
   render: renderExploreSlide,
   // Gates only when the author asks every point to be opened first.
   isQuiz: (slide) => slide.requireAll === true

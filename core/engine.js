@@ -24,6 +24,19 @@ const app = document.getElementById("app");
 // ─── Global state ───────────────────────────────────────────────────────────
 
 let currentSlide = 0;
+
+// Set once the assessment's "just unlocked" pulse has been shown, so it
+// catches the eye the first time and never nags afterwards.
+let announcedUnlock = false;
+
+// After a sidebar render: if the assessment is open, let the pulse play once
+// and then stop offering it.
+function noteUnlockAnnouncement() {
+  const a = getAssessmentIndex();
+  if (a !== -1 && !isSlideLocked(a) && !announcedUnlock) {
+    setTimeout(() => { announcedUnlock = true; }, 4000);
+  }
+}
 const completedSlides = new Set(); // indices of completed quiz-gating slides
 const slideState = {};             // persisted answer state per slide index, e.g.
                                    //   slideState[3] = { type:"steps", answers:[4,8,16] }
@@ -104,16 +117,109 @@ function gatingEnabled() {
   return _gatingCache;
 }
 
-// Returns the index of the first incomplete quiz slide — the current "gate".
-// Slides at indices ≤ this value are accessible; everything beyond is locked.
-// Returns moduleData.length (past the end) when all quizzes are complete,
-// or immediately when gating is switched off.
-function getFirstLockedIndex() {
-  if (!gatingEnabled()) return moduleData.length;   // nothing is locked
-  for (let i = 0; i < moduleData.length; i++) {
-    if (isQuizSlide(i) && !completedSlides.has(i)) return i;
+// ─── Completion model ──────────────────────────────────────────────────────
+//
+// EVERY slide has a completion criterion, owned by its type:
+//
+//   • Interactive types (mcq, steps, hotspot, explore, quiz) mark themselves
+//     complete by calling completedSlides.add(i) when the student finishes
+//     the interaction — a correct answer, all steps, all points opened.
+//
+//   • Passive types (info, context, cards, embed, reveal, pptslide) complete
+//     simply by being VIEWED. The engine marks these on render.
+//
+// A PART is complete when every slide inside it is complete.
+//
+// ─── Navigation model ──────────────────────────────────────────────────────
+//
+// All teaching parts are open from the start — students move freely, so they
+// can skim ahead, revisit, or work out of order.
+//
+// The ASSESSMENT (the "Test Your Knowledge" quiz) is locked until every
+// teaching part is complete. The FINAL page is locked until the assessment
+// itself is complete. That preserves the anti-skip intent at the two points
+// that matter, without penning students in while they learn.
+
+// A slide completes just by being seen (no interaction required).
+function completesOnView(index) {
+  return !isQuizSlide(index) && !typeDef(moduleData[index]).isEnd;
+}
+
+// Mark the current slide viewed, if that's all it needs. Called on every render.
+function markViewed(index) {
+  if (completesOnView(index) && !completedSlides.has(index)) {
+    completedSlides.add(index);
+    return true;      // caller may want to refresh the sidebar
   }
-  return moduleData.length;
+  return false;
+}
+
+// Index of the assessment slide (the gated quiz), or -1 if the module has none.
+// A slide is the assessment if it sets `assessment: true`, else the first
+// slide of type "quiz".
+function getAssessmentIndex() {
+  const explicit = moduleData.findIndex(s => s.assessment === true);
+  if (explicit !== -1) return explicit;
+  return moduleData.findIndex(s => s.type === "quiz");
+}
+
+// The slide indices belonging to each part: [{ …part, slides:[i,…] }]
+function getPartsWithSlides() {
+  const parts = getModuleParts();
+  return parts.map((p, n) => {
+    const end = (n + 1 < parts.length) ? parts[n + 1].index : moduleData.length;
+    const slides = [];
+    for (let i = p.index; i < end; i++) {
+      if (typeDef(moduleData[i]).excludeFromCount) continue;   // skip splash/final
+      slides.push(i);
+    }
+    return { ...p, slides, end };
+  });
+}
+
+// Progress for one part: { done, total, complete }
+function getPartProgress(part) {
+  const total = part.slides.length;
+  const done  = part.slides.filter(i => completedSlides.has(i)).length;
+  return { done, total, complete: total > 0 && done === total };
+}
+
+// Everything the assessment is waiting on: teaching parts (i.e. every part
+// that starts before the assessment slide). Returns { done, total, complete }.
+function getTeachingProgress() {
+  const a = getAssessmentIndex();
+  const teaching = getPartsWithSlides().filter(p => a === -1 || p.index < a);
+  const total = teaching.length;
+  const done  = teaching.filter(p => getPartProgress(p).complete).length;
+  return { done, total, complete: done === total };
+}
+
+// Is this slide locked? Only two things ever lock:
+//   the assessment (until all teaching parts are complete), and
+//   the end slide (until the assessment is complete).
+function isSlideLocked(index) {
+  if (!gatingEnabled()) return false;
+
+  const a = getAssessmentIndex();
+  const def = typeDef(moduleData[index]);
+
+  // The end slide waits on the assessment (or, with no assessment, on
+  // everything else being complete).
+  if (def.isEnd) {
+    return a !== -1 ? !completedSlides.has(a) : !getTeachingProgress().complete;
+  }
+
+  // The assessment slide — and any other slide in its part — waits on the
+  // teaching parts.
+  if (a !== -1) {
+    const assessmentPart = getPartsWithSlides().find(p => p.slides.includes(a));
+    const inAssessmentPart = assessmentPart
+      ? assessmentPart.slides.includes(index)
+      : index === a;
+    if (inAssessmentPart) return !getTeachingProgress().complete;
+  }
+
+  return false;   // all teaching content is open from the start
 }
 
 // ─── Module "parts" ────────────────────────────────────────────────────────
@@ -163,10 +269,14 @@ function renderLayout(contentHTML) {
   const progressPct   = Math.round((contentIndex / totalContent) * 100);
 
   // The gate: first incomplete quiz slide. Slides ≤ gate are accessible.
-  const lockedFromIndex     = getFirstLockedIndex();
+  // Forward is blocked when the NEXT slide is locked, or when the current
+  // interactive slide hasn't been completed yet.
+  const nextLocked = (currentSlide + 1 < moduleData.length)
+                     && isSlideLocked(currentSlide + 1);
   const isCurrentQuizLocked = gatingEnabled()
                               && isQuizSlide(currentSlide)
                               && !completedSlides.has(currentSlide);
+  const forwardBlocked = nextLocked || isCurrentQuizLocked;
 
   // If the next slide is the module's end slide, the forward button reads "Finish"
   const next         = moduleData[currentSlide + 1];
@@ -180,7 +290,13 @@ function renderLayout(contentHTML) {
                     : false;
 
   // slide index → part number it starts (for the sidebar part headings)
-  const partStarts = partNumberByStartIndex();
+  const partStarts      = partNumberByStartIndex();
+  const partsWithSlides = getPartsWithSlides();
+
+  // The whole layout is rebuilt on every render, which destroys the sidebar
+  // element and with it the student's scroll position. Capture it first and
+  // restore it below, so navigating from a scrolled sidebar stays put.
+  const savedSidebarScroll = getSidebarScroll();
 
   app.innerHTML = `
     <div class="layout">
@@ -191,31 +307,45 @@ function renderLayout(contentHTML) {
         <ul>
           ${moduleData.map((s, i) => {
             const isNoNav     = Boolean(typeDef(s).noNav);
-            const isLocked    = i > lockedFromIndex;
+            const isLocked    = isSlideLocked(i);
             const isActive    = i === currentSlide;
             const isQuiz      = isQuizSlide(i);
-            const isClickable = !isNoNav && !isActive;
+            const isDone      = completedSlides.has(i);
+            const isClickable = !isNoNav && !isActive && !isLocked;
+
+            // The assessment pulses briefly the first time it becomes available
+            const justUnlocked = (i === getAssessmentIndex())
+                                 && !isLocked && !isDone && !announcedUnlock;
 
             // A slide that starts a part gets a yellow divider + "Part X"
             // heading ABOVE it. These are permanent structural markers — they
             // delineate the whole module at a glance, locked parts included.
             const partNo = partStarts[i];
-            const partHeader = partNo
-              ? `<li class="sidebar-divider" aria-hidden="true"></li>
-                 <li class="sidebar-part-label ${isLocked ? "sidebar-part-locked" : ""}" aria-hidden="true">
-                   <span class="sidebar-part-number">Part ${partNo}</span>
-                   <span class="sidebar-part-title">${s.partStart}</span>
-                 </li>`
-              : "";
+            let partHeader = "";
+            if (partNo) {
+              const thisPart = partsWithSlides.find(p => p.index === i);
+              const prog     = thisPart ? getPartProgress(thisPart) : null;
+              partHeader = `
+                <li class="sidebar-divider" aria-hidden="true"></li>
+                <li class="sidebar-part-label ${isLocked ? "sidebar-part-locked" : ""}${prog && prog.complete ? " sidebar-part-done" : ""}" aria-hidden="true">
+                  <span class="sidebar-part-number">Part ${partNo}</span>
+                  <span class="sidebar-part-title">${s.partStart}</span>
+                  ${prog && prog.complete ? `<span class="sidebar-part-tick" aria-label="part complete">✓</span>` : ""}
+                </li>`;
+            }
 
             return `
               ${partHeader}
               <li
                 data-slide="${i}"
-                class="${isActive ? "active" : ""}${isNoNav ? " sidebar-item-no-nav" : ""}${isLocked ? " sidebar-item-locked" : ""}${isQuiz && !isNoNav ? " sidebar-item-quiz" : ""}"
+                class="${isActive ? "active" : ""}${isNoNav ? " sidebar-item-no-nav" : ""}${isLocked ? " sidebar-item-locked" : ""}${isQuiz && !isNoNav ? " sidebar-item-quiz" : ""}${isDone ? " sidebar-item-done" : ""}${justUnlocked ? " sidebar-item-unlocked" : ""}"
                 ${isClickable ? `onclick="navigateToSlide(${i})"` : ""}
+                ${isLocked ? `title="Complete all parts of the module to unlock"` : ""}
               >
-                ${getSlideIcon(s)} ${s.label || `Slide ${i}`}
+                <span class="sidebar-item-icon">${getSlideIcon(s)}</span>
+                <span class="sidebar-item-label">${s.label || `Slide ${i}`}</span>
+                ${isDone ? `<span class="sidebar-item-tick" aria-label="completed">✓</span>` : ""}
+                ${isLocked ? `<span class="sidebar-item-lock" aria-hidden="true">🔒</span>` : ""}
               </li>
             `;
           }).join("")}
@@ -247,11 +377,29 @@ function renderLayout(contentHTML) {
         </div>
       </div>
 
-      <button data-nav="next" onclick="handleForward()" ${currentSlide === moduleData.length - 1 || isCurrentQuizLocked ? "disabled" : ""}>${nextBtnLabel}</button>
+      <button data-nav="next" onclick="handleForward()" ${currentSlide === moduleData.length - 1 || forwardBlocked ? "disabled" : ""}>${nextBtnLabel}</button>
     </div>
   `;
 
+  restoreSidebarScroll(savedSidebarScroll);
+
   typesetMath(app);   // render any LaTeX in the freshly-inserted HTML
+}
+
+
+// ─── Sidebar scroll preservation ───────────────────────────────────────────
+// The sidebar is recreated on every render. These keep the student's place in
+// a long contents list instead of snapping back to the top on each navigation.
+
+function getSidebarScroll() {
+  const bar = document.querySelector(".sidebar");
+  return bar ? bar.scrollTop : 0;
+}
+
+function restoreSidebarScroll(value) {
+  if (!value) return;
+  const bar = document.querySelector(".sidebar");
+  if (bar) bar.scrollTop = value;
 }
 
 
@@ -270,6 +418,20 @@ function renderSlide() {
   }
 
   def.render(slide);
+
+  // Passive slides (info, context, cards, embed, reveal, pptslide) complete
+  // simply by being viewed. Interactive slides mark themselves when finished.
+  if (markViewed(currentSlide)) {
+    // Newly completed — refresh the sidebar so its tick and the part's
+    // progress count update immediately.
+    refreshSidebar();
+    const nextBtn = document.querySelector("[data-nav='next']");
+    if (nextBtn) {
+      const nextLocked = (currentSlide + 1 < moduleData.length)
+                         && isSlideLocked(currentSlide + 1);
+      nextBtn.disabled = (currentSlide === moduleData.length - 1) || nextLocked;
+    }
+  }
 }
 
 
@@ -285,8 +447,8 @@ function navigateToSlide(index) {
   if (gatingEnabled() && curDef.navLocked
       && curDef.navLocked(moduleData[currentSlide], currentSlide)) return;
 
-  // Block navigation to any slide beyond the current gate
-  if (index > getFirstLockedIndex()) return;
+  // Block navigation to a locked slide (the assessment / the end page)
+  if (isSlideLocked(index)) return;
 
   goToSlide(index);
 }
@@ -294,29 +456,72 @@ function navigateToSlide(index) {
 // Re-syncs the Next button, sidebar locks, and block divider after a quiz-type
 // slide is completed — WITHOUT a full re-render (keeps the student's context).
 function updateLockState() {
-  const lockedFromIndex     = getFirstLockedIndex();
+  const nextLocked = (currentSlide + 1 < moduleData.length)
+                     && isSlideLocked(currentSlide + 1);
   const isCurrentQuizLocked = gatingEnabled()
                               && isQuizSlide(currentSlide)
                               && !completedSlides.has(currentSlide);
+  const forwardBlocked = nextLocked || isCurrentQuizLocked;
 
   const nextBtn = document.querySelector("[data-nav='next']");
   if (nextBtn) {
-    nextBtn.disabled = (currentSlide === moduleData.length - 1) || isCurrentQuizLocked;
+    nextBtn.disabled = (currentSlide === moduleData.length - 1) || forwardBlocked;
   }
 
-  document.querySelectorAll(".sidebar li[data-slide]").forEach(li => {
-    const i = parseInt(li.dataset.slide);
-    li.classList.toggle("sidebar-item-locked", i > lockedFromIndex);
-  });
+  // Ticks, part progress counts and lock states all change together, so the
+  // simplest correct refresh is to rebuild the sidebar list in place.
+  refreshSidebar();
+}
 
-  // Part dividers are permanent structural markers, so nothing to move here.
-  // Just refresh which part headings look locked.
-  document.querySelectorAll(".sidebar-part-label").forEach(labelEl => {
-    const nextItem = labelEl.nextElementSibling;
-    if (!nextItem || !nextItem.dataset) return;
-    const i = parseInt(nextItem.dataset.slide);
-    labelEl.classList.toggle("sidebar-part-locked", i > lockedFromIndex);
-  });
+// Rebuilds just the sidebar list, leaving the slide content on screen intact.
+function refreshSidebar() {
+  const list = document.querySelector(".sidebar ul");
+  if (!list) return;
+  const savedScroll = getSidebarScroll();   // keep the student's place
+  const partStarts      = partNumberByStartIndex();
+  const partsWithSlides = getPartsWithSlides();
+
+  list.innerHTML = moduleData.map((s, i) => {
+    const isNoNav  = Boolean(typeDef(s).noNav);
+    const isLocked = isSlideLocked(i);
+    const isActive = i === currentSlide;
+    const isQuiz   = isQuizSlide(i);
+    const isDone   = completedSlides.has(i);
+    const isClickable  = !isNoNav && !isActive && !isLocked;
+    const justUnlocked = (i === getAssessmentIndex())
+                         && !isLocked && !isDone && !announcedUnlock;
+
+    const partNo = partStarts[i];
+    let partHeader = "";
+    if (partNo) {
+      const thisPart = partsWithSlides.find(p => p.index === i);
+      const prog     = thisPart ? getPartProgress(thisPart) : null;
+      partHeader = `
+        <li class="sidebar-divider" aria-hidden="true"></li>
+        <li class="sidebar-part-label ${isLocked ? "sidebar-part-locked" : ""}${prog && prog.complete ? " sidebar-part-done" : ""}" aria-hidden="true">
+          <span class="sidebar-part-number">Part ${partNo}</span>
+          <span class="sidebar-part-title">${s.partStart}</span>
+          ${prog && prog.complete ? `<span class="sidebar-part-tick" aria-label="part complete">✓</span>` : ""}
+        </li>`;
+    }
+
+    return `
+      ${partHeader}
+      <li
+        data-slide="${i}"
+        class="${isActive ? "active" : ""}${isNoNav ? " sidebar-item-no-nav" : ""}${isLocked ? " sidebar-item-locked" : ""}${isQuiz && !isNoNav ? " sidebar-item-quiz" : ""}${isDone ? " sidebar-item-done" : ""}${justUnlocked ? " sidebar-item-unlocked" : ""}"
+        ${isClickable ? `onclick="navigateToSlide(${i})"` : ""}
+        ${isLocked ? `title="Complete all parts of the module to unlock"` : ""}
+      >
+        <span class="sidebar-item-icon">${getSlideIcon(s)}</span>
+        <span class="sidebar-item-label">${s.label || `Slide ${i}`}</span>
+        ${isDone ? `<span class="sidebar-item-tick" aria-label="completed">✓</span>` : ""}
+        ${isLocked ? `<span class="sidebar-item-lock" aria-hidden="true">🔒</span>` : ""}
+      </li>`;
+  }).join("");
+
+  restoreSidebarScroll(savedScroll);
+  noteUnlockAnnouncement();
 }
 
 // Forward button handler — implements the two-click "Finish → Confirm" flow

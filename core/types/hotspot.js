@@ -111,7 +111,7 @@ function restoreHotspotState() {
 }
 
 registerSlideType("hotspot", {
-  icon: "🎯",
+  icon: "📝",
   render: renderHotspotSlide,
   isQuiz: true
 });

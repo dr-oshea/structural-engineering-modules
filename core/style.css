@@ -88,7 +88,6 @@ button, .card-back, .step-badge {
      plus a thin black sliver along its edge. Hard-stop gradients = crisp edges. */
   background:
     linear-gradient(112deg, var(--unsw-yellow) 0 34%, transparent 34.05%),
-    linear-gradient(112deg, var(--unsw-black) 0 34.55%, transparent 34.6%),
     var(--unsw-white);
 }
 
@@ -1783,4 +1782,85 @@ button:disabled {
 
 .final-feedback-count-full {
   color: var(--unsw-red);
+}
+
+/* ===== Sidebar: completion, locking and the assessment pulse ===== */
+
+/* Items are now a row: icon · label · tick/lock */
+.sidebar li[data-slide] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-item-icon  { flex-shrink: 0; }
+.sidebar-item-label { flex: 1; min-width: 0; }
+
+/* Completed — a green tick plus an italic label and a subtle green tint.
+   The row keeps full contrast (no fading): students revisit finished slides,
+   and greying already means "locked" elsewhere in the sidebar. */
+.sidebar-item-tick {
+  flex-shrink: 0;
+  color: #12a06a;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.sidebar li.sidebar-item-done {
+  background: rgba(26,201,135,0.08);
+}
+
+.sidebar li.sidebar-item-done .sidebar-item-label {
+  font-style: italic;
+  color: #0f7a52;
+}
+
+.sidebar li.sidebar-item-done:hover {
+  background: rgba(26,201,135,0.15);
+}
+
+/* Locked (the assessment, and the end page) */
+.sidebar-item-lock {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  opacity: 0.75;
+}
+
+.sidebar li.sidebar-item-locked {
+  cursor: not-allowed;
+}
+
+/* The assessment briefly pulses when it first becomes available */
+@keyframes sidebarUnlockPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,220,0,0); }
+  35%      { box-shadow: 0 0 0 5px rgba(255,220,0,0.55); }
+  70%      { box-shadow: 0 0 0 0 rgba(255,220,0,0); }
+}
+
+.sidebar li.sidebar-item-unlocked {
+  animation: sidebarUnlockPulse 1.8s ease-in-out 2;   /* twice, then stops */
+  background: rgba(255,220,0,0.16);
+}
+
+/* Part heading: a tick when every slide in the part is complete.
+   The heading is a two-line block, so the tick sits beside the title row. */
+.sidebar li.sidebar-part-label {
+  position: relative;
+}
+
+.sidebar-part-tick {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  color: #12a06a;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* A completed part's title goes italic — a quieter signal than a counter */
+.sidebar-part-done .sidebar-part-title {
+  font-style: italic;
+  color: #0f7a52;
 }

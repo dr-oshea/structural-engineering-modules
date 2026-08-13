@@ -69,6 +69,6 @@ function renderPptSlide(slide) {
 }
 
 registerSlideType("pptslide", {
-  icon: "🖼️",
+  icon: "📖",
   render: renderPptSlide
 });

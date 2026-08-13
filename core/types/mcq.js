@@ -121,7 +121,7 @@ function restoreMCQState() {
 }
 
 registerSlideType("mcq", {
-  icon: "❓",
+  icon: "📝",
   render: renderMCQSlide,
   isQuiz: true
 });

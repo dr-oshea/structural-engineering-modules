@@ -316,7 +316,7 @@ function quizScoreMessage(score, total) {
 
 
 registerSlideType("quiz", {
-  icon: "📝",
+  icon: "❓",
   render: renderQuiz,
   isQuiz: true,
 
