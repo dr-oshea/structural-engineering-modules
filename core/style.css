@@ -1864,3 +1864,20 @@ button:disabled {
   font-style: italic;
   color: #0f7a52;
 }
+
+
+/* ===== MCQ: "Next question" button (multi-question slides) ===== */
+
+.mcq-next-btn {
+  margin-top: 18px;
+  background: var(--unsw-teal);
+}
+
+.mcq-next-btn:hover {
+  background: #005e66;
+}
+
+/* Hidden until the current question is answered correctly */
+.mcq-next-hidden {
+  display: none;
+}
