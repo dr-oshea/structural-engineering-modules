@@ -444,7 +444,10 @@ function idSubmitItem() {
 
   delete st.status[st.openNode];       // answer changed — clear its verdict
   st.editing = null; st.addType = null;
-  idOpenNode(st.openNode, true);
+
+  // Close the panel so the student can see what they just drew. To add
+  // another item at the same point, they click the node again.
+  idClosePopup();
   idDrawAll();
 }
 

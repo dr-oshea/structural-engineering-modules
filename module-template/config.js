@@ -301,6 +301,99 @@ const moduleData = [
   },
 
 
+  /* ── DRAW THE SFD AND BMD (optional) ───────────────────────────────────
+     WORKED EXAMPLE — simply supported beam, span 8 m, carrying a UDL of
+     6 kN/m over the LEFT HALF only (A at x=0, C at midspan x=4, B at x=8).
+
+        R_A = 18 kN,  R_B = 6 kN
+        Shear:  +18 at A, falling to 0 at x = 3 m, then −6 from x = 4 to 8
+        Moment: 0 at A, PEAK 27 kNm at x = 3 m, 24 kNm at C, 0 at B
+
+     Note where the segments break. The SFD is split at x = 3 m because the
+     shear CHANGES SIDE there — each segment sits on one side of the datum.
+     The BMD is NOT split there: it's a single parabola whose turning point
+     lies inside the segment, which is exactly what `turning: "inside"` is for.
+
+     Positions are % of the image, with the beam running 10% → 90%:
+        x = 0 m → 10%     x = 3 m → 40%     x = 4 m → 50%     x = 8 m → 90%  */
+  {
+    type:  "diagram-plot",
+    label: "Draw the SFD and BMD",
+    title: "Draw the Shear Force and Bending Moment Diagrams",
+
+    image:      "images/beam-udl-half.svg",   // beam, supports and the UDL
+    imageWidth: "820px",
+    prompt: `<p>The beam carries a UDL of <strong>6 kN/m</strong> over its left
+             half. The reactions are $R_A = 18$ kN and $R_B = 6$ kN.</p>
+             <p>Click each segment and describe it, then press
+             <strong>Check answers</strong>.</p>`,
+    successFeedback: `<p>The bending moment peaks where the shear passes
+             through zero — here at $x = 3$ m, giving $M_{max} = 27$ kNm.</p>`,
+
+    plots: [
+
+      /* ── SHEAR FORCE DIAGRAM ──
+         Set  given: true  to hand students the SFD instead (values are then
+         labelled for them) so they only have to draw the BMD.            */
+      {
+        id:    "sfd",
+        title: "Shear Force Diagram",
+        unit:  "kN",
+        scale: 2,                 // px per kN → 18 kN draws 36 px tall
+        color: "#007882",
+        // given: true,
+        segments: [
+          {
+            ax: 10, ay: 34, bx: 40, by: 34, label: "A→(V=0)",
+            // 18 kN at A falling to zero at x = 3 m
+            answers: [[ { shape: "linear",
+                          values: { side: "above", vA: 18, vB: 0 } } ]]
+          },
+          {
+            ax: 40, ay: 34, bx: 50, by: 34, label: "(V=0)→C",
+            // crosses the datum, so this piece sits BELOW it
+            answers: [[ { shape: "linear",
+                          values: { side: "below", vA: 0, vB: 6 } } ]]
+          },
+          {
+            ax: 50, ay: 34, bx: 90, by: 34, label: "C→B",
+            // no load beyond midspan → constant −6 kN
+            answers: [[ { shape: "constant",
+                          values: { side: "below", value: 6 } } ]]
+          }
+        ]
+      },
+
+      /* ── BENDING MOMENT DIAGRAM ──
+         Sagging, so tension is on the underside: drawn BELOW the beam.   */
+      {
+        id:    "bmd",
+        title: "Bending Moment Diagram",
+        unit:  "kNm",
+        scale: 1.5,               // px per kNm → 27 kNm draws ~40 px
+        color: "#3f61c4",
+        segments: [
+          {
+            ax: 10, ay: 72, bx: 50, by: 72, label: "AC",
+            // Parabolic under the UDL. NOT split at x = 3 — the turning
+            // point sits inside, and its value IS the maximum moment.
+            answers: [[ { shape: "quadratic",
+                          values: { side: "below", vA: 0, vB: 24,
+                                    turning: "inside", peak: 27 } } ]]
+          },
+          {
+            ax: 50, ay: 72, bx: 90, by: 72, label: "CB",
+            // No load beyond C, so the moment runs straight back to zero
+            answers: [[ { shape: "linear",
+                          values: { side: "below", vA: 24, vB: 0 } } ]]
+          }
+        ]
+      }
+
+    ]
+  },
+
+
   /* ══ ADD MORE PARTS HERE ══════════════════════════════════════════════
      Other content types available (see AUTHORING_GUIDE.pdf §5):
        cards     flip cards for key concepts
