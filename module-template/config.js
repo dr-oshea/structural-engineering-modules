@@ -198,13 +198,29 @@ const moduleData = [
               { value: "up",    label: "Upward ↑",    draw: { angle: 270 } },
               { value: "down",  label: "Downward ↓",  draw: { angle:  90 } },
               { value: "left",  label: "Leftward ←",  draw: { angle: 180 } },
-              { value: "right", label: "Rightward →", draw: { angle:   0 } }
+              { value: "right", label: "Rightward →", draw: { angle:   0 } },
+              { value: "angled", label: "Angled ", draw: { angle:   315 } }
           ]},
           { id: "mag", label: "Magnitude", type: "number",
             unit: "kN", tolerance: 0.05 }
         ]
       },
-      moment: {
+    forcereaction: {
+        label: "Reaction Force",
+        draw:  { shape: "arrow", color: "#1c8b3b", length: 70 },
+        labelTemplate: "{name}",
+        fields: [
+          { id: "dir", label: "Direction", type: "select", options: [
+              { value: "up",    label: "Upward ↑",    draw: { angle: 270 } },
+              { value: "down",  label: "Downward ↓",  draw: { angle:  90 } },
+              { value: "left",  label: "Leftward ←",  draw: { angle: 180 } },
+              { value: "right", label: "Rightward →", draw: { angle:   0 } },
+              { value: "angled", label: "Angled ", draw: { angle:   315 } }
+          ]},
+          { id: "name", label: "Name", type: "text"}
+        ]
+      },
+    moment: {
         label: "Moment",
         draw:  { shape: "moment", color: "#3f61c4", radius: 26 },
         labelTemplate: "{mag} kNm",

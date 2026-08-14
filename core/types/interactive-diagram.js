@@ -185,7 +185,6 @@ function idOpenNode(nodeIndex, keepPosition) {
   popup.innerHTML = `
     <div class="idiag-popup-head">
       <span class="idiag-popup-title">${node.title || `Point ${node.label !== undefined ? node.label : nodeIndex + 1}`}</span>
-      <button class="idiag-popup-aside" onclick="idToggleAside()" title="Move this panel aside">⇱</button>
       <button class="idiag-popup-close" onclick="idClosePopup()" aria-label="Close">×</button>
     </div>
 
@@ -263,14 +262,15 @@ function idFieldHTML(f, value) {
     </label>`;
 }
 
-// Places the popup on whichever side of the node has more room.
+// Places the popup on whichever side of the node has more room. If it ever
+// covers something the student needs to see, they can close it (×), look, and
+// click the node again.
 function idPositionPopup(nodeIndex) {
   const slide = moduleData[currentSlide];
   const popup = document.getElementById("idiag-popup");
   const node  = slide.nodes[nodeIndex];
   if (!popup || !node) return;
 
-  popup.classList.remove("idiag-popup-aside");
   const onLeft = node.x > 50;      // node on the right → popup to its left
   const onTop  = node.y > 55;      // node low down    → popup above it
 
@@ -278,19 +278,6 @@ function idPositionPopup(nodeIndex) {
   popup.style.right  = onLeft ? `calc(${100 - node.x}% + 26px)` : "auto";
   popup.style.top    = onTop  ? "auto" : `calc(${node.y}% + 18px)`;
   popup.style.bottom = onTop  ? `calc(${100 - node.y}% + 18px)` : "auto";
-}
-
-// "Move aside" — parks the popup in a corner so it never covers the diagram.
-function idToggleAside() {
-  const popup = document.getElementById("idiag-popup");
-  if (!popup) return;
-  const aside = popup.classList.toggle("idiag-popup-aside");
-  if (aside) {
-    popup.style.left = popup.style.right = popup.style.top = popup.style.bottom = "";
-  } else {
-    const st = idState();
-    if (st.openNode !== null) idPositionPopup(st.openNode);
-  }
 }
 
 function idClosePopup() {
@@ -373,6 +360,94 @@ function idItemSummary(slide, item) {
 
 // ─── Drawing ────────────────────────────────────────────────────────────────
 
+// Node markers are 30px across, so drawings start ~18px out from the centre.
+// This stops arrowheads disappearing underneath the marker.
+const IDIAG_NODE_GAP = 18;
+
+// Canvas size for the current draw pass — label placement needs it to stay
+// inside the diagram (drawings are clipped, so a label that strays is lost).
+let idCanvasW = 0, idCanvasH = 0;
+
+// Captions placed so far in this draw pass, so a new one can avoid landing on
+// an existing one. Reset at the start of every idDrawAll().
+let idPlacedLabels = [];
+
+// Places a caption near a drawing, keeping it inside the canvas AND clear of
+// captions already drawn.
+//
+//   x, y     the preferred anchor point (already computed by the caller)
+//   dx, dy   the drawing's direction, used to push the label away from it
+//   text     the caption, for width estimation
+//   opts     { exact: true } to use x,y as given rather than offsetting along
+//            the direction — used by moments, whose caller already knows where
+//            it wants the label.
+//
+// Returns the attributes for an SVG <text>.
+function idLabelPlacement(x, y, dx, dy, text, opts) {
+  opts = opts || {};
+  const fontSize = 13;
+  const pad      = 4;
+  const halfW    = (String(text).length * fontSize * 0.52) / 2;
+  const lineH    = fontSize + 5;
+
+  let lx, ly;
+  if (opts.exact) {
+    lx = x; ly = y;
+  } else {
+    // Just beyond the tail, then pushed clear of the line itself:
+    //   horizontal arrows  → lift the label above the shaft
+    //   vertical arrows    → shift it to the side of the shaft
+    // (Sitting a caption on its own arrow makes both hard to read.)
+    const horizontal = Math.abs(dx) > Math.abs(dy);
+    lx = x - dx * 12;
+    ly = y - dy * 12;
+    if (horizontal) {
+      ly -= 10;
+    } else {
+      // Move to whichever side has more room
+      const toRight = x < idCanvasW / 2;
+      lx += (toRight ? 1 : -1) * (halfW + 10);
+      ly += 4;                       // optically centre against the shaft
+    }
+  }
+
+  const clamp = () => {
+    let anchor = "middle";
+    if (lx - halfW < pad) {
+      lx = pad; anchor = "start";
+    } else if (lx + halfW > idCanvasW - pad) {
+      lx = idCanvasW - pad; anchor = "end";
+    }
+    const topLimit = pad + fontSize;
+    if (ly < topLimit)             ly = topLimit;
+    else if (ly > idCanvasH - pad) ly = idCanvasH - pad;
+    return anchor;
+  };
+
+  let anchor = clamp();
+
+  // Box for the position we'd like
+  const boxOf = () => {
+    const left = anchor === "start" ? lx : anchor === "end" ? lx - 2 * halfW : lx - halfW;
+    return { left, right: left + 2 * halfW, top: ly - fontSize, bottom: ly + 3 };
+  };
+  const hits = (a, b) => !(a.right < b.left || a.left > b.right ||
+                           a.bottom < b.top || a.top > b.bottom);
+
+  // If it lands on an existing caption, step it away — alternating up and
+  // down, growing each time — then re-clamp and re-test.
+  const baseY = ly;
+  for (let attempt = 1; attempt <= 6; attempt++) {
+    if (!idPlacedLabels.some(b => hits(boxOf(), b))) break;
+    const step = Math.ceil(attempt / 2) * lineH;
+    ly = baseY + (attempt % 2 === 1 ? -step : step);
+    anchor = clamp();
+  }
+
+  idPlacedLabels.push(boxOf());
+  return `x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="${fontSize}"`;
+}
+
 // Merge the item type's draw spec with any draw fragments on chosen options.
 function idDrawSpec(slide, item) {
   const type = slide.itemTypes[item.itemType] || {};
@@ -404,6 +479,15 @@ function idDrawAll() {
   const w = stage.clientWidth || 800;
   const h = stage.clientHeight || 450;
   canvas.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  idCanvasW = w; idCanvasH = h;   // label placement needs these
+
+  // Seed the collision list with the node markers, so captions step around
+  // them just as they step around each other.
+  idPlacedLabels = slide.nodes.map(n => {
+    const cx = (n.x / 100) * w, cy = (n.y / 100) * h;
+    const rad = IDIAG_NODE_GAP;
+    return { left: cx - rad, right: cx + rad, top: cy - rad, bottom: cy + rad };
+  });
 
   const st = idState();
   let defs = `
@@ -434,7 +518,7 @@ function idDrawItem(slide, item, px, py) {
   const shape = s.shape || "arrow";
 
   if (shape === "moment") {
-    const r    = s.radius || 26;
+    const r    = Math.max(s.radius || 26, IDIAG_NODE_GAP + 6);   // clear the marker
     const cw   = (s.sense || "cw") === "cw";
     const sweep = cw ? 1 : 0;
     // Three-quarter arc around the node
@@ -445,8 +529,8 @@ function idDrawItem(slide, item, px, py) {
       <path d="M ${p0[0]} ${p0[1]} A ${r} ${r} 0 1 ${sweep} ${p1[0]} ${p1[1]}"
             fill="none" stroke="${color}" stroke-width="2.5"
             marker-end="url(#idiag-head)"></path>
-      ${label ? `<text x="${px}" y="${py - r - 8}" fill="${color}"
-                       font-size="13" text-anchor="middle">${label}</text>` : ""}`;
+      ${label ? `<text ${idLabelPlacement(px, py - r - 10, 0, -1, label, { exact: true })}
+                       fill="${color}">${label}</text>` : ""}`;
   }
 
   if (shape === "pin" || shape === "roller") {
@@ -469,39 +553,44 @@ function idDrawItem(slide, item, px, py) {
     // Arrows spread perpendicular to their direction
     const ox = -dy, oy = dx;
     let out = "";
+    const gap = s.gap !== undefined ? s.gap : IDIAG_NODE_GAP;
     for (let k = 0; k < count; k++) {
       const t  = (k / (count - 1) - 0.5) * width;
-      const bx = px + ox * t - dx * len, by = py + oy * t - dy * len;
-      const hx = px + ox * t,            hy = py + oy * t;
+      const hx = px + ox * t - dx * gap, hy = py + oy * t - dy * gap;
+      const bx = hx - dx * len,          by = hy - dy * len;
       out += `<line x1="${bx}" y1="${by}" x2="${hx}" y2="${hy}"
                     stroke="${color}" stroke-width="2"
                     marker-end="url(#idiag-head)"></line>`;
     }
-    out += `<line x1="${px + ox * (-width / 2) - dx * len}" y1="${py + oy * (-width / 2) - dy * len}"
-                  x2="${px + ox * ( width / 2) - dx * len}" y2="${py + oy * ( width / 2) - dy * len}"
+    const spanOff = len + gap;
+    out += `<line x1="${px + ox * (-width / 2) - dx * spanOff}" y1="${py + oy * (-width / 2) - dy * spanOff}"
+                  x2="${px + ox * ( width / 2) - dx * spanOff}" y2="${py + oy * ( width / 2) - dy * spanOff}"
                   stroke="${color}" stroke-width="2"></line>`;
-    if (label) out += `<text x="${px - dx * (len + 14)}" y="${py - dy * (len + 14)}"
-                             fill="${color}" font-size="13" text-anchor="middle">${label}</text>`;
+    if (label) out += `<text ${idLabelPlacement(px - dx * spanOff, py - dy * spanOff, dx, dy, label)}
+                             fill="${color}">${label}</text>`;
     return out;
   }
 
   // Default: arrow
   const angle = (s.angle !== undefined ? s.angle : 270) * Math.PI / 180;
   const len   = s.length || 70;
+  // Keep clear of the node marker so the arrowhead isn't hidden beneath it
+  const gap = s.gap !== undefined ? s.gap : IDIAG_NODE_GAP;
   const dx = Math.cos(angle), dy = Math.sin(angle);
   let x1, y1, x2, y2;
-  if (s.anchor === "tail") {           // starts at the node, points away
-    x1 = px; y1 = py; x2 = px + dx * len; y2 = py + dy * len;
-  } else {                              // default: head lands on the node
-    x1 = px - dx * len; y1 = py - dy * len; x2 = px; y2 = py;
+  if (s.anchor === "tail") {           // starts beside the node, points away
+    x1 = px + dx * gap; y1 = py + dy * gap;
+    x2 = x1 + dx * len; y2 = y1 + dy * len;
+  } else {                              // default: head stops just short of it
+    x2 = px - dx * gap; y2 = py - dy * gap;
+    x1 = x2 - dx * len; y1 = y2 - dy * len;
   }
-  const lx = x1 - dx * 10, ly = y1 - dy * 10;
   return `
     <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"
           stroke="${color}" stroke-width="2.5"
           marker-end="url(#idiag-head)"></line>
-    ${label ? `<text x="${lx}" y="${ly}" fill="${color}" font-size="13"
-                     text-anchor="middle" dominant-baseline="middle">${label}</text>` : ""}`;
+    ${label ? `<text ${idLabelPlacement(x1, y1, dx, dy, label)}
+                     fill="${color}">${label}</text>` : ""}`;
 }
 
 

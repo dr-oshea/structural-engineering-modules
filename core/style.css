@@ -1894,6 +1894,8 @@ button:disabled {
   max-width: 860px;
   margin: 8px auto 4px;
   line-height: 0;
+  /* A minimum height keeps the layout sane if the image is missing or slow */
+  min-height: 220px;
 }
 
 .idiag-image {
@@ -1911,7 +1913,9 @@ button:disabled {
   width: 100%;
   height: 100%;
   pointer-events: none;          /* clicks pass through to the nodes */
-  overflow: visible;
+  overflow: hidden;              /* drawings stay inside the diagram area, so
+                                    they can never cover the prompt or the
+                                    Check row below */
 }
 
 /* ── Node markers ── */
@@ -1979,15 +1983,6 @@ button:disabled {
 
 .idiag-popup-hidden { display: none; }
 
-/* "Move aside" parks it out of the way of the diagram */
-.idiag-popup-aside {
-  left: auto !important;
-  right: 8px !important;
-  top: 8px !important;
-  bottom: auto !important;
-  opacity: 0.97;
-}
-
 .idiag-popup-head {
   display: flex;
   align-items: center;
@@ -2004,7 +1999,6 @@ button:disabled {
   font-size: 0.95rem;
 }
 
-.idiag-popup-aside,
 .idiag-popup-close {
   margin: 0;
   padding: 0;
@@ -2021,7 +2015,6 @@ button:disabled {
   box-shadow: none;
 }
 
-.idiag-popup-aside:hover,
 .idiag-popup-close:hover {
   background: rgba(0,0,0,0.12);
   transform: none;
