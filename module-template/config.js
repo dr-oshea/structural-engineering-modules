@@ -186,6 +186,8 @@ const moduleData = [
     imageWidth: "760px",
     prompt: `<p>Click each marked point and add every force and moment acting
              there, then press <strong>Check answers</strong>.</p>`,
+    successFeedback: `<p>Any variable name works, but engineers conventionally
+              use $A_x$ and $A_y$ for reactions at support A.</p>`,
 
     // WHAT can be added. Each type has its own fields and its own drawing.
     itemTypes: {
@@ -198,29 +200,13 @@ const moduleData = [
               { value: "up",    label: "Upward ↑",    draw: { angle: 270 } },
               { value: "down",  label: "Downward ↓",  draw: { angle:  90 } },
               { value: "left",  label: "Leftward ←",  draw: { angle: 180 } },
-              { value: "right", label: "Rightward →", draw: { angle:   0 } },
-              { value: "angled", label: "Angled ", draw: { angle:   315 } }
+              { value: "right", label: "Rightward →", draw: { angle:   0 } }
           ]},
           { id: "mag", label: "Magnitude", type: "number",
             unit: "kN", tolerance: 0.05 }
         ]
       },
-    forcereaction: {
-        label: "Reaction Force",
-        draw:  { shape: "arrow", color: "#1c8b3b", length: 70 },
-        labelTemplate: "{name}",
-        fields: [
-          { id: "dir", label: "Direction", type: "select", options: [
-              { value: "up",    label: "Upward ↑",    draw: { angle: 270 } },
-              { value: "down",  label: "Downward ↓",  draw: { angle:  90 } },
-              { value: "left",  label: "Leftward ←",  draw: { angle: 180 } },
-              { value: "right", label: "Rightward →", draw: { angle:   0 } },
-              { value: "angled", label: "Angled ", draw: { angle:   315 } }
-          ]},
-          { id: "name", label: "Name", type: "text"}
-        ]
-      },
-    moment: {
+      moment: {
         label: "Moment",
         draw:  { shape: "moment", color: "#3f61c4", radius: 26 },
         labelTemplate: "{mag} kNm",
@@ -232,10 +218,64 @@ const moduleData = [
           { id: "mag", label: "Magnitude", type: "number",
             unit: "kNm", tolerance: 0.1 }
         ]
+      },
+
+      // ── Distributed loads attach to a REGION, not a node ──
+      udl: {
+        label: "Uniform load",
+        draw:  { shape: "spanLoad", color: "#c62828", mag: "w" },
+        labelTemplate: "{w} kN/m",
+        fields: [
+          { id: "dir", label: "Direction", type: "select", options: [
+              { value: "down", label: "Vertically down",        draw: { loadDir: "down" } },
+              { value: "up",   label: "Vertically up",          draw: { loadDir: "up"   } },
+              { value: "perp", label: "Perpendicular to member", draw: { loadDir: "perp" } }
+          ]},
+          { id: "w", label: "Magnitude", type: "number",
+            unit: "kN/m", tolerance: 0.05 }
+        ]
+      },
+      varyingLoad: {
+        label: "Varying load",
+        // Two magnitude fields → a trapezoidal/triangular load
+        draw:  { shape: "spanLoad", color: "#c62828", magStart: "wA", magEnd: "wB" },
+        labelTemplate: "{v} kN/m",          // {v} is each end's own value
+        fields: [
+          { id: "dir", label: "Direction", type: "select", options: [
+              { value: "down", label: "Vertically down",         draw: { loadDir: "down" } },
+              { value: "perp", label: "Perpendicular to member",  draw: { loadDir: "perp" } }
+          ]},
+          { id: "wA", label: "Magnitude at A", type: "number", unit: "kN/m", tolerance: 0.05 },
+          { id: "wB", label: "Magnitude at B", type: "number", unit: "kN/m", tolerance: 0.05 }
+        ]
       }
     },
 
-    // WHERE things can be added, and what's correct there.
+    // SPANS where distributed loads can be added.
+    // ax,ay → bx,by are the ends ON the structure (percentages of the image);
+    // `height` is how far the clickable box extends off the member, and its
+    // SIGN chooses which side. The box rotates with the member, so an inclined
+    // member works without any extra configuration.
+    regions: [
+      {
+        ax: 25, ay: 55, bx: 65, by: 55,     // a horizontal member
+        height: 45,                          // box extends ABOVE the member
+        label: "BC",
+        answers: [[
+          { itemType: "udl", values: { dir: "down", w: 4 } }
+        ]]
+      },
+      {
+        ax: 65, ay: 55, bx: 88, by: 32,     // an INCLINED member
+        height: 40,
+        label: "CD",
+        answers: [[
+          { itemType: "udl", values: { dir: "perp", w: 3 } }
+        ]]
+      }
+    ],
+
+    // WHERE point items can be added.
     // x, y are percentages of the image, measured from the top-left.
     nodes: [
       {

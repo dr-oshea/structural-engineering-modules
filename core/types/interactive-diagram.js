@@ -77,6 +77,46 @@
    ============================================================================ */
 
 
+// ─── Targets: nodes and regions ─────────────────────────────────────────────
+//
+// A NODE is a point — forces and moments attach to it.
+// A REGION is a span between two points ON the structure, with a signed box
+// height extending off it. Distributed loads attach to a region, and because
+// the region carries an orientation, a UDL on an inclined member draws
+// correctly without any extra configuration.
+//
+// Both are addressed by a single index: nodes come first, then regions, so
+// node indices are unchanged and every mechanism (state, popup, Check) works
+// for both without special cases.
+function idTargets(slide) {
+  const nodes   = (slide.nodes   || []).map(n => Object.assign({ kind: "node"   }, n));
+  const regions = (slide.regions || []).map(r => Object.assign({ kind: "region" }, r));
+  return nodes.concat(regions);
+}
+
+// Geometry of a region in canvas pixels.
+//   a, b     endpoints on the structure
+//   dir      unit vector A → B
+//   normal   unit vector the box extends along (sign follows `height`)
+//   maxLen   how far the box extends (|height|)
+function idRegionGeom(region, w, h) {
+  const ax = (region.ax / 100) * w, ay = (region.ay / 100) * h;
+  const bx = (region.bx / 100) * w, by = (region.by / 100) * h;
+  let vx = bx - ax, vy = by - ay;
+  const len = Math.hypot(vx, vy) || 1;
+  vx /= len; vy /= len;
+  // Rotate A→B by -90° so a left-to-right member's positive normal points up
+  let nx = vy, ny = -vx;
+  const height = region.height !== undefined ? region.height : 40;
+  if (height < 0) { nx = -nx; ny = -ny; }
+  return {
+    ax, ay, bx, by, len,
+    dir: { x: vx, y: vy },
+    normal: { x: nx, y: ny },
+    maxLen: Math.abs(height)
+  };
+}
+
 // ─── State ──────────────────────────────────────────────────────────────────
 //   items:   { nodeIndex: [ { itemType, values } … ] }   what the student built
 //   status:  { nodeIndex: "correct" | "wrong" }          set by Check
@@ -113,12 +153,12 @@ function renderInteractiveDiagram(slide) {
       <img src="${slide.image}" class="idiag-image" alt="${slide.title}"
            onload="idDrawAll()">
       <svg class="idiag-canvas" id="idiag-canvas" aria-hidden="true"></svg>
-      ${slide.nodes.map((n, i) => `
+      ${idTargets(slide).map((t, i) => t.kind !== "node" ? "" : `
         <button class="idiag-node" id="idiag-node-${i}"
-                style="left:${n.x}%; top:${n.y}%;"
+                style="left:${t.x}%; top:${t.y}%;"
                 onclick="idOpenNode(${i})"
-                aria-label="${n.title || n.label || `Point ${i + 1}`}">
-          ${n.label !== undefined ? n.label : i + 1}
+                aria-label="${t.title || t.label || `Point ${i + 1}`}">
+          ${t.label !== undefined ? t.label : i + 1}
         </button>
       `).join("")}
       <div class="idiag-popup idiag-popup-hidden" id="idiag-popup"></div>
@@ -132,17 +172,21 @@ function renderInteractiveDiagram(slide) {
     </div>
 
     <div class="steps-complete steps-complete-hidden" id="idiag-complete">
-      🎉 Diagram complete — every point is correct!
+      ${slide.completeText || "🎉 Diagram complete — every point is correct!"}
     </div>
+
+    ${slide.successFeedback ? `
+      <div class="mcq-explanation mcq-explanation-hidden" id="idiag-feedback">
+        <span class="explanation-tick">✓</span>
+        <span>${slide.successFeedback}</span>
+      </div>
+    ` : ""}
   `);
 
   idRefreshNodes();
   idDrawAll();
   if (st.openNode !== null) idOpenNode(st.openNode, true);
-  if (completedSlides.has(currentSlide)) {
-    const done = document.getElementById("idiag-complete");
-    if (done) done.classList.remove("steps-complete-hidden");
-  }
+  if (completedSlides.has(currentSlide)) idRevealSuccess(false);
 }
 
 
@@ -151,7 +195,7 @@ function renderInteractiveDiagram(slide) {
 function idRefreshNodes() {
   const slide = moduleData[currentSlide];
   const st    = idState();
-  slide.nodes.forEach((n, i) => {
+  idTargets(slide).forEach((n, i) => {
     const el = document.getElementById(`idiag-node-${i}`);
     if (!el) return;
     const count = (st.items[i] || []).length;
@@ -165,13 +209,16 @@ function idRefreshNodes() {
 
 // ─── Popup ──────────────────────────────────────────────────────────────────
 
-function idOpenNode(nodeIndex, keepPosition) {
+// `keepForm` keeps the current form state (used when re-rendering the panel
+// after choosing a type, editing, or submitting). Positioning is always
+// recomputed — see the note further down.
+function idOpenNode(nodeIndex, keepForm) {
   const slide = moduleData[currentSlide];
   const st    = idState();
-  const node  = slide.nodes[nodeIndex];
+  const node  = idTargets(slide)[nodeIndex];
 
   st.openNode = nodeIndex;
-  if (!keepPosition) { st.editing = null; st.addType = null; }
+  if (!keepForm) { st.editing = null; st.addType = null; }
 
   const popup = document.getElementById("idiag-popup");
   if (!popup) return;
@@ -224,7 +271,13 @@ function idOpenNode(nodeIndex, keepPosition) {
   `;
 
   popup.classList.remove("idiag-popup-hidden");
-  if (!keepPosition) idPositionPopup(nodeIndex);
+
+  // ALWAYS reposition. The panel's height changes every time its contents do
+  // — the Add menu is short, an item form is tall — and a position computed
+  // for the old height is exactly what pushes the form under the footer.
+  // The preferred side is derived from the target, so this doesn't make the
+  // panel jump about; it just re-clamps to the new size.
+  idPositionPopup(nodeIndex);
   idRefreshNodes();
   typesetMath(popup);
 }
@@ -262,22 +315,74 @@ function idFieldHTML(f, value) {
     </label>`;
 }
 
-// Places the popup on whichever side of the node has more room. If it ever
-// covers something the student needs to see, they can close it (×), look, and
-// click the node again.
+// Places the popup beside its target, then MEASURES it and pulls it back so
+// the whole panel stays inside the diagram area. Positioning by percentages
+// alone can't do this — the panel's own size isn't known until it's rendered,
+// so it could slide under the sidebar or off the top. We therefore set a
+// provisional position, measure, and correct.
 function idPositionPopup(nodeIndex) {
   const slide = moduleData[currentSlide];
   const popup = document.getElementById("idiag-popup");
-  const node  = slide.nodes[nodeIndex];
-  if (!popup || !node) return;
+  const stage = document.getElementById("idiag-stage");
+  const node  = idTargets(slide)[nodeIndex];
+  if (!popup || !stage || !node) return;
 
-  const onLeft = node.x > 50;      // node on the right → popup to its left
-  const onTop  = node.y > 55;      // node low down    → popup above it
+  // Work in pixels relative to the stage; clear any earlier anchoring
+  popup.style.right  = "auto";
+  popup.style.bottom = "auto";
+  popup.style.left   = "0px";
+  popup.style.top    = "0px";
 
-  popup.style.left   = onLeft ? "auto" : `calc(${node.x}% + 26px)`;
-  popup.style.right  = onLeft ? `calc(${100 - node.x}% + 26px)` : "auto";
-  popup.style.top    = onTop  ? "auto" : `calc(${node.y}% + 18px)`;
-  popup.style.bottom = onTop  ? `calc(${100 - node.y}% + 18px)` : "auto";
+  const sw = stage.clientWidth  || 800;
+  const sh = stage.clientHeight || 450;
+
+  // ── How much of the window is actually usable? ──
+  // The nav footer is FIXED, so it paints over the slide: anything the popup
+  // puts underneath it is invisible and unreachable. Subtract its height (and
+  // leave a margin) before deciding how tall the panel may be or where it sits.
+  const footer   = document.querySelector(".nav-footer");
+  const footerH  = footer ? footer.offsetHeight : 0;
+  const viewH    = (typeof window !== "undefined" && window.innerHeight) || 800;
+  const edge     = 10;
+  const topLimit    = edge;                       // viewport coords
+  const bottomLimit = viewH - footerH - edge;     // viewport coords
+
+  // Cap the panel so it can never be taller than the usable strip; a long
+  // form then scrolls inside itself instead of running under the footer.
+  popup.style.maxHeight = `${Math.max(160, bottomLimit - topLimit)}px`;
+
+  // Regions anchor from their midpoint
+  const cxPct = node.kind === "region" ? (node.ax + node.bx) / 2 : node.x;
+  const cyPct = node.kind === "region" ? (node.ay + node.by) / 2 : node.y;
+  const cx = (cxPct / 100) * sw;
+  const cy = (cyPct / 100) * sh;
+
+  // Now that it's rendered and capped we can measure it
+  const pw = popup.offsetWidth  || 280;
+  const ph = popup.offsetHeight || 220;
+
+  const gap = 24, margin = 6;
+
+  // Prefer whichever side of the target has more room
+  let left = (cx > sw / 2) ? cx - gap - pw : cx + gap;
+  let top  = (cy > sh / 2) ? cy - gap - ph : cy + gap * 0.7;
+
+  // Keep the whole panel inside the stage horizontally
+  left = Math.max(margin, Math.min(left, sw - pw - margin));
+  top  = Math.max(margin, Math.min(top,  sh - ph - margin));
+
+  // ── Then correct vertically against the WINDOW, not just the stage ──
+  // Convert to viewport coordinates, push the panel up off the footer, and
+  // make sure that didn't drive it off the top.
+  const stageTop = stage.getBoundingClientRect
+                   ? stage.getBoundingClientRect().top : 0;
+  const overshoot = (stageTop + top + ph) - bottomLimit;
+  if (overshoot > 0) top -= overshoot;
+  const shortfall = topLimit - (stageTop + top);
+  if (shortfall > 0) top += shortfall;
+
+  popup.style.left = `${left}px`;
+  popup.style.top  = `${top}px`;
 }
 
 function idClosePopup() {
@@ -483,11 +588,13 @@ function idDrawAll() {
 
   // Seed the collision list with the node markers, so captions step around
   // them just as they step around each other.
-  idPlacedLabels = slide.nodes.map(n => {
-    const cx = (n.x / 100) * w, cy = (n.y / 100) * h;
-    const rad = IDIAG_NODE_GAP;
-    return { left: cx - rad, right: cx + rad, top: cy - rad, bottom: cy + rad };
-  });
+  idPlacedLabels = idTargets(slide)
+    .filter(n => n.kind === "node")
+    .map(n => {
+      const cx = (n.x / 100) * w, cy = (n.y / 100) * h;
+      const rad = IDIAG_NODE_GAP;
+      return { left: cx - rad, right: cx + rad, top: cy - rad, bottom: cy + rad };
+    });
 
   const st = idState();
   let defs = `
@@ -499,12 +606,23 @@ function idDrawAll() {
     </defs>`;
   let body = "";
 
-  slide.nodes.forEach((n, i) => {
-    const px = (n.x / 100) * w;
-    const py = (n.y / 100) * h;
-    (st.items[i] || []).forEach(item => {
-      body += idDrawItem(slide, item, px, py);
-    });
+  const targets = idTargets(slide);
+
+  // Region outlines first, so items draw on top of them
+  targets.forEach((t, i) => {
+    if (t.kind !== "region") return;
+    body += idDrawRegionOutline(t, i, idRegionGeom(t, w, h), st);
+  });
+
+  targets.forEach((t, i) => {
+    const items = st.items[i] || [];
+    if (t.kind === "region") {
+      const g = idRegionGeom(t, w, h);
+      items.forEach(item => { body += idDrawSpanItem(slide, item, g); });
+    } else {
+      const px = (t.x / 100) * w, py = (t.y / 100) * h;
+      items.forEach(item => { body += idDrawItem(slide, item, px, py); });
+    }
   });
 
   canvas.innerHTML = defs + body;
@@ -594,6 +712,121 @@ function idDrawItem(slide, item, px, py) {
 }
 
 
+// Dashed box marking a clickable region, rotated to the member's orientation,
+// with small A / B markers so the student knows which end is which when they
+// enter start and end magnitudes.
+function idDrawRegionOutline(region, index, g, st) {
+  const status = st.status[index];
+  const open   = st.openNode === index;
+  const filled = (st.items[index] || []).length > 0;
+
+  const stroke = status === "correct" ? "#12a06a"
+               : status === "wrong"   ? "#ff635d"
+               : open                 ? "#ffdc00"
+               : filled               ? "#4a5568" : "#8aa0b8";
+  const fill   = status === "correct" ? "rgba(26,201,135,0.08)"
+               : status === "wrong"   ? "rgba(255,99,93,0.08)"
+               : open                 ? "rgba(255,220,0,0.14)"
+                                      : "rgba(63,97,196,0.05)";
+
+  const { ax, ay, bx, by, normal, maxLen } = g;
+  const ox = normal.x * maxLen, oy = normal.y * maxLen;
+  const pts = `${ax},${ay} ${bx},${by} ${bx + ox},${by + oy} ${ax + ox},${ay + oy}`;
+
+  // A / B markers sit just outside each end, along the member line
+  const ex = g.dir.x * 12, ey = g.dir.y * 12;
+  const mx = normal.x * (maxLen * 0.5), my = normal.y * (maxLen * 0.5);
+
+  return `
+    <polygon class="idiag-region" points="${pts}"
+             fill="${fill}" stroke="${stroke}" stroke-width="1"
+             stroke-dasharray="3 3" rx="6"
+             onclick="idOpenNode(${index})"></polygon>
+    <text x="${ax - ex + mx}" y="${ay - ey + my}" class="idiag-region-end"
+          fill="${stroke}" font-size="11" font-weight="700"
+          text-anchor="middle" dominant-baseline="middle">A</text>
+    <text x="${bx + ex + mx}" y="${by + ey + my}" class="idiag-region-end"
+          fill="${stroke}" font-size="11" font-weight="700"
+          text-anchor="middle" dominant-baseline="middle">B</text>`;
+}
+
+
+// Draws a distributed load across a region.
+//
+// The draw spec names which value fields hold the magnitudes:
+//     draw: { shape: "spanLoad", mag: "w" }                 uniform
+//     draw: { shape: "spanLoad", magStart: "wA", magEnd: "wB" }   varying
+//
+// Arrow lengths are proportional to the magnitudes (the larger end fills the
+// region box), so a triangular load tapers correctly and a zero end draws as
+// zero. A uniform load gets ONE centred caption; a varying load is labelled at
+// both ends.
+function idDrawSpanItem(slide, item, g) {
+  const s     = idDrawSpec(slide, item);
+  const color = s.color || "#c62828";
+  const type  = slide.itemTypes[item.itemType] || {};
+
+  // Magnitudes at each end
+  let wA, wB;
+  if (s.mag !== undefined) {
+    wA = wB = Number(item.values[s.mag]);
+  } else {
+    wA = Number(item.values[s.magStart]);
+    wB = Number(item.values[s.magEnd]);
+  }
+  if (isNaN(wA)) wA = 0;
+  if (isNaN(wB)) wB = 0;
+
+  // Which way do the arrows point?
+  //   "perp"  → back toward the member from the box side (the default)
+  //   "down"/"up"/"left"/"right" → absolute, for inclined members
+  const ABS = { down: {x:0,y:1}, up: {x:0,y:-1}, left: {x:-1,y:0}, right: {x:1,y:0} };
+  const u = ABS[s.loadDir] || { x: -g.normal.x, y: -g.normal.y };
+
+  const wRef = Math.max(Math.abs(wA), Math.abs(wB)) || 1;
+  const count = Math.max(3, Math.min(9, Math.round(g.len / 45) + 2));
+
+  let out = "";
+  const tails = [];
+  for (let k = 0; k < count; k++) {
+    const t  = count === 1 ? 0 : k / (count - 1);
+    const px = g.ax + (g.bx - g.ax) * t;
+    const py = g.ay + (g.by - g.ay) * t;
+    const w  = wA + (wB - wA) * t;
+    const L  = g.maxLen * (Math.abs(w) / wRef);
+    const tx = px - u.x * L, ty = py - u.y * L;
+    tails.push([tx, ty]);
+    if (L > 2) {
+      out += `<line x1="${tx}" y1="${ty}" x2="${px}" y2="${py}"
+                    stroke="${color}" stroke-width="2"
+                    marker-end="url(#idiag-head)"></line>`;
+    }
+  }
+
+  // Line joining the arrow tails — the load's profile
+  out += `<polyline points="${tails.map(p => p.join(",")).join(" ")}"
+                    fill="none" stroke="${color}" stroke-width="2"></polyline>`;
+
+  // Captions: one in the middle when uniform, one per end when varying
+  const fmt = (v) => (type.labelTemplate || "{v}")
+                       .replace(/\{(\w+)\}/g, (_, k) =>
+                          k === "v" ? v : (item.values[k] !== undefined ? item.values[k] : v));
+  if (wA === wB) {
+    const mid = tails[Math.floor(tails.length / 2)];
+    out += `<text ${idLabelPlacement(mid[0] - u.x * 12, mid[1] - u.y * 12,
+                                     u.x, u.y, fmt(wA))} fill="${color}">${fmt(wA)}</text>`;
+  } else {
+    const a = tails[0], b = tails[tails.length - 1];
+    out += `<text ${idLabelPlacement(a[0] - u.x * 10, a[1] - u.y * 10, u.x, u.y, fmt(wA))}
+                  fill="${color}">${fmt(wA)}</text>`;
+    out += `<text ${idLabelPlacement(b[0] - u.x * 10, b[1] - u.y * 10, u.x, u.y, fmt(wB))}
+                  fill="${color}">${fmt(wB)}</text>`;
+  }
+
+  return out;
+}
+
+
 // ─── Checking ───────────────────────────────────────────────────────────────
 
 // Acceptable answer sets for a node (supports `answer` shorthand).
@@ -604,21 +837,37 @@ function idNodeAnswers(node) {
 }
 
 // Does one entered item match one expected item?
+// How strictly is each field checked?
+//
+//   OMIT the field from `values`   → accept ANYTHING the student enters.
+//     This is the supported way to leave a field free — the form still
+//     requires it to be filled in, it just isn't marked against. Use it for
+//     things like a reaction's variable name, where any label is valid.
+//
+//   Give an ARRAY                  → accept any ONE of those values.
+//     e.g.  values: { dir: ["up", "down"] }   — either sense will do.
+//
+//   Give a single value            → must match (numbers within `tolerance`,
+//                                    text trimmed and case-insensitive).
+function idFieldMatches(f, ev, xv) {
+  if (xv === undefined) return true;              // unconstrained — anything goes
+  if (Array.isArray(xv)) return xv.some(v => idFieldMatches(f, ev, v));
+
+  if (f.type === "number") {
+    const tol = f.tolerance !== undefined ? f.tolerance : 0.01;
+    return !isNaN(ev) && Math.abs(ev - xv) <= tol;
+  }
+  if (f.type === "text") {
+    return String(ev).trim().toLowerCase() === String(xv).trim().toLowerCase();
+  }
+  return ev === xv;
+}
+
 function idItemMatches(slide, entered, expected) {
   if (entered.itemType !== expected.itemType) return false;
   const type = slide.itemTypes[expected.itemType] || {};
   for (const f of (type.fields || [])) {
-    const ev = entered.values[f.id];
-    const xv = expected.values[f.id];
-    if (xv === undefined) continue;               // author didn't constrain it
-    if (f.type === "number") {
-      const tol = f.tolerance !== undefined ? f.tolerance : 0.01;
-      if (isNaN(ev) || Math.abs(ev - xv) > tol) return false;
-    } else if (f.type === "text") {
-      if (String(ev).trim().toLowerCase() !== String(xv).trim().toLowerCase()) return false;
-    } else if (ev !== xv) {
-      return false;
-    }
+    if (!idFieldMatches(f, entered.values[f.id], expected.values[f.id])) return false;
   }
   return true;
 }
@@ -637,7 +886,7 @@ function idSetMatches(slide, entered, expectedSet) {
 
 function idNodeIsCorrect(slide, nodeIndex) {
   const entered = idState().items[nodeIndex] || [];
-  return idNodeAnswers(slide.nodes[nodeIndex])
+  return idNodeAnswers(idTargets(slide)[nodeIndex])
            .some(set => idSetMatches(slide, entered, set));
 }
 
@@ -646,7 +895,7 @@ function idCheck() {
   const st    = idState();
   let wrong = 0;
 
-  slide.nodes.forEach((n, i) => {
+  idTargets(slide).forEach((n, i) => {
     const ok = idNodeIsCorrect(slide, i);
     st.status[i] = ok ? "correct" : "wrong";
     if (!ok) wrong++;
@@ -666,12 +915,25 @@ function idCheck() {
     idClosePopup();
     completedSlides.add(currentSlide);
     updateLockState();
-    const done = document.getElementById("idiag-complete");
-    if (done) {
-      done.classList.remove("steps-complete-hidden");
-      done.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
+    idRevealSuccess(true);
   }
+}
+
+
+// Shows the completion banner and, if the author supplied one, the extra
+// feedback note beneath it.
+function idRevealSuccess(scroll) {
+  const done = document.getElementById("idiag-complete");
+  if (done) done.classList.remove("steps-complete-hidden");
+
+  const fb = document.getElementById("idiag-feedback");
+  if (fb) {
+    fb.classList.remove("mcq-explanation-hidden");
+    typesetMath(fb);              // the note may contain LaTeX
+  }
+
+  const target = fb || done;
+  if (scroll && target) target.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 

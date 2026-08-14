@@ -1970,6 +1970,11 @@ button:disabled {
   z-index: 10;
   width: 280px;
   max-width: 88%;
+  /* A fallback cap; the exact value is set in JS from the usable window
+     height (viewport minus the fixed nav footer) each time it opens, so a
+     long form scrolls inside rather than running under the footer. */
+  max-height: 72vh;
+  overflow-y: auto;
   background: var(--surface-card);
   border: 1px solid var(--border-soft);
   border-top: 3px solid var(--unsw-yellow);
@@ -2187,3 +2192,24 @@ button:disabled {
 
 .idiag-status-ok    { color: #0f7a52; }
 .idiag-status-wrong { color: #b32c28; }
+
+
+/* ===== Interactive diagram: regions (spans for distributed loads) ===== */
+
+/* The canvas ignores pointer events so nodes stay clickable; region outlines
+   opt back in so the whole span is a click target. */
+.idiag-region {
+  pointer-events: auto;
+  cursor: pointer;
+  transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+.idiag-region:hover {
+  fill: rgba(63,97,196,0.16);
+}
+
+/* The small A / B end markers */
+.idiag-region-end {
+  pointer-events: none;
+  user-select: none;
+}
