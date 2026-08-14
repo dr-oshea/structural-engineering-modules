@@ -2213,3 +2213,55 @@ button:disabled {
   pointer-events: none;
   user-select: none;
 }
+
+
+/* ===== Diagram plot (SFD / BMD) ===== */
+
+.dp-seg {
+  pointer-events: auto;
+  cursor: pointer;
+  transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+.dp-seg:hover { fill: rgba(63,97,196,0.14); }
+
+.dp-seg-label { pointer-events: none; user-select: none; }
+
+/* Which plot is which */
+.dp-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.dp-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+
+.dp-legend-swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Per-segment notes after Check — says WHICH field, not what it should be */
+.dp-messages { margin-top: 14px; }
+
+.dp-message-list {
+  text-align: left;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 12px 18px 12px 34px;
+  background: #fff5f5;
+  border: 1px solid rgba(255,99,93,0.35);
+  border-left: 4px solid var(--unsw-red);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #7a2420;
+}
+
+.dp-message-list li { margin: 3px 0; }
