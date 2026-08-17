@@ -642,6 +642,51 @@ function imageSizeStyle(o) {
   return parts.length ? parts.join(";") + ";" : "";
 }
 
+// Renders an optional author hint.
+//
+// Set `hint` on a step, node, region or segment to walk the student through
+// the method — these are revision exercises, not assessments, so spelling out
+// the approach is often exactly what's wanted. Accepts HTML and LaTeX.
+//
+// Set `hintCollapsed: true` alongside it and the hint starts folded behind a
+// "Show hint" toggle, so students who want to try unaided can.
+//
+// `onToggle` is JS run when a collapsible hint opens or closes — panels that
+// float (the diagram popups) use it to re-clamp themselves to the new height.
+function hintHTML(target, onToggle) {
+  if (!target || !target.hint) return "";
+  if (target.hintCollapsed) {
+    return `<details class="hint-box hint-collapsible"
+                     ${onToggle ? `ontoggle="${onToggle}"` : ""}>
+              <summary>Show hint</summary>
+              <div class="hint-body">${target.hint}</div>
+            </details>`;
+  }
+  return `<div class="hint-box"><div class="hint-body">${target.hint}</div></div>`;
+}
+
+// Re-clamps whichever floating diagram panel is open. Opening or closing a
+// collapsible hint changes the panel's height, and a native <details> toggle
+// fires no layout hook of its own — without this the panel keeps the position
+// computed for its old height and can slide under the footer.
+function idRepositionOpenPopup() {
+  const slide = (typeof moduleData !== "undefined") ? moduleData[currentSlide] : null;
+  if (!slide) return;
+
+  if (slide.type === "interactive-diagram" && typeof idPositionPopup === "function") {
+    const st = idState();
+    if (st.openNode !== null && st.openNode !== undefined) idPositionPopup(st.openNode);
+    return;
+  }
+
+  if (slide.type === "diagram-plot" && typeof dpPositionPopup === "function") {
+    const st = dpState();
+    if (!st.open) return;
+    const plot = slide.plots.find(p => p.id === st.open.plot);
+    if (plot) dpPositionPopup(plot, st.open.seg);
+  }
+}
+
 // Fisher-Yates shuffle; returns a new array (doesn't mutate the input).
 function shuffleArray(arr) {
   const a = arr.slice();

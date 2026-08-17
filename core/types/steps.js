@@ -27,6 +27,9 @@
      answer         Correct numerical value
      tolerance      Accepted margin (default 0.01)
      explanation    Revealed on a correct answer
+     hint           Optional help shown with the step (HTML + LaTeX).
+                    Add  hintCollapsed: true  to fold it behind a
+                    "Show hint" toggle so students can try unaided first.
 
    SIZING NOTES
      • Aspect ratio is always preserved — set ONE of width/height/scale and the
@@ -73,10 +76,14 @@ function renderStepsSlide(slide) {
           ? stepFigure + stepText
           : stepText + stepFigure;
 
+        // Optional hint, between the instruction and the answer box
+        const stepHint = hintHTML(step);
+
         return `
         <div class="step ${i > 0 ? "step-inactive" : ""}" id="step-${i}">
           <span class="step-badge">Step ${i + 1} of ${slide.steps.length}</span>
           ${stepBlock}
+          ${stepHint}
           <div class="step-input-row">
             <input
               type="number"

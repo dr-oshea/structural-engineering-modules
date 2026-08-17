@@ -209,27 +209,6 @@ function idRefreshNodes() {
 
 // ─── Popup ──────────────────────────────────────────────────────────────────
 
-// Renders an optional author hint at the top of a popup.
-//
-// Set `hint` on a node, region or segment to walk the student through the
-// step — these are revision exercises, not assessments, so spelling out the
-// method is often exactly what's wanted. Accepts HTML and LaTeX.
-//
-// Set `hintCollapsed: true` alongside it and the hint starts folded behind a
-// "Show hint" toggle, so students who want to try unaided can.
-function idHintHTML(target) {
-  if (!target || !target.hint) return "";
-  if (target.hintCollapsed) {
-    return `<details class="idiag-hint idiag-hint-collapsible">
-              <summary>Show hint</summary>
-              <div class="idiag-hint-body">${target.hint}</div>
-            </details>`;
-  }
-  return `<div class="idiag-hint">
-            <div class="idiag-hint-body">${target.hint}</div>
-          </div>`;
-}
-
 
 
 // `keepForm` keeps the current form state (used when re-rendering the panel
@@ -258,7 +237,7 @@ function idOpenNode(nodeIndex, keepForm) {
       <button class="idiag-popup-close" onclick="idClosePopup()" aria-label="Close">×</button>
     </div>
 
-    ${idHintHTML(node)}
+    ${hintHTML(node, "idRepositionOpenPopup()")}
 
     ${items.length ? `
       <div class="idiag-items">

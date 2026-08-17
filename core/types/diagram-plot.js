@@ -406,7 +406,7 @@ function dpOpenSegment(plotId, segIndex, keepForm) {
       <button class="idiag-popup-close" onclick="dpClosePopup()" aria-label="Close">×</button>
     </div>
 
-    ${typeof idHintHTML === "function" ? idHintHTML(seg) : ""}
+    ${hintHTML(seg, "idRepositionOpenPopup()")}
 
     ${existing ? `
       <div class="idiag-item">

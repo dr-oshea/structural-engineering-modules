@@ -157,17 +157,49 @@ const moduleData = [
     label:   "Worked Example: Short label",
     title:   "Worked example heading",
     image:   "images/problem-figure.svg",   // optional
-    problem: `<p>State the problem here.</p>`,
+    problem: `<p>A simply supported beam <strong>AB</strong> spans 6 m and
+              carries a 12 kN point load 2 m from A.</p>`,
     steps: [
       {
-        instruction: `First thing to calculate.
-                      <br><em>Hint: $\\Sigma M_A = 0$</em>`,
+        instruction: `Taking moments about <strong>A</strong>, find the
+                      vertical reaction at <strong>B</strong>.`,
+
+        // COLLAPSED hint — the student can try first, then open it if stuck.
+        // HTML and LaTeX both work, including display equations.
+        hint: `<p>Moments about A must balance:</p>
+               \\[ \\Sigma M_A = 0 \\]
+               <p>The 12 kN load acts 2 m from A, and $R_B$ acts at the far
+               end, 6 m from A.</p>`,
+        hintCollapsed: true,
+
         unit:        "kN",
         answer:      4,
         tolerance:   0.05,
-        explanation: `$R_B = 24 \\div 6 = 4$ kN`
+        explanation: `$R_B \\times 6 = 12 \\times 2$, so $R_B = 4$ kN.`
+      },
+      {
+        instruction: `Now use vertical equilibrium to find the reaction at
+                      <strong>A</strong>.`,
+
+        // ALWAYS-VISIBLE hint — omit `hintCollapsed` to show it straight away
+        hint: `<p>Every vertical force must sum to zero:
+               $\\Sigma F_y = 0$.</p>`,
+
+        unit:        "kN",
+        answer:      8,
+        tolerance:   0.05,
+        explanation: `$R_A = 12 - 4 = 8$ kN.`
+      },
+      {
+        // A step with NO hint at all — nothing extra is shown
+        instruction: `Calculate the bending moment directly under the load
+                      (at $x = 2$ m from A).`,
+        unit:        "kNm",
+        answer:      16,
+        tolerance:   0.05,
+        explanation: `$M = R_A \\times 2 = 8 \\times 2 = 16$ kNm — the peak
+                      of the bending moment diagram.`
       }
-      // …more steps
     ]
   },
 
@@ -280,6 +312,15 @@ const moduleData = [
     nodes: [
       {
         x: 12, y: 62, label: "A", title: "Support A (pin)",
+
+        // OPTIONAL hint, shown at the top of this node's form. These are
+        // revision exercises, so walking the student through the method is
+        // often exactly right. HTML and LaTeX both work.
+        // Add  hintCollapsed: true  to fold it behind a "Show hint" toggle.
+        hint: `<p>A pin resists movement in <em>two</em> directions, so it
+               needs two force components.</p>
+               <p>Find the vertical one from $\\Sigma M_E = 0$.</p>`,
+
         // A pin needs TWO forces — order doesn't matter
         answers: [[
           { itemType: "force", values: { dir: "up",    mag: 13.8 } },
@@ -375,6 +416,15 @@ const moduleData = [
         segments: [
           {
             ax: 10, ay: 72, bx: 50, by: 72, label: "AC",
+
+            // A hint that spells out the method for this segment
+            hint: `<p>The change in moment between two points equals the
+                   <strong>area under the SFD</strong> between them:</p>
+                   \\[ \\Delta M = \\int V\\,dx \\]
+                   <p>The shear is linear here, so the moment is
+                   <strong>quadratic</strong>. Its turning point is where the
+                   shear crosses zero — at $x = 3$ m.</p>`,
+
             // Parabolic under the UDL. NOT split at x = 3 — the turning
             // point sits inside, and its value IS the maximum moment.
             answers: [[ { shape: "quadratic",
@@ -383,6 +433,13 @@ const moduleData = [
           },
           {
             ax: 50, ay: 72, bx: 90, by: 72, label: "CB",
+
+            // Folded away, so students can try unaided first
+            hint: `<p>Beyond midspan the shear is constant, so the moment
+                   changes at a constant rate — a straight line back to zero
+                   at the roller.</p>`,
+            hintCollapsed: true,
+
             // No load beyond C, so the moment runs straight back to zero
             answers: [[ { shape: "linear",
                           values: { side: "below", vA: 24, vB: 0 } } ]]
