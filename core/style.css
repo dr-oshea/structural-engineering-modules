@@ -2320,3 +2320,73 @@ button:disabled {
 /* Inside a worked-example step the hint sits between the question and the
    answer box, so it needs a little breathing room */
 .step .hint-box { margin: 4px 0 14px; }
+
+/* Line-style segment hit areas (hitStyle: "line") */
+.dp-seg-line { pointer-events: auto; cursor: pointer; }
+.dp-seg-line:hover { stroke: #3f61c4 !important; stroke-opacity: 0.28 !important; }
+
+/* Validation note inside a diagram-plot form */
+.dp-form-note {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #b32c28;
+}
+
+/* ===== diagram-plot: paged form ===== */
+
+.dp-page-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 2px 0 10px;
+}
+
+.dp-page-title {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--unsw-indigo);
+  font-weight: 700;
+}
+
+.dp-page-count {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-muted);
+}
+
+.dp-shape-choice { flex-direction: column; align-items: stretch; gap: 6px; }
+.dp-shape-choice .idiag-add-btn { width: 100%; }
+.dp-shape-choice .dp-shape-on { background: var(--unsw-teal); }
+
+.dp-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dp-nav-btn {
+  margin: 0;
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: rgba(0,0,0,0.06);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  line-height: 1;
+  box-shadow: none;
+}
+
+.dp-nav-btn:hover:not(:disabled) { background: rgba(0,0,0,0.12); transform: none; }
+.dp-nav-btn:disabled { opacity: 0.35; }
+
+.dp-nav-enter  { flex: 1; margin: 0; padding: 8px 10px; font-size: 0.85rem;
+                 border-radius: 7px; box-shadow: none; }
+.dp-nav-cancel { margin: 0; padding: 8px 12px; font-size: 0.85rem;
+                 border-radius: 7px; box-shadow: none; background: #94a3b8; }
+.dp-nav-cancel:hover { background: #7c8ba1; transform: none; }

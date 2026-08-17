@@ -342,111 +342,319 @@ const moduleData = [
   },
 
 
-  /* ── DRAW THE SFD AND BMD (optional) ───────────────────────────────────
-     WORKED EXAMPLE — simply supported beam, span 8 m, carrying a UDL of
-     6 kN/m over the LEFT HALF only (A at x=0, C at midspan x=4, B at x=8).
+  /* ══════════════════════════════════════════════════════════════════════
+     DRAWING SHEAR FORCE AND BENDING MOMENT DIAGRAMS  ("diagram-plot")
 
+     Students click a segment and describe it through a SHORT PAGED FORM —
+     shape, then end A, then end B, then the turning point — using ‹ › to
+     move between pages and Enter on the last. Whatever they describe is
+     drawn, right or wrong; Check then names the segment and the field.
+
+     THE BACKGROUND IMAGE only needs the structure, its supports and loads,
+     with BLANK SPACE BELOW for the diagrams. Don't draw axes — the engine
+     draws each plot's datum for you.
+
+     GEOMETRY IS DERIVED: give each plot an `axis` (the datum as image
+     percentages), a `span` in problem units, and the `breaks` between
+     segments. Nothing is eyeballed, and two plots on the same structure
+     can't drift out of line.
+
+     Three examples follow, one per way of stating WHICH SIDE of the datum
+     a value falls.
+     ══════════════════════════════════════════════════════════════════════ */
+
+
+  /* ── EXAMPLE 1 — "signed" (for an SFD) and "segment" (for a BMD) ────────
+     Simply supported beam, 8 m span, UDL of 6 kN/m over the LEFT HALF.
         R_A = 18 kN,  R_B = 6 kN
-        Shear:  +18 at A, falling to 0 at x = 3 m, then −6 from x = 4 to 8
-        Moment: 0 at A, PEAK 27 kNm at x = 3 m, 24 kNm at C, 0 at B
-
-     Note where the segments break. The SFD is split at x = 3 m because the
-     shear CHANGES SIDE there — each segment sits on one side of the datum.
-     The BMD is NOT split there: it's a single parabola whose turning point
-     lies inside the segment, which is exactly what `turning: "inside"` is for.
-
-     Positions are % of the image, with the beam running 10% → 90%:
-        x = 0 m → 10%     x = 3 m → 40%     x = 4 m → 50%     x = 8 m → 90%  */
+        Shear:  +18 at A falling to −6 at midspan, then constant −6
+        Moment: 0 at A, PEAK 27 kNm at x = 3 m, 24 kNm at C, 0 at B        */
   {
     type:  "diagram-plot",
     label: "Draw the SFD and BMD",
     title: "Draw the Shear Force and Bending Moment Diagrams",
 
-    image:      "images/beam-udl-half.svg",   // beam, supports and the UDL
+    image:      "images/beam-udl-half.svg",
     imageWidth: "820px",
     prompt: `<p>The beam carries a UDL of <strong>6 kN/m</strong> over its left
              half. The reactions are $R_A = 18$ kN and $R_B = 6$ kN.</p>
-             <p>Click each segment and describe it, then press
-             <strong>Check answers</strong>.</p>`,
-    successFeedback: `<p>The bending moment peaks where the shear passes
-             through zero — here at $x = 3$ m, giving $M_{max} = 27$ kNm.</p>`,
+             <p>Draw the shear force diagram first, then the bending moment
+             diagram.</p>`,
+    successFeedback: `<p>The moment peaks where the shear passes through zero —
+             here at $x = 3$ m, giving $M_{max} = 27$ kNm.</p>`,
 
     plots: [
 
-      /* ── SHEAR FORCE DIAGRAM ──
-         Set  given: true  to hand students the SFD instead (values are then
-         labelled for them) so they only have to draw the BMD.            */
       {
         id:    "sfd",
         title: "Shear Force Diagram",
         unit:  "kN",
-        scale: 2,                 // px per kN → 18 kN draws 36 px tall
+        scale: 2,                      // px per kN
         color: "#007882",
-        // given: true,
+
+        // SIDE MODE 1 — "signed": the student types the number WITH its sign,
+        // so segment AC runs +18 straight through to −6 as one line and the
+        // zero crossing falls out of it. No "which side?" question is asked.
+        sideMode: "signed",
+        positiveSide: "above",         // what a POSITIVE number means
+
+        // The datum is the click target, invisible until hovered.
+        // Drop these two for the default dashed box.
+        hitStyle: "line",
+        hitBand:  14,
+
+        // Wording, per plot
+        labels: {
+          shape: "What shape is the shear over this length?",
+          vA:    "Shear at the left end",
+          vB:    "Shear at the right end",
+          value: "Shear (constant along this length)"
+        },
+
+        axis:   { ax: 10, ay: 46, bx: 90, by: 46 },
+        span:   [0, 8],                // the beam runs 0 → 8 m along that axis
+        breaks: [0, 4, 8],             // segment boundaries, in metres
+
         segments: [
           {
-            ax: 10, ay: 34, bx: 40, by: 34, label: "A→(V=0)",
-            // 18 kN at A falling to zero at x = 3 m
-            answers: [[ { shape: "linear",
-                          values: { side: "above", vA: 18, vB: 0 } } ]]
+            label: "A → C",
+            hint: `<p>Start at $R_A$ and subtract the UDL as you move right:</p>
+                   \\[ V(x) = R_A - wx \\]`,
+            hintCollapsed: true,
+            answers: [[ { shape: "linear", values: { vA: 18, vB: -6 } } ]]
           },
           {
-            ax: 40, ay: 34, bx: 50, by: 34, label: "(V=0)→C",
-            // crosses the datum, so this piece sits BELOW it
-            answers: [[ { shape: "linear",
-                          values: { side: "below", vA: 0, vB: 6 } } ]]
-          },
-          {
-            ax: 50, ay: 34, bx: 90, by: 34, label: "C→B",
-            // no load beyond midspan → constant −6 kN
-            answers: [[ { shape: "constant",
-                          values: { side: "below", value: 6 } } ]]
+            label: "C → B",
+            // No load beyond midspan, so the shear holds constant
+            answers: [[ { shape: "constant", values: { value: -6 } } ]]
           }
         ]
       },
 
-      /* ── BENDING MOMENT DIAGRAM ──
-         Sagging, so tension is on the underside: drawn BELOW the beam.   */
       {
         id:    "bmd",
         title: "Bending Moment Diagram",
         unit:  "kNm",
-        scale: 1.5,               // px per kNm → 27 kNm draws ~40 px
+        scale: 1.5,
         color: "#3f61c4",
+
+        requires: "sfd",               // locked until the SFD is right
+
+        // SIDE MODE 2 — "segment" (the default): magnitudes plus ONE side for
+        // the whole segment. This is the classic tension-side BMD.
+        sideMode: "segment",
+
+        // TURNING POINT — "both" asks WHERE it is and WHAT it is. A parabola
+        // is fitted through the three points, so the two can never contradict
+        // each other. Use "location" to ask only where, or "value" only what.
+        turningInput: "both",
+
+        labels: {
+          shape:   "What shape is the moment over this length?",
+          side:    "Which face is in tension?",
+          vA:      "Moment at the left end",
+          vB:      "Moment at the right end",
+          turning: "Is there a turning point?",
+          peakAt:  "Where does the shear cross zero? (m from A)",
+          peak:    "Maximum moment there"
+        },
+
+        axis:   { ax: 10, ay: 82, bx: 90, by: 82 },
+        span:   [0, 8],
+        breaks: [0, 4, 8],
+
         segments: [
           {
-            ax: 10, ay: 72, bx: 50, by: 72, label: "AC",
-
-            // A hint that spells out the method for this segment
-            hint: `<p>The change in moment between two points equals the
-                   <strong>area under the SFD</strong> between them:</p>
+            label: "A → C",
+            // Side wording can be set per SEGMENT, so it can speak the
+            // language of this particular member
+            sides: [
+              { value: "below", label: "Tension underneath (sagging)" },
+              { value: "above", label: "Tension on top (hogging)" }
+            ],
+            hint: `<p>The change in moment is the <strong>area under the
+                   SFD</strong>:</p>
                    \\[ \\Delta M = \\int V\\,dx \\]
-                   <p>The shear is linear here, so the moment is
-                   <strong>quadratic</strong>. Its turning point is where the
-                   shear crosses zero — at $x = 3$ m.</p>`,
-
-            // Parabolic under the UDL. NOT split at x = 3 — the turning
-            // point sits inside, and its value IS the maximum moment.
+                   <p>Linear shear means a <strong>quadratic</strong> moment,
+                   turning where the shear crosses zero.</p>`,
+            hintCollapsed: true,
             answers: [[ { shape: "quadratic",
                           values: { side: "below", vA: 0, vB: 24,
-                                    turning: "inside", peak: 27 } } ]]
+                                    turning: "inside", peakAt: 3, peak: 27 } } ]]
           },
           {
-            ax: 50, ay: 72, bx: 90, by: 72, label: "CB",
-
-            // Folded away, so students can try unaided first
-            hint: `<p>Beyond midspan the shear is constant, so the moment
-                   changes at a constant rate — a straight line back to zero
-                   at the roller.</p>`,
-            hintCollapsed: true,
-
-            // No load beyond C, so the moment runs straight back to zero
+            label: "C → B",
+            sides: [
+              { value: "below", label: "Tension underneath (sagging)" },
+              { value: "above", label: "Tension on top (hogging)" }
+            ],
             answers: [[ { shape: "linear",
                           values: { side: "below", vA: 24, vB: 0 } } ]]
           }
         ]
       }
 
+    ]
+  },
+
+
+  /* ── EXAMPLE 2 — "ends": a segment that CHANGES SIDE ────────────────────
+     Overhanging beam: 8 m span with a UDL of 3 kN/m, plus a 2 m overhang
+     carrying 12 kN at its tip.    R_A = 9 kN,  R_B = 27 kN
+
+        M = 0 at A, peaks SAGGING at +13.5 kNm (x = 3 m),
+        crosses zero at x = 6 m, and reaches HOGGING −24 kNm at B
+
+     One side for that whole segment would be misleading, so this plot asks
+     for a side at EACH end.                                                */
+  {
+    type:  "diagram-plot",
+    label: "BMD: overhanging beam",
+    title: "Bending Moment Diagram — Overhanging Beam",
+
+    image:      "images/beam-overhang.svg",
+    imageWidth: "820px",
+    prompt: `<p>An 8 m span carries a UDL of <strong>3 kN/m</strong>; a 2 m
+             overhang carries <strong>12 kN</strong> at its tip.
+             $R_A = 9$ kN and $R_B = 27$ kN.</p>`,
+
+    plots: [
+      {
+        id:    "bmd",
+        title: "Bending Moment Diagram",
+        unit:  "kNm",
+        scale: 1.6,
+        color: "#3f61c4",
+
+        // SIDE MODE 3 — "ends": a magnitude AND a side for each end
+        sideMode: "ends",
+
+        // Only the POSITION of the turning point is asked here; the value
+        // follows from it. (Use "both" to ask for the value as well.)
+        turningInput: "location",
+
+        labels: {
+          shape:   "What shape is the moment over this length?",
+          sideA:   "Tension face at the left end",
+          sideB:   "Tension face at the right end",
+          vA:      "Moment at the left end",
+          vB:      "Moment at the right end",
+          turning: "Is there a turning point?",
+          peakAt:  "Where is it? (m from A)"
+        },
+
+        axis:   { ax: 8, ay: 70, bx: 92, by: 70 },
+        span:   [0, 10],               // 8 m span + 2 m overhang
+        breaks: [0, 8, 10],
+
+        segments: [
+          {
+            label: "A → B (span)",
+            sides: [
+              { value: "below", label: "Tension underneath (sagging)" },
+              { value: "above", label: "Tension on top (hogging)" }
+            ],
+            hint: `<p>Sagging near midspan but hogging at the support, so the
+                   curve <strong>changes side</strong> within this segment —
+                   give each end its own tension face.</p>
+                   <p>It turns where the shear is zero.</p>`,
+            hintCollapsed: true,
+            answers: [[ { shape: "quadratic",
+                          values: { sideA: "below", vA: 0,     // zero at the pin
+                                    sideB: "above", vB: 24,    // hogging at B
+                                    turning: "inside", peakAt: 3 } } ]]
+          },
+          {
+            label: "B → C (overhang)",
+            sides: [
+              { value: "below", label: "Tension underneath (sagging)" },
+              { value: "above", label: "Tension on top (hogging)" }
+            ],
+            // Hogging throughout, running back to zero at the free end
+            answers: [[ { shape: "linear",
+                          values: { sideA: "above", vA: 24,
+                                    sideB: "above", vB: 0 } } ]]
+          }
+        ]
+      }
+    ]
+  },
+
+
+  /* ── EXAMPLE 3 — A FRAME: several members in one plot ───────────────────
+     L-frame: 4 m column AB, 8 m beam BC, pin at A, vertical roller at C,
+     with a 10 kN horizontal load at the joint B.
+
+        A_x = 10 kN opposing the load,  A_y = 5 kN down,  C_y = 5 kN up
+        Column AB: 0 at the pin, rising linearly to 40 kNm at B
+        Beam BC:   40 kNm at B, falling linearly to 0 at the roller
+
+     Name an AXIS PER MEMBER and point each segment at the one it belongs
+     to. Each member keeps its own local coordinate, so `from` and `to`
+     read exactly as they do in the problem.                               */
+  {
+    type:  "diagram-plot",
+    label: "BMD: portal frame",
+    title: "Bending Moment Diagram — L-Frame",
+
+    image:      "images/frame-L.svg",
+    imageWidth: "760px",
+    prompt: `<p>The frame carries a <strong>10 kN</strong> horizontal load at
+             the joint. Draw the bending moment diagram on each member.</p>`,
+    successFeedback: `<p>The tension face runs continuously around the corner —
+             the inside of the column meets the inside of the beam.</p>`,
+
+    plots: [
+      {
+        id:    "bmd",
+        title: "Bending Moment Diagram",
+        unit:  "kNm",
+        scale: 1.2,
+        color: "#3f61c4",
+        sideMode: "segment",
+
+        labels: {
+          shape: "What shape is the moment along this member?",
+          side:  "Which face of the member is in tension?",
+          vA:    "Moment at the start of the member",
+          vB:    "Moment at the end of the member"
+        },
+
+        // One named axis per member, each with its own span in metres
+        axes: {
+          col: { ax: 20, ay: 88, bx: 20, by: 34, span: [0, 4] },  // A → B, up
+          bm:  { ax: 20, ay: 34, bx: 86, by: 34, span: [0, 8] }   // B → C
+        },
+
+        segments: [
+          {
+            axis: "col", from: 0, to: 4, label: "AB (column)",
+            // On a member running UPWARDS, "above" is its left-hand face
+            sides: [
+              { value: "below", label: "Inside face of the frame" },
+              { value: "above", label: "Outside face of the frame" }
+            ],
+            hint: `<p>A pin carries no moment, so the diagram starts at zero
+                   at A and grows to the joint value at B.</p>`,
+            hintCollapsed: true,
+            answers: [[ { shape: "linear",
+                          values: { side: "below", vA: 0, vB: 40 } } ]]
+          },
+          {
+            axis: "bm", from: 0, to: 8, label: "BC (beam)",
+            // On a member running LEFT TO RIGHT, "below" is its underside
+            sides: [
+              { value: "below", label: "Underside (inside the frame)" },
+              { value: "above", label: "Top face (outside the frame)" }
+            ],
+            hint: `<p>No load along the beam, so the moment runs straight from
+                   the joint value back to zero at the roller.</p>`,
+            hintCollapsed: true,
+            answers: [[ { shape: "linear",
+                          values: { side: "below", vA: 40, vB: 0 } } ]]
+          }
+        ]
+      }
     ]
   },
 

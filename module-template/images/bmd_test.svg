@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 315 405">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #1c75bc;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-4, .cls-3 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #fff;
+        stroke: #231f20;
+      }
+
+      .cls-5 {
+        fill: #1c75bc;
+      }
+
+      .cls-6 {
+        fill: #be1e2d;
+      }
+
+      .cls-3 {
+        stroke: #be1e2d;
+      }
+
+      .cls-7 {
+        fill: #231f20;
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+    </style>
+  </defs>
+  <rect class="cls-2" x="54" y="54" width="216" height="9"/>
+  <g>
+    <line class="cls-1" x1="54" y1="90" x2="54" y2="75.53"/>
+    <polygon class="cls-5" points="54 72 56.03 76.97 54 75.79 51.97 76.97 54 72"/>
+  </g>
+  <g>
+    <line class="cls-1" x1="270" y1="90" x2="270" y2="75.53"/>
+    <polygon class="cls-5" points="270 72 272.03 76.97 270 75.79 267.97 76.97 270 72"/>
+  </g>
+  <g>
+    <line class="cls-3" x1="54" y1="27" x2="54" y2="41.47"/>
+    <polygon class="cls-6" points="54 45 51.97 40.03 54 41.21 56.03 40.03 54 45"/>
+  </g>
+  <g>
+    <line class="cls-3" x1="162" y1="27" x2="162" y2="41.47"/>
+    <polygon class="cls-6" points="162 45 159.97 40.03 162 41.21 164.03 40.03 162 45"/>
+  </g>
+  <line class="cls-3" x1="54" y1="27" x2="162" y2="27"/>
+  <g>
+    <line class="cls-3" x1="81" y1="27" x2="81" y2="41.47"/>
+    <polygon class="cls-6" points="81 45 78.97 40.03 81 41.21 83.03 40.03 81 45"/>
+  </g>
+  <g>
+    <line class="cls-3" x1="108" y1="27" x2="108" y2="41.47"/>
+    <polygon class="cls-6" points="108 45 105.97 40.03 108 41.21 110.03 40.03 108 45"/>
+  </g>
+  <g>
+    <line class="cls-3" x1="135" y1="27" x2="135" y2="41.47"/>
+    <polygon class="cls-6" points="135 45 132.97 40.03 135 41.21 137.03 40.03 135 45"/>
+  </g>
+  <rect class="cls-4" width="315" height="405"/>
+  <text class="cls-7" transform="translate(99 18)"><tspan x="0" y="0">6 kN/m</tspan></text>
+  <text class="cls-7" transform="translate(153 81)"><tspan x="0" y="0">8 m</tspan></text>
+</svg>
