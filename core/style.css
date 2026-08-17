@@ -2265,3 +2265,60 @@ button:disabled {
 }
 
 .dp-message-list li { margin: 3px 0; }
+
+
+/* ===== Author hints inside node / region / segment popups ===== */
+
+.idiag-hint {
+  margin-bottom: 10px;
+  padding: 9px 11px;
+  background: #f4f8f9;
+  border: 1px solid rgba(0,120,130,0.22);
+  border-left: 3px solid var(--unsw-teal);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #2d3748;
+}
+
+.idiag-hint-body p:first-child { margin-top: 0; }
+.idiag-hint-body p:last-child  { margin-bottom: 0; }
+
+.idiag-hint-body ul,
+.idiag-hint-body ol {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+
+.idiag-hint-body li { margin: 2px 0; }
+
+/* Display maths inside a hint shouldn't tower over the small panel */
+.idiag-hint-body .katex-display { margin: 0.3em 0 !important; }
+.idiag-hint-body .katex { font-size: 0.95em; }
+
+/* Collapsible variant — starts folded behind "Show hint" */
+.idiag-hint-collapsible { padding: 0; }
+
+.idiag-hint-collapsible summary {
+  cursor: pointer;
+  padding: 7px 11px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--unsw-teal);
+  list-style: none;
+  user-select: none;
+}
+
+.idiag-hint-collapsible summary::-webkit-details-marker { display: none; }
+
+.idiag-hint-collapsible summary::before {
+  content: "💡 ";
+}
+
+.idiag-hint-collapsible[open] summary {
+  border-bottom: 1px solid rgba(0,120,130,0.18);
+}
+
+.idiag-hint-collapsible .idiag-hint-body {
+  padding: 9px 11px;
+}
