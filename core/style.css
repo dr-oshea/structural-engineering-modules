@@ -2390,3 +2390,162 @@ button:disabled {
 .dp-nav-cancel { margin: 0; padding: 8px 12px; font-size: 0.85rem;
                  border-radius: 7px; box-shadow: none; background: #94a3b8; }
 .dp-nav-cancel:hover { background: #7c8ba1; transform: none; }
+
+
+/* ===== Info: side-by-side columns ===== */
+
+.info-columns {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.info-column { min-width: 0; }
+
+.info-column .info-block { margin-bottom: 12px; }
+
+@media (max-width: 780px) {
+  .info-columns { flex-direction: column; }
+}
+
+
+/* ===== Cloze: fill in the blanks ===== */
+
+.cloze-bank {
+  margin: 4px 0 22px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid var(--border-soft);
+  border-left: 4px solid var(--unsw-indigo);
+  border-radius: 0 8px 8px 0;
+  text-align: left;
+}
+
+.cloze-bank-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.cloze-bank-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cloze-bank-empty {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* A word waiting in the bank */
+.cloze-word {
+  margin: 0;
+  padding: 7px 14px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background: var(--surface-card);
+  color: var(--text-primary);
+  border: 2px solid #cbd5e0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.cloze-word:hover {
+  border-color: var(--unsw-indigo);
+  background: #eef2fb;
+  transform: none;
+}
+
+/* Picked up, waiting for a blank */
+.cloze-word-selected {
+  background: var(--unsw-indigo);
+  border-color: var(--unsw-indigo);
+  color: var(--unsw-white);
+  box-shadow: 0 0 0 4px rgba(63,97,196,0.22);
+}
+
+/* ── The passage ── */
+
+.cloze-passage {
+  text-align: left;
+  font-size: 1.02rem;
+  line-height: 2.2;
+  color: var(--text-primary);
+}
+
+.cloze-passage p { margin: 0 0 10px; }
+
+/* An empty blank: the red-underlined slot from the storyboard */
+.cloze-blank {
+  margin: 0 2px;
+  padding: 2px 10px;
+  min-width: 96px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--unsw-red);
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  box-shadow: none;
+  vertical-align: baseline;
+}
+
+.cloze-blank:hover { background: rgba(0,0,0,0.05); transform: none; }
+
+/* A blank that can receive the word currently picked up */
+.cloze-blank-open {
+  background: rgba(63,97,196,0.10);
+  border-bottom-color: var(--unsw-indigo);
+  box-shadow: 0 0 0 2px rgba(63,97,196,0.18);
+}
+
+.cloze-blank-filled {
+  background: #eef2fb;
+  border-bottom-color: var(--unsw-indigo);
+}
+
+.cloze-blank-correct {
+  background: rgba(26,201,135,0.14);
+  border-bottom-color: #12a06a;
+  color: #0f7a52;
+}
+
+.cloze-blank-wrong {
+  background: rgba(255,99,93,0.14);
+  border-bottom-color: var(--unsw-red);
+  color: #b32c28;
+}
+
+/* ── Optional figure beside the passage ── */
+
+.cloze-cols {
+  display: flex;
+  gap: 26px;
+  align-items: flex-start;
+}
+
+.cloze-cols .cloze-passage { flex: 1 1 55%; min-width: 0; }
+.cloze-figure { flex: 1 1 45%; min-width: 0; }
+
+.cloze-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+}
+
+@media (max-width: 780px) {
+  .cloze-cols { flex-direction: column; }
+}

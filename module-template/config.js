@@ -659,6 +659,48 @@ const moduleData = [
   },
 
 
+  /* ── FILL IN THE BLANKS (optional) ─────────────────────────────────────
+     Students click a word in the bank, then click a blank to place it.
+     Clicking a placed word sends it back. Check marks everything at once and
+     flags the wrong ones; they fix and re-check until all are right.
+
+     THE PASSAGE IS THE ANSWER KEY — wrap each answer in [[double brackets]]
+     and the word bank builds itself. `distractors` adds words that fit no
+     blank, so there are more options than gaps.
+
+     Click-to-place, not drag-and-drop: HTML5 dragging doesn't work on touch
+     devices, and students open these on phones from Moodle.               */
+  {
+    type:  "cloze",
+    label: "Truss Members",
+    title: "Truss Members",
+
+    intro: `<p>To carry only axial forces, a truss needs pinned connections
+            and loads applied only at its joints. Complete the load path
+            below.</p>`,
+
+    text: `<p>For this roof truss, the:</p>
+           <p>(1) [[roof sheeting]] connects to the</p>
+           <p>(2) [[purlins]] which connect to the</p>
+           <p>(3) [[truss joints]].</p>`,
+
+    // Extra words that fit nowhere — students must discriminate
+    distractors: ["rafters", "bracing"],
+
+    image:         "images/roof-truss.svg",
+    imagePosition: "right",           // or "below" to stack it under the text
+    imageWidth:    "420px",
+
+    hint: `<p>Follow the load downwards: what does the wind or snow land on
+           first, and what carries it from there?</p>`,
+    hintCollapsed: true,
+
+    explanation: `Loads travel from the sheeting, through the purlins, into
+                  the truss joints — which is why external forces arrive at
+                  the joints and the members carry only axial force.`
+  },
+
+
   /* ══ ADD MORE PARTS HERE ══════════════════════════════════════════════
      Other content types available (see AUTHORING_GUIDE.pdf §5):
        cards     flip cards for key concepts
