@@ -76,7 +76,38 @@ function renderQuizQuestion() {
 
   let answerAreaHTML = "";
 
-  if (q.kind === "mcq") {
+  if (q.kind === "mcq" && q.multi) {
+    // SELECT ALL THAT APPLY — one attempt, judged on Submit.
+    if (!rt.order) rt.order = {};
+    if (!rt.order[rt.q]) {
+      const indices = q.options.map((_, i) => i);
+      rt.order[rt.q] = (q.shuffle === false) ? indices : shuffleArray(indices);
+    }
+    const morder = rt.order[rt.q];
+
+    answerAreaHTML = `
+      <p class="mcq-multi-instruction">
+        Select all that apply${q.showCount
+          ? ` — <strong>${q.options.filter(o => o.correct).length}</strong> are correct`
+          : ""}.
+      </p>
+      <div class="mcq-options mcq-cols-${q.options.length === 3 ? 3 : 2}" id="quiz-options">
+        ${morder.map((origIndex, displayPos) => {
+          const opt = q.options[origIndex];
+          return `
+            <button class="mcq-option mcq-option-check" id="quiz-opt-${displayPos}"
+                    onclick="quizToggleMulti(${displayPos})">
+              <span class="mcq-tick" aria-hidden="true"></span>
+              ${opt.image ? `<img src="${opt.image}" class="mcq-option-img" alt="Option ${displayPos + 1}">` : ""}
+              ${opt.text ? `<span>${opt.text}</span>` : ""}
+            </button>`;
+        }).join("")}
+      </div>
+      <button class="mcq-submit-btn" id="quiz-submit" onclick="quizSubmitMulti()" disabled>
+        Submit
+      </button>`;
+
+  } else if (q.kind === "mcq") {
     // Build (once per visit) a shuffled display order for this question's
     // options, unless the question opts out with shuffle:false.
     if (!rt.order) rt.order = {};
@@ -233,6 +264,54 @@ function quizAnswerMCQ(origIndex) {
   setTimeout(quizAdvance, 850);
 }
 
+// Tick or untick an option in a quiz multi-select.
+function quizToggleMulti(displayPos) {
+  const btn = document.getElementById(`quiz-opt-${displayPos}`);
+  if (!btn || btn.disabled) return;
+  btn.classList.toggle("mcq-option-ticked");
+  const any = document.querySelectorAll(".mcq-option-ticked").length > 0;
+  const sub = document.getElementById("quiz-submit");
+  if (sub) sub.disabled = !any;
+}
+
+// One attempt: judge the SET, reveal the right answer, then advance.
+function quizSubmitMulti() {
+  const slide = moduleData[currentSlide];
+  const rt    = getQuizRuntime();
+  const q     = slide.questions[rt.q];
+  const order = rt.order[rt.q];
+
+  const pickedPos = [];
+  document.querySelectorAll(".mcq-option").forEach((b, i) => {
+    if (b.classList.contains("mcq-option-ticked")) pickedPos.push(i);
+  });
+  const picked  = pickedPos.map(p => order[p]).sort((a, b) => a - b);
+  const correct = q.options.map((o, i) => (o.correct ? i : -1))
+                    .filter(i => i >= 0).sort((a, b) => a - b);
+  const isCorrect = picked.length === correct.length
+                    && correct.every((v, i) => picked[i] === v);
+
+  // Only one attempt here, so show what the answer should have been
+  document.querySelectorAll(".mcq-option").forEach((b, i) => {
+    b.disabled = true;
+    const orig   = order[i];
+    const ticked = pickedPos.indexOf(i) !== -1;
+    if (q.options[orig].correct) b.classList.add("mcq-option-correct");
+    else if (ticked)             b.classList.add("mcq-option-wrong-final");
+  });
+  const sub = document.getElementById("quiz-submit");
+  if (sub) sub.disabled = true;
+
+  rt.answers[rt.q] = {
+    correct:   isCorrect,
+    givenText: picked.length
+      ? picked.map(i => q.options[i].text || `Option ${i + 1}`).join(", ")
+      : "(nothing selected)"
+  };
+
+  setTimeout(quizAdvance, 850);
+}
+
 // Record an input answer, show correct/wrong briefly, then advance.
 function quizAnswerInput() {
   const slide = moduleData[currentSlide];
@@ -298,6 +377,11 @@ function quizRetry() {
 
 // Helper: readable correct-answer text for the review table.
 function quizCorrectAnswerText(q) {
+  if (q.kind === "mcq" && q.multi) {
+    const all = q.options.filter(o => o.correct)
+                  .map(o => o.text || "(image option)");
+    return all.length ? all.join(", ") : "—";
+  }
   if (q.kind === "mcq") {
     const correct = q.options.find(o => o.correct);
     return correct ? (correct.text || "(image option)") : "—";
