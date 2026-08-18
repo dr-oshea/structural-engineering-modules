@@ -134,6 +134,23 @@ const moduleData = [
           { text: "Right answer", correct: true }
         ],
         explanation: `Explanation for the third question.`
+      },
+
+      // A SELECT-ALL question can sit alongside single-answer ones.
+      // Single-answer questions keep their immediate feedback on click; a
+      // multi-select waits for Submit, because a half-made selection isn't
+      // wrong yet. A wrong set says "not quite" WITHOUT marking anything,
+      // so students adjust and resubmit until the whole set is right.
+      {
+        multi: true,
+        question: `<p>Which of these are true? (Select all that apply.)</p>`,
+        options: [
+          { text: "A true statement",       correct: true },
+          { text: "Another true statement", correct: true },
+          { text: "A false statement" },
+          { text: "Another false statement" }
+        ],
+        explanation: `Explain why those two, and not the others.`
       }
     ]
   },
@@ -730,7 +747,23 @@ const moduleData = [
 
     questions: [
 
-      // Multiple choice
+      // SELECT ALL THAT APPLY — add multi:true and mark every correct option.
+      // One attempt in a quiz: Submit reveals the right answer and advances.
+      {
+        kind:  "mcq",
+        multi: true,
+        question: `<p>Which assumptions are needed for a truss to carry only
+                   axial forces?</p>`,
+        options: [
+          { text: "All connections are pinned",       correct: true },
+          { text: "Loads are applied only at joints", correct: true },
+          { text: "All members are the same length" },
+          { text: "Both supports must be fixed" }
+        ]
+        // showCount: true    // optional: tell them HOW MANY are correct
+      },
+
+      // Multiple choice (single answer)
       {
         kind:     "mcq",
         question: `<p>Your question here. Maths works: $M_{max} = \\frac{PL}{4}$.</p>`,

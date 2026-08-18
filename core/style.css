@@ -2549,3 +2549,71 @@ button:disabled {
 @media (max-width: 780px) {
   .cloze-cols { flex-direction: column; }
 }
+
+
+/* ===== MCQ: select all that apply ===== */
+
+.mcq-multi-instruction {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 12px;
+  font-style: italic;
+}
+
+/* A tickable option carries a checkbox */
+.mcq-option-check {
+  position: relative;
+  padding-left: 42px;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.mcq-tick {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: 2px solid #cbd5e0;
+  border-radius: 4px;
+  background: var(--surface-card);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.mcq-option-ticked .mcq-tick {
+  background: var(--unsw-indigo);
+  border-color: var(--unsw-indigo);
+}
+
+.mcq-option-ticked .mcq-tick::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.mcq-option-ticked {
+  border-color: var(--unsw-indigo);
+  background: #eef2fb;
+}
+
+/* Correct/incorrect states keep their tick visible */
+.mcq-option-correct .mcq-tick      { background: #12a06a; border-color: #12a06a; }
+.mcq-option-wrong-final .mcq-tick  { background: var(--unsw-red); border-color: var(--unsw-red); }
+
+.mcq-submit-btn { margin-top: 20px; }
+
+.mcq-retry-note {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #b32c28;
+}
+
+.mcq-retry-hidden { display: none; }
