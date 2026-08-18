@@ -25,6 +25,11 @@
                Aspect ratio is always preserved.
      equation  latex     LaTeX, rendered centred as display maths (preferred)
                html      legacy: plain HTML instead of LaTeX (still supported)
+     columns   columns   an ARRAY OF ARRAYS — each inner array is a column
+                         holding its own blocks, so anything that works on a
+                         slide works inside a column
+               widths    optional relative widths, e.g. [55, 45]
+                         (columns stack vertically on a narrow screen)
 
    WRITING LATEX IN config.js
      Use String.raw`…` so backslashes survive:
@@ -40,12 +45,21 @@
    Other fields: title, label
    ============================================================================ */
 
-function renderInfoSlide(slide) {
+// One block → HTML. Pulled out of the render so a `columns` block can lay
+// out its own children under exactly the same rules.
+function infoBlockHTML(block) {
 
-  let bodyHTML = "";
-
-  if (Array.isArray(slide.blocks)) {
-    bodyHTML = slide.blocks.map(block => {
+      // ── Columns: content side by side ──
+      if (block.type === "columns") {
+        const cols = block.columns || [];
+        const w    = block.widths || [];
+        return `<div class="info-columns">
+          ${cols.map((col, i) => `
+            <div class="info-column" style="flex:${w[i] || 1} 1 0;">
+              ${(col || []).map(infoBlockHTML).join("")}
+            </div>`).join("")}
+        </div>`;
+      }
 
       // ── Image block ──
       // Sizing reuses the engine's shared helper, so width/height/scale behave
@@ -78,8 +92,14 @@ function renderInfoSlide(slide) {
 
       // ── Text block (default) ──
       return `<div class="info-block">${block.html || ""}</div>`;
+}
 
-    }).join("");
+function renderInfoSlide(slide) {
+
+  let bodyHTML = "";
+
+  if (Array.isArray(slide.blocks)) {
+    bodyHTML = slide.blocks.map(infoBlockHTML).join("");
 
   } else {
     // Legacy single content string — wrap it in one styled block
