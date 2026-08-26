@@ -47,6 +47,17 @@ function buildMoodlePanel(courseCode, options) {
   const moduleLink = (id) => {
     const m = catalogModule(id);
     if (!m) return "";
+
+    // A module that isn't released yet is LISTED but not linked — a live link
+    // to an unbuilt module is a dead end, and students should still see what
+    // is coming.
+    if (typeof catalogModuleAvailable === "function" && !catalogModuleAvailable(m)) {
+      const note = (typeof catalogComingSoonLabel === "function")
+        ? catalogComingSoonLabel(m) : "coming soon";
+      return `<li style="margin:4px 0;color:${MP.grey};">`
+           + `${m.title} <em style="font-size:0.9em;">(${note})</em></li>`;
+    }
+
     const href = `${base}${m.folder}/index.html${courseSuffix}`;
     return `<li style="margin:4px 0;">`
          + `<a href="${href}" target="_blank" rel="noopener noreferrer" `

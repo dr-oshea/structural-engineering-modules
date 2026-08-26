@@ -131,3 +131,31 @@
   padding-bottom: 8px;
   border-bottom: 3px solid #ffdc00;   /* UNSW Yellow rule */
 }
+
+/* A module that's listed but not released yet */
+.hp-card-soon {
+  background: #f4f5f7;
+  border-style: dashed;
+  border-color: #d3d8de;
+  box-shadow: none;
+  cursor: default;
+  opacity: 0.75;
+}
+
+.hp-card-soon:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.hp-card-soon .hp-card-title { color: #64748b; }
+
+.hp-card-soon .hp-card-status {
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+.hp-card-soon .hp-card-foot {
+  color: #64748b;
+  font-style: italic;
+  opacity: 1;
+}

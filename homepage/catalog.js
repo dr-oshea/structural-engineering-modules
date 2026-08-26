@@ -1,3 +1,4 @@
+
 /* ============================================================================
    homepage/catalog.js — THE SINGLE SOURCE OF TRUTH for modules & categories.
 
@@ -5,6 +6,21 @@
    position within that category, its display title, and its folder.
    courses.js entries reference modules by ID only — titles, categories, and
    ordering always come from here, so they can never drift or disagree.
+
+   ── NOT READY YET? ──
+   A module can be listed before it's finished, so students can see what's
+   coming. Either:
+
+       status: "coming-soon"           held back until you remove this line
+       availableFrom: "2026-09-22"     releases itself on that date
+
+   Either way it appears on the homepage greyed out and unclickable, labelled
+   "Coming soon" (or "Available from 22 Sep"). `availableFrom` is usually the
+   better choice: set the whole term's release schedule once, up front, and
+   nothing needs editing mid-term.
+
+   Readiness lives HERE, not in courses.js, because it's a property of the
+   module itself — releasing it releases it in every course at once.
 
    ── To add a new module ──
    1. Build the module folder as usual (config.js with a unique moduleMeta.id).
@@ -39,10 +55,16 @@ const CATALOG = {
       title: "Drawing Free Body Diagrams",     category: "statics", order: 1 },
     
     { id: "module-02-reactions", folder: "module-02",
-      title: "Calculating Reactions",     category: "statics", order: 2 },
+      title: "Calculating Reactions",     category: "statics", order: 2,
+    status: "coming-soon" },
       
     { id: "module-03-bending-moments", folder: "module-03",
       title: "Drawing Bending Moment Diagrams",     category: "statics", order: 3 },
+
+          // Or hold it back with no fixed date — delete the line to release:
+    // { id: "module-03-deflection",   folder: "module-03",
+    //   title: "Deflection of Beams",               category: "solids", order: 3,
+    //   status: "coming-soon" },
     
       // { id: "module-05-equilibrium",  folder: "module-05",
     //   title: "Equilibrium & Reactions",          category: "statics", order: 1 },
@@ -64,6 +86,33 @@ const CATALOG = {
 
 
 /* ── Lookup helpers (used by the homepage and the setup tool) ─────────────── */
+
+// Is this module released to students yet?
+//   status: "coming-soon"        → no, until the line is removed
+//   availableFrom: "YYYY-MM-DD"  → no, until that date (from 00:00 local time)
+// Anything else (including no fields at all) → yes.
+function catalogModuleAvailable(m) {
+  if (!m) return false;
+  if (m.status === "coming-soon") return false;
+  if (m.availableFrom) {
+    const from = new Date(m.availableFrom + "T00:00:00");
+    if (!isNaN(from.getTime()) && Date.now() < from.getTime()) return false;
+  }
+  return true;
+}
+
+// What to show on a card that isn't available yet.
+function catalogComingSoonLabel(m) {
+  if (m && m.status !== "coming-soon" && m.availableFrom) {
+    const d = new Date(m.availableFrom + "T00:00:00");
+    if (!isNaN(d.getTime())) {
+      const months = ["Jan","Feb","Mar","Apr","May","Jun",
+                      "Jul","Aug","Sep","Oct","Nov","Dec"];
+      return `Available from ${d.getDate()} ${months[d.getMonth()]}`;
+    }
+  }
+  return "Coming soon";
+}
 
 function catalogModule(id) {
   return CATALOG.modules.find(m => m.id === id) || null;

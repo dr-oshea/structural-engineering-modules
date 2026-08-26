@@ -58,6 +58,19 @@ async function renderHomepage() {
       <h2 class="hp-section-title">${g.category ? g.category.name : "Other"}</h2>
       <div class="hp-grid">
         ${g.modules.map(m => {
+          // A module can be listed before it's finished, so students can see
+          // what's coming. It renders as a plain, unclickable card.
+          const ready = catalogModuleAvailable(m);
+          if (!ready) {
+            return `
+              <div class="hp-card hp-card-soon" aria-disabled="true">
+                <div class="hp-card-status">🔒</div>
+                <div class="hp-card-title">${m.title}</div>
+                <div class="hp-card-foot">${catalogComingSoonLabel(m)}</div>
+              </div>
+            `;
+          }
+
           const isDone = completed.includes(m.id);
           const doneDate = (completed.dates && completed.dates[m.id]) || null;
           const params = new URLSearchParams();
