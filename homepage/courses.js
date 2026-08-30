@@ -29,8 +29,13 @@ const COURSES = {
     courseName: "Structural Analysis and Modelling (T3 2026)",
     modules: [
       "module-01-free-body",
-      "module-02-reactions",
-      "module-03-bending-moments"
+      "module-02-equilibrium",
+      "module-03-reactions",
+      "module-04-bending-moments",
+      "module-05-trusses",
+      "module-06-distributed-loads",
+      "module-07-internal-hinges",
+      "module-10-cross-section"
     ]
   },
 
