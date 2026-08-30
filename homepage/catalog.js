@@ -66,7 +66,7 @@ const CATALOG = {
     { id: "module-04-bending-moments", folder: "module-04",
       title: "Drawing Bending Moment Diagrams",     category: "statics", order: 4 },
 
-    { id: "module-05-solving-trusses", folder: "module-05",
+    { id: "module-05-trusses", folder: "module-05",
       title: "Solving Trusses",     category: "statics", order: 5,
       status: "coming-soon"},
 
@@ -78,7 +78,7 @@ const CATALOG = {
       title: "Handling Internal Hinges",     category: "statics", order: 7,
     status: "coming-soon"},     
 
-    { id: "module-03-deflection",   folder: "module-10",
+    { id: "module-10-cross-section",   folder: "module-10",
       title: "Cross Section Properties", category: "solids", order: 1,
       status: "coming-soon" },
     

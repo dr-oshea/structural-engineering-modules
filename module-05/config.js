@@ -1,6 +1,6 @@
 // Optional module metadata — used by the final slide's save payload
 const moduleMeta = {
-  id: "module-02-equilibrium"
+  id: "module-05-trusses"
 };
 
 const moduleData = [
