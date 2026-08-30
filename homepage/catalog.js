@@ -70,11 +70,11 @@ const CATALOG = {
       title: "Solving Trusses",     category: "statics", order: 5,
       status: "coming-soon"},
 
-    { id: "module-06-distributed-loads", folder: "module-05",
+    { id: "module-06-distributed-loads", folder: "module-06",
       title: "Handling Distributed Loads",     category: "statics", order: 6,
     status: "coming-soon"},
 
-    { id: "module-07-internal-hinges", folder: "module-05",
+    { id: "module-07-internal-hinges", folder: "module-07",
       title: "Handling Internal Hinges",     category: "statics", order: 7,
     status: "coming-soon"},     
 
