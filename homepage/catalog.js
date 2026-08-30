@@ -52,19 +52,35 @@ const CATALOG = {
 
     // ── Statics (ENGG1300) ──
     { id: "module-01-free-body", folder: "module-01",
-      title: "Drawing Free Body Diagrams",     category: "statics", order: 1 },
+      title: "Drawing Free Body Diagrams",     category: "statics", order: 1,
+    status: "coming-soon" },
     
-    { id: "module-02-reactions", folder: "module-02",
-      title: "Calculating Reactions",     category: "statics", order: 2,
+    { id: "module-02-equilibrium", folder: "module-02",
+      title: "Using Equations of Equilibrium",     category: "statics", order: 2,
     status: "coming-soon" },
       
-    { id: "module-03-bending-moments", folder: "module-03",
-      title: "Drawing Bending Moment Diagrams",     category: "statics", order: 3 },
+    { id: "module-03-reactions", folder: "module-03",
+      title: "Calculating Reactions",     category: "statics", order: 3,
+    status: "coming-soon" },
 
-          // Or hold it back with no fixed date — delete the line to release:
-    // { id: "module-03-deflection",   folder: "module-03",
-    //   title: "Deflection of Beams",               category: "solids", order: 3,
-    //   status: "coming-soon" },
+    { id: "module-04-bending-moments", folder: "module-04",
+      title: "Drawing Bending Moment Diagrams",     category: "statics", order: 4 },
+
+    { id: "module-05-solving-trusses", folder: "module-05",
+      title: "Solving Trusses",     category: "statics", order: 5,
+      status: "coming-soon"},
+
+    { id: "module-06-distributed-loads", folder: "module-05",
+      title: "Handling Distributed Loads",     category: "statics", order: 6,
+    status: "coming-soon"},
+
+    { id: "module-07-internal-hinges", folder: "module-05",
+      title: "Handling Internal Hinges",     category: "statics", order: 7,
+    status: "coming-soon"},     
+
+    { id: "module-03-deflection",   folder: "module-10",
+      title: "Cross Section Properties", category: "solids", order: 1,
+      status: "coming-soon" },
     
       // { id: "module-05-equilibrium",  folder: "module-05",
     //   title: "Equilibrium & Reactions",          category: "statics", order: 1 },
