@@ -1,37 +1,49 @@
 
 /* ============================================================================
-   homepage/catalog.js — THE SINGLE SOURCE OF TRUTH for modules & categories.
-
+      homepage/catalog.js — THE SINGLE SOURCE OF TRUTH for modules & categories.
+ 
    Every module ever created is listed here ONCE, with its category, its
    position within that category, its display title, and its folder.
    courses.js entries reference modules by ID only — titles, categories, and
    ordering always come from here, so they can never drift or disagree.
-
+ 
+   ── HOW LONG DOES IT TAKE? ──
+   Give a module an approximate duration and the homepage shows it with a
+   clock. Any of these work:
+ 
+       minutes: 12                 →  "12 min"
+       minutes: [10, 12]           →  "10–12 min"
+       time: "about half an hour"  →  used verbatim
+ 
+   Leave them all out and no time is shown — nothing breaks, the card simply
+   omits that line. Rough ranges are fine, and more honest than one number.
+ 
    ── NOT READY YET? ──
    A module can be listed before it's finished, so students can see what's
    coming. Either:
-
+ 
        status: "coming-soon"           held back until you remove this line
        availableFrom: "2026-09-22"     releases itself on that date
-
+ 
    Either way it appears on the homepage greyed out and unclickable, labelled
    "Coming soon" (or "Available from 22 Sep"). `availableFrom` is usually the
    better choice: set the whole term's release schedule once, up front, and
    nothing needs editing mid-term.
-
+ 
    Readiness lives HERE, not in courses.js, because it's a property of the
    module itself — releasing it releases it in every course at once.
-
+ 
    ── To add a new module ──
    1. Build the module folder as usual (config.js with a unique moduleMeta.id).
    2. Add ONE entry to CATALOG.modules below with the same id.
    It then automatically appears in the setup tool and in the default suite
    of every course downstream of its category.
-
+ 
    ── To add a new category ──
    Add it to CATALOG.categories with the next `order` number, and reference
    it from the course that teaches it in prerequisites.js.
    ============================================================================ */
+ 
 
 const CATALOG = {
 
@@ -56,30 +68,39 @@ const CATALOG = {
     status: "coming-soon" },
     
     { id: "module-02-equilibrium", folder: "module-02",
-      title: "Using Equations of Equilibrium",     category: "statics", order: 2,
-    status: "coming-soon" },
+      title: "Using Equations of Equilibrium",     
+      category: "statics", 
+      order: 2,
+      status: "coming-soon" },
       
     { id: "module-03-reactions", folder: "module-03",
-      title: "Calculating Reactions",     category: "statics", order: 3,
-    status: "coming-soon" },
+      title: "Calculating Reactions",
+      category: "statics", order: 3,
+      status: "coming-soon" },
 
     { id: "module-04-bending-moments", folder: "module-04",
-      title: "Drawing Bending Moment Diagrams",     category: "statics", order: 4 },
+      title: "Drawing Bending Moment Diagrams",
+      category: "statics", order: 4,
+      minutes: [10, 12] },
 
     { id: "module-05-trusses", folder: "module-05",
-      title: "Solving Trusses",     category: "statics", order: 5,
+      title: "Solving Trusses",     
+      category: "statics", order: 5,
       status: "coming-soon"},
 
     { id: "module-06-distributed-loads", folder: "module-06",
-      title: "Handling Distributed Loads",     category: "statics", order: 6,
-    status: "coming-soon"},
+      title: "Handling Distributed Loads",     
+      category: "statics", order: 6,
+      status: "coming-soon"},
 
     { id: "module-07-internal-hinges", folder: "module-07",
-      title: "Handling Internal Hinges",     category: "statics", order: 7,
-    status: "coming-soon"},     
+      title: "Handling Internal Hinges",     
+      category: "statics", order: 7,
+      status: "coming-soon"},     
 
     { id: "module-10-cross-section",   folder: "module-10",
-      title: "Cross Section Properties", category: "solids", order: 1,
+      title: "Cross Section Properties", 
+      category: "solids", order: 1,
       status: "coming-soon" },
     
       // { id: "module-05-equilibrium",  folder: "module-05",
@@ -102,7 +123,25 @@ const CATALOG = {
 
 
 /* ── Lookup helpers (used by the homepage and the setup tool) ─────────────── */
-
+ 
+// A short duration label for a module, or "" if the author didn't give one.
+//   time:    "about 20 min"   used exactly as written
+//   minutes: 12               → "12 min"
+//   minutes: [10, 12]         → "10–12 min"
+function catalogTimeLabel(m) {
+  if (!m) return "";
+  if (m.time) return String(m.time);
+ 
+  const mins = m.minutes;
+  if (Array.isArray(mins) && mins.length === 2) {
+    return `${mins[0]}–${mins[1]} min`;       // en dash, as a range should have
+  }
+  if (typeof mins === "number" && isFinite(mins)) {
+    return `${mins} min`;
+  }
+  return "";
+}
+ 
 // Is this module released to students yet?
 //   status: "coming-soon"        → no, until the line is removed
 //   availableFrom: "YYYY-MM-DD"  → no, until that date (from 00:00 local time)
@@ -116,7 +155,7 @@ function catalogModuleAvailable(m) {
   }
   return true;
 }
-
+ 
 // What to show on a card that isn't available yet.
 function catalogComingSoonLabel(m) {
   if (m && m.status !== "coming-soon" && m.availableFrom) {
@@ -129,15 +168,15 @@ function catalogComingSoonLabel(m) {
   }
   return "Coming soon";
 }
-
+ 
 function catalogModule(id) {
   return CATALOG.modules.find(m => m.id === id) || null;
 }
-
+ 
 function catalogCategory(id) {
   return CATALOG.categories.find(c => c.id === id) || null;
 }
-
+ 
 // Sort module IDs into catalog order: by category order, then module order.
 // Unknown IDs are kept (at the end) and flagged in the console.
 function sortModuleIds(ids) {

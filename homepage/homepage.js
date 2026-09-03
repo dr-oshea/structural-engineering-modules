@@ -61,11 +61,17 @@ async function renderHomepage() {
           // A module can be listed before it's finished, so students can see
           // what's coming. It renders as a plain, unclickable card.
           const ready = catalogModuleAvailable(m);
+          const timeLabel = catalogTimeLabel(m);
+          const timeHTML = timeLabel
+            ? `<div class="hp-card-time"><span aria-hidden="true">🕐</span> ${timeLabel}</div>`
+            : "";
+
           if (!ready) {
             return `
               <div class="hp-card hp-card-soon" aria-disabled="true">
                 <div class="hp-card-status">🔒</div>
                 <div class="hp-card-title">${m.title}</div>
+                ${timeHTML}
                 <div class="hp-card-foot">${catalogComingSoonLabel(m)}</div>
               </div>
             `;
@@ -84,6 +90,7 @@ async function renderHomepage() {
             <a class="hp-card ${isDone ? "hp-card-done" : ""}" href="${moduleUrl}">
               <div class="hp-card-status">${isDone ? "✓" : ""}</div>
               <div class="hp-card-title">${m.title}</div>
+              ${timeHTML}
               <div class="hp-card-foot">${footText}</div>
             </a>
           `;

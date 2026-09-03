@@ -159,3 +159,60 @@
   font-style: italic;
   opacity: 1;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BACKGROUND IMAGE
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Put your image at  homepage/images/homepage-bg.webp  (WebP is smaller than
+   PNG at the same quality and every current browser reads it; rename the file
+   below if you use .png instead).
+
+   The two gradient layers sit OVER the photo as a "scrim". Without one, white
+   cards on a busy image are hard to read and the yellow section rules get
+   lost. Raise the two alpha values toward 1 for a paler, calmer background;
+   lower them to let more of the image through.
+
+   This rule only loads on the homepage, so modules are unaffected.           */
+
+body {
+  background-image:
+    linear-gradient(rgba(242,242,242,0.90), rgba(242,242,242,0.94)),
+    url("images/homepage-bg.webp");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;   /* the image stays put as the page scrolls */
+  min-height: 100vh;
+}
+
+/* `fixed` backgrounds are expensive to scroll on phones, and iOS ignores them
+   anyway — fall back to a normal scrolling background on small screens. */
+@media (max-width: 780px) {
+  body { background-attachment: scroll; }
+}
+
+/* Cards need a little more presence once they sit on a photo */
+.hp-card {
+  backdrop-filter: blur(2px);
+}
+
+
+/* ===== Card: approximate duration ===== */
+
+.hp-card-time {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin: -6px 0 10px;
+}
+
+.hp-card-time span { font-size: 0.85rem; line-height: 1; }
+
+.hp-card-done .hp-card-time { color: #0f7a52; }
+.hp-card-soon .hp-card-time { color: #64748b; }
