@@ -32,6 +32,9 @@ async function renderHomepage() {
       <h1>${course.courseName}</h1>
       <p>Revision Modules${ctx.student ? ` · ${ctx.student}` : ""}</p>
     </div>
+
+    ${course.intro ? `<div class="hp-intro">${course.intro}</div>` : ""}
+
     <div id="hp-sections">
       <p class="hp-loading">Loading your progress…</p>
     </div>

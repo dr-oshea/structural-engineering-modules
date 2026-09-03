@@ -27,6 +27,12 @@ const COURSES = {
   // T3 2026
   "CVEN2303-CVEN2303-5269_00716": {
     courseName: "Structural Analysis and Modelling (T3 2026)",
+
+    intro: `<p>Welcome to the revision modules for this course! These modules are designed for you to interactively 
+            get up to pace on the assumed knowledge for this course!
+            You can work through them in any order.</p>
+            <p>If you fully complete a module, your progress will be saved.</p>`,
+
     modules: [
       "module-01-free-body",
       "module-02-equilibrium",
