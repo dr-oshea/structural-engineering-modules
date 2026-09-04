@@ -1,331 +1,628 @@
-// Optional module metadata — used by the final slide's save payload
 const moduleMeta = {
   id: "module-02-equilibrium"
 };
 
 const moduleData = [
+
+  /*Slide 1*/
   {
-    type: "splash",
-    label: "Home page",
-    title: "Calculating Reactions",
-    subtitle: "Interactive Revision Modules for structural engineering",
+    type:       "splash",
+    label:      "Home page",
+    title:      "Using Equations of Equilibrium​",
+    subtitle:   "Interactive Revision Modules for structural engineering",
     buttonText: "Start Module"
+    // The contents list is generated automatically from the partStart
+    // fields below — nothing to maintain here.
   },
 
+  /*MISSING*/
   {
-    type: "context",
+    type:  "context",
     label: "Context/Motivation",
-    title: "Calculating Reactions",
-    image: "images/context-beam-engineer.jpg",
-    text: `<p>Support reactions fix a structure in place. How much force is required in reaction to applied loads to achieve this?</p>
-          <p> Calculating support reactions is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
+    title: "Why do we use Equilibrium?​",
+    text:  `<p>
+            Isaac Newton’s laws of motion provide the basis of modern physics and engineering. The laws are stated as follows:​
+            <ol>
+              <li>An object at rest remains at rest, and an object in motion remains in motion at constant speed and in a straight line unless acted on by an unbalanced force.​
+              <li>The acceleration of an object depends on the mass of the object and the amount of force applied.​
+              <li> Whenever one object exerts a force on another object, the second object exerts an equal and opposite on the first.
+            </ol>
+            <p>…But they can be simplified for the purposes of practical application (next slide).​
+            </p>`,
   },
 
-
-  // INFO SLIDE:   What is a reaction? 
+  /*PART 1*/
+  /*Slide 2*/
   {
-    type: "info",
-    label: "What is a Reaction Force?",
-    title: "What is a Reaction Force?",
-
-    content: `
-      <p>Reaction forces arise in response to applid loads</p>
-
-      <ul>
-        <li>Pin support</li>
-        <li>Roller support</li>
-        <li>Fixed support</li>
-      </ul>
-    `,
-
-    image: "images/truss.svg"
-  },
-
-
-  // INFO SLIDE:   Relationship between Shear and Bending
-  {
-    type: "info",
-    label: "Relationship V and M",
-    title: "Relationship between Shear Force and Bending Moment",
+    type:      "info",
+    partStart: "Newton’s Laws of Motion​",
+    label:     "Introduction to Newton's Laws of Motion",
+    title:     "Newton’s Laws of Motion​",
 
     blocks: [
-      {
-        type: "text",
-        html: `<p>Shear force is the derivative of the bending moment. This means
-               the slope of the bending moment diagram at any point equals the
-               shear force at that point.</p>`
-      },
-      {
-        type: "equation",
-        html: `V(x) = dM(x) / dx`
-      },
-      {
-        type: "text",
-        html: `<p>We use this relationship to:</p>
-               <ul>
-                 <li>Locate maximum bending moments (where V = 0)</li>
-                 <li>Sketch one diagram from the other</li>
-                 <li>Check the consistency of our results</li>
-               </ul>`
-      }
+      { type: "text",
+        html: `<p>
+            Isaac Newton’s laws of motion provide the basis of modern physics and engineering. The laws are stated as follows:​
+            <ol>
+              <li>An object at rest remains at rest, and an object in motion remains in motion at constant speed and in a straight line unless acted on by an unbalanced force.​
+              <li>The acceleration of an object depends on the mass of the object and the amount of force applied.​
+              <li> Whenever one object exerts a force on another object, the second object exerts an equal and opposite on the first.
+            </ol>
+            <p>…But they can be simplified for the purposes of practical application (next slide).​
+            </p>
+        ` },
+        {type: "image",
+          src: "images/isaac_newton.jpg",
+          width: "300px",
+          caption: "Britannica Online (2026)"
+        },
+
     ]
   },
 
+  /*Slide 3*/
   {
-    type:  "steps",
-    label: "Worked Example: Beam Reactions",
-    title: "Simply Supported Beam — Finding Reactions",
+    type:      "info",
+    label:     "Newton's Second Law of Motion",
+    title:     "Newton’s Laws of Motion​",
 
-    image: "images/module-01_01.svg",   // beam figure shown above the problem
-  
-    problem: `
-      <p>
-        A simply supported beam <strong>AB</strong> has a span of <strong>6 m</strong>.
-        A point load of <strong>12 kN</strong> acts vertically downward at a point
-        <strong>2 m from A</strong>.
-      </p>
-      <p>Work through the steps below to find the support reactions and the
-      maximum bending moment.</p>
-    `,
-  
-    steps: [
-  
-      {
-        instruction: `Taking moments about <strong>A</strong>, find the vertical
-                      reaction at <strong>B</strong>.
-                      <br><em>Hint: ΣM<sub>A</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      4,
-        tolerance:   0.05,
-        explanation: `ΣM_A = 0 → R_B × 6 = 12 × 2 = 24 → R_B = 24 ÷ 6 = <strong>4 kN</strong>`
-      },
-  
-      {
-        instruction: `Using vertical equilibrium, find the reaction at <strong>A</strong>.
-                      <br><em>Hint: ΣF<sub>y</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      8,
-        tolerance:   0.05,
-        explanation: `ΣF_y = 0 → R_A + R_B = 12 → R_A = 12 − 4 = <strong>8 kN</strong>`
-      },
-  
-      {
-        instruction: `Calculate the bending moment at the point load
-                      (i.e. at <strong>x = 2 m</strong> from A).
-                      <br><em>Hint: consider only the forces to the left of the section.</em>`,
-        image:       "images/module-01_step3_cut.svg",  // optional per-step hint figure
-        unit:        "kNm",
-        answer:      16,
-        tolerance:   0.05,
-        explanation: `M(x=2) = R_A × 2 = 8 × 2 = <strong>16 kNm</strong>
-                      — this is also the peak of the bending moment diagram.`
-      }
- 
+    blocks: [
+      { type: "text",
+        html: `<p> It is easiest to first understand <strong><u>Newton’s 2nd Law,</strong></u> the law of force and acceleration. Imagine a box of mass $m$ that is <strong><u>moving.</strong></u> If it is accelerating horizontally at acceleration $a$, the net force associated with this motion is $F$.</p>
+            <p>You can think of $m$ as an object’s resistance to acceleration (change of velocity) when a net force is applied.</p>
+            <p>$$+&rarr;&Sigma;F_x=ma$$</p>
+        ` },
+      
+      { type: "image",
+        src:     "images/Slide 3.png",
+        width:   "600px",
+        caption: "Fig. 1" },
+
     ]
   },
 
-  
-  // CARDS:   Extra Info on Bending Moment
+  /*Slide 4*/
   {
-    type: "cards",
-    label: "Key Concepts",
-    title: "Key Concepts",
+    type:      "info",
+    label:     "Newton's Third Law of Motion",
+    title:     "Newton’s Laws of Motion​",
 
-    intro: `<p>Here are three foundational concepts that underpin bending moment
-            analysis. <strong>Click each card</strong> to reveal its definition.</p>`,
+    blocks: [
+      { type: "text",
+        html: `<p> Next, let’s consider the vertical forces. The weight force of the box, $W=mg$, is directed downwards. We know the box doesn’t sink into the ground. This is because the ground pushes back with a (normal force) reaction of $N$ upward. This is due to <strong><u>Newton’s 3rd Law</strong></u>, the law of action and reaction.</p>
+            <p>Since the system’s vertical forces are balanced such that it is not moving - it is said to be a <strong><u>static system</strong></u>, in other words, it is in <strong><u>equilibrium</strong></u>. This is the basis of <strong><u>Newton’s 2nd Law</strong></u>, the law of inertia.</p>
+            <p>$$+&uarr;&Sigma;F_y=0$$</p>
+        ` },
 
-    cards: [
+      { type: "image",
+        src:     "images/Slide 4.png",
+        width:   "600px",
+        caption: "Fig. 2" },
+
+    ]
+  },
+
+  /*Slide 5*/
+  {
+    type:      "info",
+    label:     "Summary of Newton’s Laws of Motion​",
+    title:     "Newton’s Laws of Motion​",
+
+    blocks: [
+      { type: "text",
+        html: `<p>As a quick summary, the three laws are…</p>
+            <p>
+              <ol>
+                <li>Law of Inertia (Equations of Equilibrium)​
+
+                <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr 1fr;
+                  width: 100%;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                  text-align: center;
+                ">
+                <div>
+                  <p>$+&uarr;&Sigma;F_y=0$</p>
+                </div>
+                <div>
+                  <p>$+&rarr;&Sigma;F_x=0$</p>
+                </div>
+                <div>
+                  <p>$+↺&Sigma;M=0$</p>
+                </div>
+
+                <li>Law of Force & Acceleration (Equations of Motion)​
+
+                <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr 1fr;
+                  width: 100%;
+                  margin-top: 10px;
+                  margin-bottom: 10px;
+                  text-align: center;
+                ">
+                <div>
+                  <p>$+&uarr;&Sigma;F_y=ma$</p>
+                </div>
+                <div>
+                  <p>$+&rarr;&Sigma;F_x=ma$</p>
+                </div>
+                <div>
+                  <p>$+↺&Sigma;M=I&alpha;$</p>
+                </div>
+
+                <li>Law of Action & Reaction &rarr; Support Reactions​
+              </ol>
+            </p>
+            <p>$$+&uarr;&Sigma;F_y=0$$</p>
+        ` },
+
+    ]
+  },
+
+  /*Slide 6*/
+  {
+    type:  "cloze",
+    partStart: "Static Equilibrium - Sliding",
+    label: "Equilibrium: Sliding​",
+    title: "Equilibrium: Sliding​",
+
+    intro: `<p>
+            The box below has a weight of $W = 100$ N and sits on a flat
+            surface. The coefficient of static friction between the box and the surface is
+            $&mu;_s=0.3$ N. $N$ represents the
+            normal force, $F_{fr}$ is the friction force.
+            </p>
+            <p>
+            We can use equations of equilibrium to find the magnitude of force
+            $P$ to cause sliding.
+            </p>`,
+
+    text: `<p>If a box weighs $W=100$ N:</p>
+           <p>(1) We can use [[$+&uarr;&Sigma;F_y=0$]] ...to find <strong>N</strong></p>
+           <p>Then, we can use $F_{fr}=&mu;_SN$</p>
+           <p>(2) Then, we can use [[$+&rarr;&Sigma;F_x=0$]] ...to find $P$</p>`,
+
+    // Extra words that fit nowhere — students must discriminate
+    distractors: ["$+↺&Sigma;M=0$"],
+
+    image:         "images/Slide 6.png",
+    imagePosition: "right",           // or "below" to stack it under the text
+    imageWidth:    "200px",
+
+    explanation: `Correct!`
+  },
+
+
+  /*Slide 7*/
+  {
+    type:      "info",
+    partStart: "Bending Moment: Line of Action & Lever Arm​",
+    label:     "Bending Moment: Line of Action & Lever Arm​",
+    title:     "Bending Moment: Line of Action & Lever Arm​",
+
+    blocks: [
+      { type: "text",
+        html: `<p>Moment equilibrium always requires a reference point. For example, <strong>point A​</strong></p>
+               <p>$$+↺&Sigma;M_A=0$$</p>
+        ` },
+
+      { type: "image",
+        src:     "images/Slide 7.png",
+        width:   "800px",
+        caption: "Fig. 3" },
+
+    ]
+  },
+
+  /*Slide 8*/
+  {
+    type:      "info",
+    label:     "Bending Moment: Line of Action & Lever Arm​",
+    title:     "Bending Moment: Line of Action & Lever Arm​",
+
+    blocks: [
+      { type: "text",
+        html: `<p>From here, we consider the forces and moments in the system…​</p>
+               <p>$$+↺&Sigma;M_A=0$$</p>
+        ` },
+
+      { type: "image",
+        src:     "images/Slide 8.png",
+        width:   "600px",
+        caption: "Fig. 4" },
+
+    ]
+  },
+
+  /*Slide 9*/
+  {
+    type:      "info",
+    label:     "Bending Moment: Line of Action & Lever Arm​",
+    title:     "Bending Moment: Line of Action & Lever Arm​",
+
+    blocks: [
+      { type: "text",
+        html: `<p>The <strong><span style="color: #e97132;">line of action</span></strong> of a force is a line extending infinitely along the direction of the vector.​</p>
+               <p>Now consider the perpendicular distance from point A to each <strong><span style="color: #e97132;">lines of action</span></strong>,​ these are the <strong><span style="color: #196b24;">“lever arms”</span></strong>. Here, there’s only one non-zero lever arm.</p>
+               <p>$$+↺&Sigma;M_A=0$$</p>
+        ` },
+
+      { type: "image",
+        src:     "images/Slide 9.png",
+        width:   "600px",
+        caption: "Fig. 5" },
+
+    ]
+  },
+
+  /*Slide 10*/
+  {
+    "type": "steps",
+    "label": "Bending Moment: Line of Action & Lever Arm​",
+    "title": "Bending Moment: Line of Action & Lever Arm​",
+
+    "image": "images/Slide 10.png",
+    "imageWidth": "620px",
+    "imagePosition": "below",
+
+    "problem": "<p>Let’s hide the support reaction forces with zero lever arm distance.​</p><p>Thus:​</p><p>$+↺&Sigma;M_A=0=M_A-X&times;Y$</p><p>$M_A=$ $?$</p>",
+    "steps": [
       {
-        front: "📐 Equilibrium",
-        back: "Sum of forces = 0 and sum of moments = 0"
+        "instruction": "What is the value best replaces $X$?",
+        "unit": "Newtons",
+        "answer": 1200,
+        "tolerance": 0,
+        "explanation": "Correct!"
       },
       {
-        front: "🧩 Free Body Diagrams",
-        back: "Used to isolate and understand forces in structures"
+        "instruction": "What is the value best replaces $Y$?​",
+        "unit": "metres",
+        "answer": 2,
+        "tolerance": 0,
+        "explanation": "Correct!"
       },
       {
-        front: "🏗️ Load Paths",
-        back: "Describes how forces travel through structures"
+        "instruction": "What is $M_A$?​",
+        "unit": "Newton metres",
+        "answer": 2400,
+        "tolerance": 0,
+        "explanation": "Correct!"
       }
     ]
   },
 
+  /*Slide 11*/
+  {
+    type:      "info",
+    partStart: "Static Equilibrium - Overturning",
+    label:     "Equilibrium: Overturning​",
+    title:     "Equilibrium: Overturning​",
 
-  // MCQ SLIDE:   Quiz on max bending moment
+    blocks: [
+      { type: "text",
+        html: `<p>The ladder shown in the figure has a weight of <span style="color: red;"><strong>$W$</strong></span> acting through its centre of mass as shown. It is at rest when placed against contact points A and B. Then, a force $P$ is applied to disturb the ladder.</p>
+               <p>Bending moments caused by these forces can be defined based on how they cause or prevent overturning in the static system.</p>
+               <p> A <strong><u>disturbing moment</u></strong> causes the object (the ladder) to potentially move, and a <strong><u>resisting moment</u></strong> would stop the system from moving by holding it in place.</p>
+        ` },
+
+      { type: "image",
+        src:     "images/Slide 11.png",
+        width:   "600px",
+        caption: "Fig. 6" },
+
+    ]
+  },
+
+  /*Slide 12*/
+  {
+    type:  "cloze",
+    label: "Equilibrium: Overturning​",
+    title: "Equilibrium: Overturning​",
+
+    intro: `<p>
+            This ladder has a self-weight $W$ stopping it from moving and force $P$ is disturbing it.
+            </p>`,
+
+    text: `<p>(1) We can use [[$↻&Sigma;M_A$]] ...to find <strong><u>the disturbing moment.</strong></u></p>
+           <p>(1) We can use [[$↺&Sigma;M_A$]] ...to find <strong><u>the resisting moment.</strong></u></p>\
+           <p>If <strong><u>disturbing moment $=$ resisting moment</strong></u> are equal, the system is in equilibrium.</p>`,
+
+    // Extra words that fit nowhere — students must discriminate
+    distractors: ["$+&uarr;&Sigma;F_y=0$" , "$+&rarr;&Sigma;F_x=0$"],
+
+    image:         "images/Slide 12.png",
+    imagePosition: "right",           // or "below" to stack it under the text
+    imageWidth:    "200px",
+
+    explanation: `Loads travel from the sheeting, through the purlins, into
+                  the truss joints — which is why external forces arrive at
+                  the joints and the members carry only axial force.`
+  },
+
+  /*Slide 13*/
+  {
+    type:      "info",
+    partStart: "Internal vs External Forces​",
+    label:     "Internal vs External Forces​",
+    title:     "Internal vs External Forces​",
+
+    blocks: [
+    { type: "text",
+      html: `<p>Consider a simple beam as shown below.​</p>
+            
+              <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  width: 100%;
+                  text-align: left;
+              ">
+            
+              <div>
+                <img
+                  src="images/Slide 13.png"
+                  style="
+                    width: 60%;
+                    display: block;
+                    margin: 0 auto;
+                  "
+                  alt="Slide 13"
+                />
+
+                <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  width: 100%;
+                  text-align: center;
+                ">
+                  <div>
+                    <p><strong><u>Net upwards force:</strong></u></p>
+                    <p>$3$ kN $+$ $3$ kN $=6$ kN</p>
+                  </div>
+                  <div>
+                    <p><strong><u>Net downwards force:</strong></u></p>
+                    <p>$2$ kN/m $&times;$ $3$ m $=6$ kN</p>
+                  </div>
+                </div>
+              </div>
+
+            
+            <div>
+              <p>
+                <ul>
+                  <li>There is a total of $2$ kN/m $&times;$ $3$ m $= 6$ kN of downwards <strong><u>external force</u></strong>.
+                  <li>There are two vertical support reactions at either end, thus they share this load equally and exert an upwards <strong><u>external force</u></strong> back as a <strong><u>reaction</u></strong>.
+                </ul>
+              </p>
+            </div>
+      ` },
+
+    ]
+  },
+
+  /*Slide 14*/
+  {
+    type:      "info",
+    label:     "Internal vs External Forces​",
+    title:     "Internal vs External Forces​",
+
+    blocks: [
+    { type: "text",
+      html: `<p>If a structure is in equilibrium, then all sections of that structure is also in equilibrium. So, what happens if we cut a section of the beam?​​</p>
+            
+              <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  width: 100%;
+                  text-align: left;
+              ">
+            
+              <div>
+                <img
+                  src="images/Slide 14.png"
+                  style="
+                    width: 45%;
+                    display: block;
+                    margin: 0 auto;
+                  "
+                  alt="Slide 14"
+                />
+
+                <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  width: 100%;
+                  text-align: center;
+                ">
+                <div>
+                  <p><strong><u>Net upwards force:</strong></u></p>
+                  <p>$3$ kN $=$ $3$ kN</p>
+                </div>
+                <div>
+                  <p><strong><u>Net downwards force:</strong></u></p>
+                  <p>$2$ kN/m $&times;$ $x$ $=2x$ kN</p>
+                </div>
+                </div>
+              </div>
+
+            
+            <div>
+              <p>
+                <ul>
+                  <li>Now there is more upwards force then downwards force. However, both the left-hand side and the right-hand side of this section must individually also be in equilibrium​
+                  <li>For this system to remain in equilibrium (not move)…​
+                </ul>
+              </p>
+            </div>
+      ` },
+
+    ]
+  },
+
+  /*Slide 15*/
+  {
+    type:      "info",
+    label:     "Internal vs External Forces​",
+    title:     "Internal vs External Forces​",
+
+    blocks: [
+    { type: "text",
+      html: `<p>If a structure is in equilibrium, then all sections of that structure is also in equilibrium. So, what happens if we cut a section of the beam?​​</p>
+            
+              <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  width: 100%;
+                  text-align: left;
+              ">
+            
+              <div>
+                <img
+                  src="images/Slide 15.png"
+                  style="
+                    width: 60%;
+                    display: block;
+                    margin: 0 auto;
+                  "
+                  alt="Slide 15"
+                />
+
+                <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  width: 100%;
+                  text-align: center;
+                ">
+                  <div>
+                    <p><strong><u>Net upwards force:</strong></u></p>
+                    <p>$3$ kN $=$ $3$ kN</p>
+                  </div>
+                  <div>
+                    <p><strong><u>Net downwards force:</strong></u></p>
+                    <p>$2$ kN/m $&times;$ $x$ $=2x$ kN</p>
+                  </div>
+                </div>
+              </div>
+
+            
+            <div>
+              <p>
+                <ul>
+                  <li>Now there is more upwards force then downwards force. However, both the left-hand side and the right-hand side of this section must individually also be in equilibrium​
+                  <li>For this system to remain in equilibrium (not move)…​ There needs to be <strong><u>internal forces</strong></u> from the beam.
+                  <li>In this case there's <strong><u>internal shear</strong></u> $V_{(x)}$ and <strong><u>internal moment</strong></u> $M_{(x)}$.
+                </ul>
+              </p>
+            </div>
+      ` },
+
+    ]
+  },
+
+  /*Slide 16*/
+  {
+    type:      "info",
+    label:     "Internal vs External Forces​",
+    title:     "Internal vs External Forces​",
+
+    blocks: [
+    { type: "text",
+      html: `<p>Now, consider a simple hanger rod.​​​</p>
+            
+            <div style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  width: 100%;
+                  text-align: left;
+            ">
+
+            <div>
+            <img
+              src="images/Slide 16.png"
+              style="
+                width: 35%;
+                display: block;
+                margin: 0 auto;
+              "
+              alt="Slide 16"
+            />
+            </div>
+
+            <div>
+            <p>
+              <ul>
+                <li>There is a total of <span style="color: red;"><strong>$5$ kN</strong></span> downwards <strong><u>external force</strong></u>.
+                <li>At the fixed end, there is an upwards <strong><u>external force</strong></u> back as a <strong><u>reaction</strong></u>.
+              </ul>
+            </p>
+            </div>
+      ` },
+
+    ]
+  },
+
+  /*Slide 17*/
   {
     type:  "mcq",
-    label: "Quiz: Max Bending Moment",
-    title: "Multiple Choice: Bending Moment",
-
-    question: `
-      <p>
-        A simply supported beam of span <strong>8 m</strong> carries a
-        <strong>uniformly distributed load of 10 kN/m</strong> over its entire length.
-      </p>
-      <p>What is the <strong>maximum bending moment</strong> in the beam?</p>
-    `,
-
-    options: [
-      { text: "40 kNm"  },
-      { text: "80 kNm",  correct: true },
-      { text: "160 kNm" },
-      { text: "320 kNm" }
-    ],
-
-    explanation: `M_max = wL² / 8 = 10 × 8² / 8 = <strong>80 kNm</strong>, occurring at midspan.`
-  },
-
-
-  // ── EXAMPLE: image-based MCQ (uncomment & supply SVGs to use) ──────────────
-  // {
-  //   type:  "mcq",
-  //   label: "Quiz: Identify the BMD",
-  //   title: "Which is the correct Bending Moment Diagram?",
-  //   image: "images/module-01_bmd_question.svg",   // the beam + loading shown above options
-  //   question: `<p>For the beam shown above, select the correct bending moment diagram.</p>`,
-  //   options: [
-  //     { image: "images/bmd_option_a.svg" },
-  //     { image: "images/bmd_option_b.svg", correct: true },
-  //     { image: "images/bmd_option_c.svg" },
-  //     { image: "images/bmd_option_d.svg" }
-  //   ],
-  //   explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
-  // },
-
-    // EXAMPLE GEOGEBRA
-    {
-    type:  "embed",
-    label: "Interactive: Mohr's Circle",
-    title: "Drag the slider to transform the stresses",
-  
-    intro: `<p>Please wait a moment for the applet to load. Try rotating the element and observing how the values of stress change. When are the normal stresses maximum and minimum?</p>`,
-  
-    src:         "https://www.geogebra.org/material/iframe/id/xjmmtgqt/width/1203/height/768/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false",
-    aspectRatio: "16 / 10",          // optional — default is 16/9
-    maxWidth:    "820px",            // optional
-    caption:     "GeoGebra applet — interact directly above."
-  },
-
-  // EXAMPLE REVEAL
-  {
-    type:   "reveal",
-    label:  "Try it: Reaction at B",
-    title:  "Quick Check — Reaction at B",
-
-    // image:     "images/module-01_01.svg",   // optional figure above the prompt
-    // imageWidth:"480px",
-
-    prompt: `<p>For the beam from the worked example (6 m span, 12 kN load at 2 m
-             from A), have a go at finding the reaction at <strong>B</strong> on
-             paper. When you're ready, reveal the worked solution to check your
-             method.</p>`,
-
-    buttonText: "Show solution",     // optional (default "Show solution")
-    hideText:   "Hide solution",     // optional (default "Hide solution")
-
-    answer: `<p><strong>Taking moments about A (ΣM<sub>A</sub> = 0):</strong></p>
-             <p>R<sub>B</sub> × 6 = 12 × 2 = 24</p>
-             <p>R<sub>B</sub> = 24 ÷ 6 = <strong>4 kN</strong></p>`
-  },
-
-  // EXAMPLE HOTSPOT
-  {
-    type:  "hotspot",
-    label: "Find the Maximum Moment",
-    title: "Where is the Bending Moment greatest?",
-  
-    prompt: `<p>Click the point on the beam where the <strong>bending moment is
-            maximum</strong>.</p>`,
-  
-    image:    "images/module-01_01.svg",
-    maxWidth: "700px",               // optional
-  
-    hotspots: [
-      { x: 10, y: 40, w: 12, h: 20 },                 // a wrong region
-      { x: 44, y: 35, w: 14, h: 28, correct: true },  // the correct region
-      { x: 78, y: 40, w: 12, h: 20 }                  // another wrong region
-    ],
-  
-    explanation: `The maximum bending moment occurs under the point load, where
-                  the shear force passes through zero.`
-  },
-
-  /* ============================================================================
-   QUIZ ("Test Your Knowledge") — a multi-question sub-sequence in one slide.
-
-   Appears ONCE in the sidebar. Internally runs: intro → N questions → results.
-   - One attempt per question; advances on answer (right or wrong).
-   - Results page shows score, a review table, and a Retry button.
-   - Completing it (reaching results) gates the module, regardless of score.
-
-   Each question has a "kind": "mcq" or "input".
-     mcq   → options array, one with correct:true (same shape as the mcq slide)
-     input → numeric answer + tolerance + optional unit (like a Worked Example step)
-
-   Any question may include an optional image / imageWidth (shown above it).
-   ============================================================================ */
-
-  {
-    type:  "quiz",
-    label: "Test Your Knowledge",
-    title: "Test Your Knowledge",
-
-    intro:     "Answer the following questions to complete the module. You have one attempt per question, but you can retry the whole quiz as many times as you like.",
-    startText: "Start Quiz",          // optional (default "Start Quiz")
+    label: "Internal vs External Forces​",
+    title: "Internal vs External Forces​",
 
     questions: [
-
-      // ── An MCQ question ──
       {
-        kind:     "mcq",
-        question: `<p>The maximum bending moment in a simply supported beam under a
-                  central point load <strong>P</strong> over span <strong>L</strong> is:</p>`,
+        question: `<p>What happens if we cut a section of the hanger?​​</p>
+                  <p>Now we've exposed the <strong><u>internal axial force</strong></u> $N_{(x)}$.</p>
+                  <p>If we ignore self-weight, there is a constant $5$ kN of:`,
+        
+        image: "images/Slide 17.png",
+
         options: [
-          { text: "PL / 2" },
-          { text: "PL / 4", correct: true },
-          { text: "PL / 8" },
-          { text: "PL" }
-        ]
+      { text: "Tension", correct: true},
+      { text: "Compression"},
+        ],
+        explanation: `Correct!`
       },
+    ]
+  },
 
-      // ── An input (numeric) question ──
-      {
-        kind:      "input",
-        question:  `<p>A simply supported beam of span <strong>4 m</strong> carries a
-                    UDL of <strong>6 kN/m</strong>. What is the maximum bending
-                    moment (in kNm)?</p>
-                    <p><em>Recall M<sub>max</sub> = wL²/8</em></p>`,
-        answer:    12,
-        tolerance: 0.1,
-        unit:      "kNm"
-      },
+  /*Slide 18*/
+  {
+    type:      "info",
+    label:     "Summary of Internal Forces​",
+    title:     "Internal Forces (Summary)​",
 
-      // ── An image-based MCQ question ──
-      {
-        kind:     "mcq",
-        // image:    "images/some-diagram.svg",   // optional figure above the question
-        question: `<p>Which support condition provides a reaction moment?</p>`,
-        options: [
-          { text: "Pin" },
-          { text: "Roller" },
-          { text: "Fixed", correct: true }
-        ]
-      }
+    blocks: [
+    { type: "text",
+      html: `<p>As could be seen in the previous two examples, <strong><u>internal forces</strong></u> are
+            actions that arise to resist load that prevent a material from being
+            pulled apart, from shearing, or from resisting bending, see <strong>Figure 7.</strong>
+            They follow a sign convention as shown in <strong>Figure 8.</strong>​​​​</p>
+      ` },
+
+    { type: "image",
+        src:     "images/Slide 18 - 1.png",
+        width:   "600px",
+        caption: "Fig. 7" },
+
+    { type: "image",
+        src:     "images/Slide 18 - 2.png",
+        width:   "900px",
+        caption: "Fig. 8" },
 
     ]
   },
 
-
-  // FINAL SLIDE:   Module completion
+  /*CLOSING SLIDE (22)*/
   {
     type:         "final",
     label:        "Module Complete",
     title:        "Well done!",
-    subtitle:     "You've completed the Bending Moments module.",
+    subtitle:     "You've completed this module.",
     buttonText:   "Save and Close",
     showRating:   true,
+    showFeedback: true,
     bugReportUrl: "https://forms.office.com/your-bug-report-form"
   }
-
 
 ];
