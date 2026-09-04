@@ -67,6 +67,22 @@
            oninput="toolGenerateMoodle()">
     <p class="hint">Each module links to <code>&lt;base&gt;&lt;folder&gt;/index.html</code>.</p>
 
+    <label for="mp-home">Moodle link to your "Revision Modules" URL activity <em>(recommended)</em></label>
+    <input type="text" id="mp-home" placeholder="https://moodle.telt.unsw.edu.au/mod/url/view.php?id=123456"
+           oninput="toolGenerateMoodle()">
+    <p class="hint">If given, every module link points here instead. Moodle can
+       only substitute the student ID for a <strong>URL activity</strong>, not
+       for links inside pasted HTML — routing through the activity is what makes
+       progress tracking work from this panel. Leave blank to link straight to
+       the modules.</p>
+
+    <label for="mp-res">Course resources <em>(optional, one per line: Label | URL)</em></label>
+    <textarea id="mp-res" rows="4" style="width:100%;box-sizing:border-box;
+      font-family:monospace;font-size:.85rem;border:2px solid #cbd5e0;border-radius:8px;padding:8px;"
+      placeholder="Course profile | https://…&#10;Course FAQs | https://…"
+      oninput="toolGenerateMoodle()"></textarea>
+    <p class="hint">These expand from the <strong>CURRENT</strong> course bubble, the same way each prerequisite's refresh modules do.</p>
+
     <button class="tool-btn" onclick="toolCopyMoodle()"
             style="background:#007882;">Copy to clipboard</button>
     <span id="mp-copied" style="margin-left:10px;color:#1ac987;font-weight:600;
@@ -161,8 +177,21 @@ ${ordered.map(id => `      "${id}"`).join(",\n")}
       const term = document.getElementById("term-input").value.trim();
       const base = document.getElementById("mp-base").value.trim();
 
+      const homeUrl = document.getElementById("mp-home").value.trim();
+
+      // "Label | URL" per line → [{label, url}]
+      const resources = document.getElementById("mp-res").value
+        .split("\n").map(l => l.trim()).filter(Boolean)
+        .map(l => {
+          const i = l.lastIndexOf("|");
+          return i === -1 ? null
+            : { label: l.slice(0, i).trim(), url: l.slice(i + 1).trim() };
+        }).filter(r => r && r.label && r.url);
+
       const html = buildMoodlePanel(code, {
         moduleBaseUrl: base,
+        homeUrl:       homeUrl || undefined,
+        resources:     resources.length ? resources : undefined,
         courseParam:   term ? `${code}_${term}` : code
       });
 
