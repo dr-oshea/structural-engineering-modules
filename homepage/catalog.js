@@ -64,8 +64,9 @@ const CATALOG = {
 
     // ── Statics (ENGG1300) ──
     { id: "module-01-free-body", folder: "module-01",
-      title: "Drawing Free Body Diagrams",     category: "statics", order: 1,
-    status: "coming-soon" },
+      title: "Drawing Free Body Diagrams",     
+      category: "statics", order: 1,
+      minutes: [5, 10]},
     
     { id: "module-02-equilibrium", folder: "module-02",
       title: "Using Equations of Equilibrium",     

@@ -1,5 +1,5 @@
 const moduleMeta = {
-  id: "module-01-free-body-diagrams"
+  id: "module-01-free-body"
 };
 
 
