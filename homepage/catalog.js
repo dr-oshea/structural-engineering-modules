@@ -72,7 +72,7 @@ const CATALOG = {
       title: "Using Equations of Equilibrium",     
       category: "statics", 
       order: 2,
-      status: "coming-soon" },
+      minutes: [5, 10]},
       
     { id: "module-03-reactions", folder: "module-03",
       title: "Calculating Reactions",
