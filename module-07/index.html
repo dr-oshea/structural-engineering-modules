@@ -6,6 +6,25 @@
   <title>Module 07</title>
 
   <link rel="stylesheet" href="../core/style.css">
+
+  <!-- ═══ KaTeX — LaTeX maths rendering (optional but recommended) ═══
+       Lets you write \[ … \] or $ … $ anywhere in a module's content.
+       If these three lines are removed (or the CDN is unreachable), modules
+       still work — raw LaTeX simply shows as plain text.
+       `defer` scripts run before DOMContentLoaded, which is when the engine
+       boots, so KaTeX is always ready in time.                              -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.css"
+        integrity="sha384-1vdNCNel6Tx/NQa8IR1mGOGKsbGreCkOPfbtPPnUURJ5Tu2PRVfQ/7KLZC+Pi1p1"
+        crossorigin="anonymous">
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/katex.min.js"
+          integrity="sha384-ycJ6GAwiS15LoUPipwJOrWTvkUHl/YqELValBwI5I4awP1EeEQJYarj+w85ntcz7"
+          crossorigin="anonymous"></script>
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.18.1/dist/contrib/auto-render.min.js"
+          integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz"
+          crossorigin="anonymous"></script>
 </head>
 
 <body>
