@@ -371,65 +371,127 @@ const moduleData = [
             </ul>
         </ol>
           ` },
+          {type: "text",
+            html: `<p><strong>The next series of slides steps you through this process for an example truss</strong></p>`
+          }
     ]
   },
 
   /*Slide 17-21*/
   {
     type:  "mcq",
-    label: "Quiz 2",
-    title: "Quiz 2 – Find internal axial forces in BC, GC, GF​",
+    label: "Step 1",
+    title: "Step 1 – Method of Sections",
 
     questions: [
       /*Slide 17*/
       { multi: true,
         question:`<p>1. Identify and ignore any zero-force members.​</p>
                   <p><u>Select any zero-force member(s):</u>​</p>`,
+        image: "images/Slide 18.png",
+        imagePosition: "below",
         options: [
           { text: "AB" },
           { text: "AG" },
-          { text: "BG", correct: true },
+          { text: "BG" },
           { text: "BC" },
-          { text: "CG" }
+          { text: "CG" },
+          { text: "DE" , correct: true}
         ],
-        explanation: `Correct!"`
+        showCount: true,
+        explanation: `Correct! Equilibrium of vertical forces at E shows that DE is zero force."`
       },
+    ],
+  },
+
+  {
+    type:  "mcq",
+    label: "Step 2",
+    requires: true,
+    title: "Step 2 – Method of Sections",
+
+    questions: [
       /*Slide 18*/
-      { 
-        question:`<p>2. Think about section cut location and extent​​​</p>
-                  <p><u>Which section cut should be taken?​​</u>​</p>`,
+      {
+        question:`<p><strong>2. Think about section cut location and extent​​​</strong></p>
+                  <p>The objective is to find axial force in members $BC,\\ GC,\\ GF$. </p>
+                  <p><strong>Which section cut should be taken?​​</strong></p>`,
+        image: "images/Slide 18.png",
+        imagePosition: "below",
         options: [
           { text: "a-a", correct: true },
           { text: "b-b" },
           { text: "c-c" }
         ],
-        explanation: `Correct!"`
+        explanation: `Correct! This section cuts through all three members we wish to solve and so is most efficient."`
       },
-      /*Slide 19*/
-      { 
-        question:`<p>2. Think about section cut location and extent​​​</p>
-                  <p><u>Which extent should we consider to make analysis simpler?​​</u>​</p>`,
+    ],
+  },
+
+  {
+    type:  "mcq",
+    label: "Step 3",
+    requires: true,
+    title: "Step 3 – Method of Sections",
+
+    questions: [
+      /*Slide 18*/
+      { multi: true,
+        question:`<p><strong>3. IF NEEDED, find all support reactions</strong></p>
+                  <p>Which extent (left or right of the section) should we consider to make analysis simpler?​​</p>`,
+        image: "images/Slide 19.png",
+        imagePosition: "below",
         options: [
           { text: "Left-hand side", correct: true },
           { text: "Right-hand side" }
         ],
-        explanation: `Correct!"`
+        explanation: `Correct! Using the RHS will also work, though we would first need to find the support reactions considering equlibrium of the <strong>structure as a whole</strong> so that there are not too many unknowns."`
       },
+    ],
+  },
 
-      { type: "cloze",
-        intro: `<p>Complete the load path below.</p>`,
-        text: `<p>(1) [[roof sheeting]] connects to the</p>
-        <p>(2) [[purlins]] which connect to the</p>
-        <p>(3) [[truss joints]].</p>`,
-        distractors: ["rafters", "bracing"], // fit no blank — more words than gaps
-        image: "images/roof-truss.svg",
-        imagePosition: "right", // or "below"
-        explanation: `Shown once every blank is right.`
+  {type: "steps",
+    requires: true,
+    label: "Step 4",
+    title: "Step 4 - Method of Sections",
+
+    image: "images/Slide 20.png",
+    imageWidth: "600px",
+
+    problem: `<p><strong>4. Use equilibrium of sections to solve the required axial forces</strong></p>
+    <p>We wish to solve axial force in members $BC, GC, GF$`,
+
+    steps: [
+      {
+        instruction: `Find axial force $F_{BC}$`,
+        hint: `<p>Take moments about $G$ such that there is only one unknown to solve</p>`,
+        hintCollapsed: true,
+        unit: "N",
+        answer: 1000,
+        tolerance: 0,
+        explanation: `Correct!`
       },
-
-
+      {
+        instruction: `Find axial force $F_{GF}$`,
+        hint: `<p>The line of action of $F_{BC}, F_{GC}$ pass through $C$. Take moments about $C$ such that there is only one unknown to solve</p>`,
+        hintCollapsed: true,
+        unit: "N",
+        answer: 1000,
+        tolerance: 0,
+        explanation: `Correct!`
+      },
+      {
+        instruction: `Find axial force $F_{GC}$`,
+        hint: `<p>You could use equilibrium of horizontal or vertical forces here.</p>`,
+        hintCollapsed: true,
+        unit: "N",
+        answer: 1412,
+        tolerance: 10,
+        explanation: `Correct!`
+      },
     ]
   },
+
 
   /*CLOSING SLIDE (22)*/
   {

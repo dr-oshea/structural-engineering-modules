@@ -87,7 +87,7 @@ const CATALOG = {
     { id: "module-05-trusses", folder: "module-05",
       title: "Solving Trusses",     
       category: "statics", order: 5,
-      status: "coming-soon"},
+      minutes: [10, 15]},
 
     { id: "module-06-distributed-loads", folder: "module-06",
       title: "Handling Distributed Loads",     
