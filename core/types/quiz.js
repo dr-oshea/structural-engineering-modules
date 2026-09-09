@@ -87,9 +87,12 @@ function renderQuizQuestion() {
 
     answerAreaHTML = `
       <p class="mcq-multi-instruction">
-        Select all that apply${q.showCount
-          ? ` — <strong>${q.options.filter(o => o.correct).length}</strong> are correct`
-          : ""}.
+        Select all that apply${q.showCount ? (() => {
+            // "1 is correct", not "1 are correct" — a single-answer
+            // question can still be posed as a select-all.
+            const n = q.options.filter(o => o.correct).length;
+            return ` — <strong>${n}</strong> ${n === 1 ? "is" : "are"} correct`;
+          })() : ""}.
       </p>
       <div class="mcq-options mcq-cols-${q.options.length === 3 ? 3 : 2}" id="quiz-options">
         ${morder.map((origIndex, displayPos) => {

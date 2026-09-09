@@ -220,11 +220,22 @@ function getRequiredSlide(index) {
 
 // Why is this slide locked? Used for the sidebar tooltip, so the message names
 // the actual blocker rather than always blaming the whole module.
+//
+// The text goes into a title="…" attribute, so it must not contain a double
+// quote — one inside a slide label would terminate the attribute early and
+// truncate the message. Curly quotes are used for the label, and any straight
+// quotes in it are stripped.
 function lockReason(index) {
   const req = getRequiredSlide(index);
   if (req !== -1 && req !== index && !completedSlides.has(req)) {
-    const label = moduleData[req].label || `slide ${req + 1}`;
-    return `Complete "${label}" first`;
+    // `requires: true` just means "the one before", so say that plainly
+    // rather than naming a slide the student can see for themselves.
+    if (moduleData[index].requires === true) {
+      return "Complete the previous page to unlock";
+    }
+    const label = String(moduleData[req].label || `slide ${req + 1}`)
+                    .replace(/"/g, "");
+    return `Complete \u201c${label}\u201d to unlock`;
   }
   return "Complete all parts of the module to unlock";
 }

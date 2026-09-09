@@ -281,6 +281,50 @@ const moduleData = [
   },
 
   /*Slide 9-15*/
+  {type: "mcq",
+    label: "Step 1",
+    title: "Step 1 - Method of Joints",
+
+     questions: [
+      /*Slide 9*/
+      { multi: true,
+        question:`<p><strong>1. Identify and ignore any zero-force members.​</strong></p>
+                  <p>Select any zero-force member(s):​</p>`,
+        options: [
+          { text: "AB" },
+          { text: "AD" },
+          { text: "BC" },
+          { text: "BD", correct: true },
+          { text: "CD" },
+          { text: "None"}
+        ],
+        showCount: true,
+        explanation: `Correct!"`
+      },
+    ]
+  },
+
+  {type: "mcq",
+    requires: true,
+    label: "Step 2",
+    title: "Step 2 - Method of Joints",
+
+    questions: [
+      /*Slide 9*/
+      { multi: true,
+        question:`<p><strong>2. Think about path/sequence of analysis (pick a starting joint).​​</strong></p>
+                  <p>Which node is best to start at?​</p>`,
+        options: [
+          { text: "A" },
+          { text: "B" },
+          { text: "C" },
+          { text: "D", correct: true }
+        ],
+        showCount: true,
+        explanation: `Correct! `
+      },
+    ]
+  },
   {
     type:  "mcq",
     label: "Quiz 1",
