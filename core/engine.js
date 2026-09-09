@@ -197,11 +197,60 @@ function getTeachingProgress() {
 // Is this slide locked? Only two things ever lock:
 //   the assessment (until all teaching parts are complete), and
 //   the end slide (until the assessment is complete).
+// The slide a given slide is waiting on, or -1.
+//
+//   requires: true        the previous slide (excluding splash/final)
+//   requires: "A label"   that specific slide, matched on its `label`
+//
+// Use it for a problem worked across several slides — part 2 opens only once
+// part 1 is right — while the rest of the module stays freely navigable.
+// Chains work: if 3 requires 2 and 2 requires 1, they open strictly in order.
+function getRequiredSlide(index) {
+  const req = moduleData[index] && moduleData[index].requires;
+  if (!req) return -1;
+
+  if (req === true) {
+    for (let i = index - 1; i >= 0; i--) {
+      if (!typeDef(moduleData[i]).excludeFromCount) return i;
+    }
+    return -1;
+  }
+  return moduleData.findIndex(s => s.label === req);
+}
+
+// Why is this slide locked? Used for the sidebar tooltip, so the message names
+// the actual blocker rather than always blaming the whole module.
+function lockReason(index) {
+  const req = getRequiredSlide(index);
+  if (req !== -1 && req !== index && !completedSlides.has(req)) {
+    const label = moduleData[req].label || `slide ${req + 1}`;
+    return `Complete "${label}" first`;
+  }
+  return "Complete all parts of the module to unlock";
+}
+
 function isSlideLocked(index) {
   if (!gatingEnabled()) return false;
 
   const a = getAssessmentIndex();
   const def = typeDef(moduleData[index]);
+
+  // ── A slide can name a prerequisite of its own ──
+  // Checked before the module-wide rules, and recursively: a slide whose
+  // prerequisite is itself locked stays locked, so a run of slides opens
+  // strictly in order. The guard stops a mistaken circular reference hanging
+  // the page.
+  const req = getRequiredSlide(index);
+  if (req !== -1 && req !== index) {
+    if (!completedSlides.has(req)) return true;
+    if (!isSlideLocked._seen) isSlideLocked._seen = new Set();
+    if (!isSlideLocked._seen.has(index)) {
+      isSlideLocked._seen.add(index);
+      const upstream = isSlideLocked(req);
+      isSlideLocked._seen.delete(index);
+      if (upstream) return true;
+    }
+  }
 
   // The end slide waits on the assessment (or, with no assessment, on
   // everything else being complete).
@@ -340,7 +389,7 @@ function renderLayout(contentHTML) {
                 data-slide="${i}"
                 class="${isActive ? "active" : ""}${isNoNav ? " sidebar-item-no-nav" : ""}${isLocked ? " sidebar-item-locked" : ""}${isQuiz && !isNoNav ? " sidebar-item-quiz" : ""}${isDone ? " sidebar-item-done" : ""}${justUnlocked ? " sidebar-item-unlocked" : ""}"
                 ${isClickable ? `onclick="navigateToSlide(${i})"` : ""}
-                ${isLocked ? `title="Complete all parts of the module to unlock"` : ""}
+                ${isLocked ? `title="${lockReason(i)}"` : ""}
               >
                 <span class="sidebar-item-icon">${getSlideIcon(s)}</span>
                 <span class="sidebar-item-label">${s.label || `Slide ${i}`}</span>
@@ -361,6 +410,7 @@ function renderLayout(contentHTML) {
       <div class="main">
         <div class="slide">
           ${contentHTML}
+          ${creditHTML(moduleData[currentSlide].credits, "slide-credit")}
         </div>
       </div>
 
@@ -511,7 +561,7 @@ function refreshSidebar() {
         data-slide="${i}"
         class="${isActive ? "active" : ""}${isNoNav ? " sidebar-item-no-nav" : ""}${isLocked ? " sidebar-item-locked" : ""}${isQuiz && !isNoNav ? " sidebar-item-quiz" : ""}${isDone ? " sidebar-item-done" : ""}${justUnlocked ? " sidebar-item-unlocked" : ""}"
         ${isClickable ? `onclick="navigateToSlide(${i})"` : ""}
-        ${isLocked ? `title="Complete all parts of the module to unlock"` : ""}
+        ${isLocked ? `title="${lockReason(i)}"` : ""}
       >
         <span class="sidebar-item-icon">${getSlideIcon(s)}</span>
         <span class="sidebar-item-label">${s.label || `Slide ${i}`}</span>
@@ -642,6 +692,21 @@ function imageSizeStyle(o) {
   return parts.length ? parts.join(";") + ";" : "";
 }
 
+// Small, faded credit line for an image or a whole slide.
+//
+// Two places to put one:
+//   • `credit` next to an image (info image blocks, context, pptslide) —
+//     sits directly under that image, which is what you want when a single
+//     figure came from somewhere.
+//   • `credits` on the SLIDE — a line at the foot, covering everything on it.
+//     Works on every content type without each one needing its own field.
+//
+// Plain HTML, so a link to the source or licence is fine.
+function creditHTML(text, extraClass) {
+  if (!text) return "";
+  return `<p class="img-credit ${extraClass || ""}">${text}</p>`;
+}
+
 // Renders an optional author hint.
 //
 // Set `hint` on a step, node, region or segment to walk the student through
@@ -716,7 +781,76 @@ function showDevBadge() {
 // DOMContentLoaded fires after all synchronous <script> tags have executed,
 // so every type is registered and moduleData exists by the time this runs.
 
+// ─── Dev-mode check: LaTeX backslashes eaten by JavaScript ─────────────────
+//
+// The single most common authoring mistake. In an ordinary template literal
+// JavaScript consumes the backslash BEFORE KaTeX sees the string:
+//
+//     `$\mathbf{a}$`            becomes  "$mathbf{a}$"   → renders as italics
+//     String.raw`$\mathbf{a}$`  stays    "$\mathbf{a}$"  → renders correctly
+//
+// KaTeX doesn't complain, because "mathbfa" is valid maths (juxtaposed
+// letters), so the slide looks subtly wrong rather than broken. This scans the
+// config for LaTeX command names sitting inside maths delimiters WITHOUT their
+// backslash and points them out. Dev mode only — never shown to students.
+const LATEX_COMMANDS = [
+  "frac","sqrt","sum","int","lim","cdot","times","approx","neq","leq","geq",
+  "alpha","beta","gamma","delta","theta","lambda","mu","nu","pi","rho","sigma",
+  "phi","omega","Delta","Sigma","Omega","Gamma","Theta","Lambda","Phi",
+  "mathbf","mathrm","text","vec","hat","bar","overline","underline",
+  "left","right","begin","end","rightarrow","leftarrow","partial","infty"
+];
+
+function checkLatexEscaping() {
+  if (gatingEnabled()) return;            // dev mode only
+  if (typeof moduleData === "undefined") return;
+
+  const found = [];
+  const mathBit = /\$\$([\s\S]+?)\$\$|\$([^$\n]+?)\$|\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)/g;
+  const bare = new RegExp("(^|[^\\\\A-Za-z])(" + LATEX_COMMANDS.join("|") + ")\\b");
+
+  const scan = (value, where) => {
+    if (typeof value === "string") {
+      // Control characters are a dead giveaway: \f, \t, \n, \r, \b, \v
+      // came from \frac, \text, \nu, \rho, \beta, \vec.
+      if (/[\f\v\b]/.test(value)) {
+        found.push(`${where}: contains a control character — a LaTeX command `
+                 + `like \\frac, \\vec or \\beta lost its backslash`);
+      }
+      let m;
+      mathBit.lastIndex = 0;
+      while ((m = mathBit.exec(value)) !== null) {
+        const inner = m[1] || m[2] || m[3] || m[4] || "";
+        const hit = bare.exec(inner);
+        if (hit) found.push(`${where}: "${inner.trim().slice(0, 50)}" — `
+                          + `"${hit[2]}" is missing its backslash`);
+      }
+    } else if (Array.isArray(value)) {
+      value.forEach((v, i) => scan(v, `${where}[${i}]`));
+    } else if (value && typeof value === "object") {
+      Object.keys(value).forEach(k => {
+        if (k === "latex") return;        // authored raw; delimiters not needed
+        scan(value[k], `${where}.${k}`);
+      });
+    }
+  };
+
+  moduleData.forEach((slide, i) => scan(slide, `slide ${i} (${slide.label || slide.type})`));
+
+  if (found.length) {
+    console.warn(
+      "%c[engine] LaTeX backslashes appear to have been eaten by JavaScript.\n" +
+      "Wrap the string in String.raw`…` (or double every backslash).\n",
+      "font-weight:bold;color:#b32c28;"
+    );
+    found.slice(0, 20).forEach(f => console.warn("   " + f));
+    if (found.length > 20) console.warn(`   …and ${found.length - 20} more.`);
+  }
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
   showDevBadge();
+  checkLatexEscaping();
   renderSlide();
 });
