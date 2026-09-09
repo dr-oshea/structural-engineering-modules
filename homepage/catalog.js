@@ -72,12 +72,12 @@ const CATALOG = {
       title: "Using Equations of Equilibrium",     
       category: "statics", 
       order: 2,
-      minutes: [5, 10]},
+      minutes: [10, 12]},
       
     { id: "module-03-reactions", folder: "module-03",
       title: "Calculating Reactions",
       category: "statics", order: 3,
-      status: "coming-soon" },
+      minutes: [5, 10]},
 
     { id: "module-04-bending-moments", folder: "module-04",
       title: "Drawing Bending Moment Diagrams",
