@@ -264,7 +264,7 @@ const moduleData = [
         <ol><strong>
           <li>Identify and ignore any zero-force members.
           <li>Think about path/sequence of analysis (pick a starting joint with at most two unknowns attached to it).
-          <li>Find support reactions using equations of equilibrium for overall structure.
+          <li>IF NECESSARY, find support reactions using equations of equilibrium for overall structure.
             <ul>
               <li>$&uarr;&Sigma;F_y=0$
               <li>$&rarr;&Sigma;F_x=0$
@@ -290,6 +290,8 @@ const moduleData = [
       { multi: true,
         question:`<p><strong>1. Identify and ignore any zero-force members.​</strong></p>
                   <p>Select any zero-force member(s):​</p>`,
+        image: "images/joints-prob.jpg",
+        imageWidth: "300px",
         options: [
           { text: "AB" },
           { text: "AD" },
@@ -311,76 +313,113 @@ const moduleData = [
 
     questions: [
       /*Slide 9*/
-      { multi: true,
+      { 
         question:`<p><strong>2. Think about path/sequence of analysis (pick a starting joint).​​</strong></p>
                   <p>Which node is best to start at?​</p>`,
+        image: "images/step2-joints.png",
+        imageWidth: "300px",
         options: [
           { text: "A" },
           { text: "B" },
           { text: "C" },
           { text: "D", correct: true }
         ],
+        hint: `<p>After removing zero-force members, which node has only two unknowns passing through it? Remember, support reactions and internal forces are all currently unknown...</p>`,
+        hintCollapsed: true,
+        showCount: true,
+        explanation: `<p>Correct! </p>
+        <p>Joint A has three unknowns ($A_y, F_{AD}, F_{AB}$) and Joint C has four unknowns ($C_x, C_y, F_{BC}, F_{CD}$). Joint B has two unknowns ($F_{AB}, F_{BC}$) though they are collinear so cannot be resolved.</p>
+        <p>Note you could also begin by solving the three reactions using equilibrium equations on the structure as a whole. The method considered here, demonstrates how this work can be avoided since the target is the internal axial forces rather than the reactions.</p>`
+      },
+    ]
+  },
+
+  { type: "steps",
+    requires: true,
+    label: "Step 3",
+    title: "Step 3 - Method of Joints",
+
+    image: "images/step3-joints.png",
+    imageWidth: "600px",
+
+    problem: `<p><strong>4. Pick a starting joint and apply particle equilibrium, repeat this at appropriate joints until all relevant member forces are found.</strong></p>
+    <p> We have selected Joint $D$, and we know $F_{BD} = 0$. We can solve $F_{AD}$ and $F_{CD}$.`,
+
+    steps: [
+      {
+        instruction: `Find axial force $F_{AD}$. Use positive for tension, negative for compression`,
+        hint: `<p>From equilibrium of vertical forces, $F_{AD} = -F_{CD}$. Equilibrium of horizontal forces gives: $\\rightarrow \\Sigma F_x = -45 + F_{CD} \\cos(45\\deg) - F_{AD}\\cos(45\\deg) = 0</p>`,
+        hintCollapsed: true,
+        unit: "kN",
+        answer: -3.182,
+        tolerance: 0.01,
+        explanation: `Correct! This is in compression`
+      },
+      {
+        instruction: `Find axial force $F_{CD}$. Use positive for tension, negative for compression`,
+        unit: "kN",
+        answer: 3.182,
+        tolerance: 0.01,
+        explanation: `Correct! This is in tension`
+      },
+    ]
+  },
+
+  {type: "mcq",
+    requires: true,
+    label: "Step 4a",
+    title: "Step 4 - Method of Joints",
+
+    
+
+    questions: [
+      /*Slide 9*/
+      { 
+        question:`<p><strong>4. Pick a starting joint and apply particle equilibrium, repeat this at appropriate joints until all relevant member forces are found.​​</strong></p>
+                  <p>Which node is best to consider next? Which only has 2 unknowns remaining​</p>`,
+        options: [
+          { text: "A", correct: true },
+          { text: "B" },
+          { text: "C" },
+        ],
+        image: "images/step5-joints.png",
+        imageWidth: "300px",
+        hint: `<p>Point C has three unknowns ($C_y, C_x, F_{BC}$), Point B has two unknowns, though they are collinear so cannot be determined.</p>`,
+        hintCollapsed: true,
         showCount: true,
         explanation: `Correct! `
       },
     ]
   },
-  {
-    type:  "mcq",
-    label: "Quiz 1",
-    title: "Quiz 1 – Find internal axial forces in all members​",
 
-    questions: [
-      /*Slide 9*/
-      { multi: true,
-        question:`<p>1. Identify and ignore any zero-force members.​</p>
-                  <p><u>Select any zero-force member(s):</u>​</p>`,
-        options: [
-          { text: "AB" },
-          { text: "AD" },
-          { text: "BC" },
-          { text: "BD", correct: true },
-          { text: "CD" }
-        ],
-        explanation: `Correct!"`
-      },
-      /*Slide 10*/
-      { multi: true,
-        question:`<p>2. Think about path/sequence of analysis (pick a starting joint).​​</p>
-                  <p><u>Which node(s) are best to start at?​</u>​</p>`,
-        options: [
-          { text: "A", correct: true },
-          { text: "B" },
-          { text: "C", correct: true },
-          { text: "D"}
-        ],
-        explanation: `Correct!"`
-      },
-      /*Slide 11*/
-      { type: "cloze",
-        intro:`<p>2. Think about path/sequence of analysis (pick a starting joint).​​</p>
-                  <p><u>Which node(s) are best to start at?​</u>​</p>`,
-        text: [
-          { text: "A", correct: true },
-          { text: "B" },
-          { text: "C", correct: true },
-          { text: "D"}
-        ],
-        explanation: `Correct!"`
-      },
+  { type: "steps",
+    requires: true,
+    label: "Step 4b",
+    title: "Step 4 - Method of Joints",
 
-      { type: "cloze",
-        intro: `<p>Complete the load path below.</p>`,
-        text: `<p>(1) [[roof sheeting]] connects to the</p>
-        <p>(2) [[purlins]] which connect to the</p>
-        <p>(3) [[truss joints]].</p>`,
-        distractors: ["rafters", "bracing"], // fit no blank — more words than gaps
-        image: "images/roof-truss.svg",
-        imagePosition: "right", // or "below"
-        explanation: `Shown once every blank is right.`
+    image: "images/step4-joints.png",
+    imageWidth: "600px",
+
+    problem: `<p><strong>4. Pick a starting joint and apply particle equilibrium, repeat this at appropriate joints until all relevant member forces are found.</strong></p>
+    <p> We have selected Joint $A$, and we know $F_{AD} = 31.82\\ \\text{kN}$. We can solve $F_{AB}$ (and $A_{y}$ if desired).`,
+
+    steps: [
+      {
+        instruction: `Find axial force $F_{AB}$. Use positive for tension, negative for compression`,
+        hint: `<p>Use equilibrium of horizontal forces to isolate the unknown you want to solve.</p>`,
+        hintCollapsed: true,
+        unit: "kN",
+        answer: -2.25,
+        tolerance: 0.01,
+        explanation: `Correct!`
       },
-
-
+      {
+        instruction: `<p>Now, consider joint $B$.</p> <p>Find axial force $F_{BC}$ to compelte the problem. Use positive for tension, negative for compression</p>`,
+        unit: "kN",
+        answer: 2.25,
+        tolerance: 0.01,
+        explanation: `Correct!`
+      },
     ]
   },
 
