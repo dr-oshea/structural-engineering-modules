@@ -4,328 +4,263 @@ const moduleMeta = {
 };
 
 const moduleData = [
+
+  /*Slide 1*/
   {
-    type: "splash",
-    label: "Home page",
-    title: "Calculating Reactions",
-    subtitle: "Interactive Revision Modules for structural engineering",
+    type:       "splash",
+    label:      "Home page",
+    title:      "Calculating Reactions​",
+    subtitle:   "Interactive Revision Modules for structural engineering",
     buttonText: "Start Module"
+    // The contents list is generated automatically from the partStart
+    // fields below — nothing to maintain here.
   },
 
+  /*Slide 3*/
   {
-    type: "context",
+    type:  "context",
     label: "Context/Motivation",
-    title: "Calculating Reactions",
-    image: "images/context-beam-engineer.jpg",
-    text: `<p>Support reactions fix a structure in place. How much force is required in reaction to applied loads to achieve this?</p>
-          <p> Calculating support reactions is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
+    title: "What is a Reaction?",
+    image: "images/context.jpg",
+    text:  `<p>
+            Supports prevent structures from moving by providing reaction forces and moments that resist applied loads. Determining these support reactions is often the first step in structural analysis and is essential for assessing how loads are distributed throughout a structure.​
+            </p>`
   },
 
-
-  // INFO SLIDE:   What is a reaction? 
+  /*Slide 2*/
   {
-    type: "info",
-    label: "What is a Reaction Force?",
-    title: "What is a Reaction Force?",
-
-    content: `
-      <p>Reaction forces arise in response to applid loads</p>
-
-      <ul>
-        <li>Pin support</li>
-        <li>Roller support</li>
-        <li>Fixed support</li>
-      </ul>
-    `,
-
-    image: "images/truss.svg"
-  },
-
-
-  // INFO SLIDE:   Relationship between Shear and Bending
-  {
-    type: "info",
-    label: "Relationship V and M",
-    title: "Relationship between Shear Force and Bending Moment",
-
-    blocks: [
-      {
-        type: "text",
-        html: `<p>Shear force is the derivative of the bending moment. This means
-               the slope of the bending moment diagram at any point equals the
-               shear force at that point.</p>`
-      },
-      {
-        type: "equation",
-        html: `V(x) = dM(x) / dx`
-      },
-      {
-        type: "text",
-        html: `<p>We use this relationship to:</p>
-               <ul>
-                 <li>Locate maximum bending moments (where V = 0)</li>
-                 <li>Sketch one diagram from the other</li>
-                 <li>Check the consistency of our results</li>
-               </ul>`
-      }
-    ]
-  },
-
-  {
-    type:  "steps",
-    label: "Worked Example: Beam Reactions",
-    title: "Simply Supported Beam — Finding Reactions",
-
-    image: "images/module-01_01.svg",   // beam figure shown above the problem
-  
-    problem: `
-      <p>
-        A simply supported beam <strong>AB</strong> has a span of <strong>6 m</strong>.
-        A point load of <strong>12 kN</strong> acts vertically downward at a point
-        <strong>2 m from A</strong>.
-      </p>
-      <p>Work through the steps below to find the support reactions and the
-      maximum bending moment.</p>
-    `,
-  
-    steps: [
-  
-      {
-        instruction: `Taking moments about <strong>A</strong>, find the vertical
-                      reaction at <strong>B</strong>.
-                      <br><em>Hint: ΣM<sub>A</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      4,
-        tolerance:   0.05,
-        explanation: `ΣM_A = 0 → R_B × 6 = 12 × 2 = 24 → R_B = 24 ÷ 6 = <strong>4 kN</strong>`
-      },
-  
-      {
-        instruction: `Using vertical equilibrium, find the reaction at <strong>A</strong>.
-                      <br><em>Hint: ΣF<sub>y</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      8,
-        tolerance:   0.05,
-        explanation: `ΣF_y = 0 → R_A + R_B = 12 → R_A = 12 − 4 = <strong>8 kN</strong>`
-      },
-  
-      {
-        instruction: `Calculate the bending moment at the point load
-                      (i.e. at <strong>x = 2 m</strong> from A).
-                      <br><em>Hint: consider only the forces to the left of the section.</em>`,
-        image:       "images/module-01_step3_cut.svg",  // optional per-step hint figure
-        unit:        "kNm",
-        answer:      16,
-        tolerance:   0.05,
-        explanation: `M(x=2) = R_A × 2 = 8 × 2 = <strong>16 kNm</strong>
-                      — this is also the peak of the bending moment diagram.`
-      }
- 
-    ]
-  },
-
-  
-  // CARDS:   Extra Info on Bending Moment
-  {
-    type: "cards",
-    label: "Key Concepts",
-    title: "Key Concepts",
-
-    intro: `<p>Here are three foundational concepts that underpin bending moment
-            analysis. <strong>Click each card</strong> to reveal its definition.</p>`,
+    type:      "cards",
+    partStart: "Types of Supports",
+    label:     "Three main types",
+    title:     "Recap – The Three main reaction Types",
+    intro: `<p>There are three main types of supports used in structural analysis. Each can be replaced by a set of reaction forces and moment, depending on the motions which they restrict​.</p>
+    <p><strong>Reaction forces prevent translational displacements</strong> from occurring at a point.</p> 
+    <p><strong>Moment reactions prevent rotational displacements</strong> from occurring at a point.</p>`,
 
     cards: [
-      {
-        front: "📐 Equilibrium",
-        back: "Sum of forces = 0 and sum of moments = 0"
-      },
-      {
-        front: "🧩 Free Body Diagrams",
-        back: "Used to isolate and understand forces in structures"
-      },
-      {
-        front: "🏗️ Load Paths",
-        back: "Describes how forces travel through structures"
-      }
-    ]
+    { front: "Roller Support", back: "One reaction​ force (Perpendicular to surface)​" },
+    { front: "Pin Support", back: "Two reactions. One vertical force, one horizontal force." },
+    { front: "Fixed Support", back: "Three reactions. One vertical force, one horizontal force and one moment." }
+  ]
   },
 
-
-  // MCQ SLIDE:   Quiz on max bending moment
+  /*Slide 4*/
   {
     type:  "mcq",
-    label: "Quiz: Max Bending Moment",
-    title: "Multiple Choice: Bending Moment",
-
-    question: `
-      <p>
-        A simply supported beam of span <strong>8 m</strong> carries a
-        <strong>uniformly distributed load of 10 kN/m</strong> over its entire length.
-      </p>
-      <p>What is the <strong>maximum bending moment</strong> in the beam?</p>
-    `,
-
-    options: [
-      { text: "40 kNm"  },
-      { text: "80 kNm",  correct: true },
-      { text: "160 kNm" },
-      { text: "320 kNm" }
-    ],
-
-    explanation: `M_max = wL² / 8 = 10 × 8² / 8 = <strong>80 kNm</strong>, occurring at midspan.`
-  },
-
-
-  // ── EXAMPLE: image-based MCQ (uncomment & supply SVGs to use) ──────────────
-  // {
-  //   type:  "mcq",
-  //   label: "Quiz: Identify the BMD",
-  //   title: "Which is the correct Bending Moment Diagram?",
-  //   image: "images/module-01_bmd_question.svg",   // the beam + loading shown above options
-  //   question: `<p>For the beam shown above, select the correct bending moment diagram.</p>`,
-  //   options: [
-  //     { image: "images/bmd_option_a.svg" },
-  //     { image: "images/bmd_option_b.svg", correct: true },
-  //     { image: "images/bmd_option_c.svg" },
-  //     { image: "images/bmd_option_d.svg" }
-  //   ],
-  //   explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
-  // },
-
-    // EXAMPLE GEOGEBRA
-    {
-    type:  "embed",
-    label: "Interactive: Mohr's Circle",
-    title: "Drag the slider to transform the stresses",
-  
-    intro: `<p>Please wait a moment for the applet to load. Try rotating the element and observing how the values of stress change. When are the normal stresses maximum and minimum?</p>`,
-  
-    src:         "https://www.geogebra.org/material/iframe/id/xjmmtgqt/width/1203/height/768/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false",
-    aspectRatio: "16 / 10",          // optional — default is 16/9
-    maxWidth:    "820px",            // optional
-    caption:     "GeoGebra applet — interact directly above."
-  },
-
-  // EXAMPLE REVEAL
-  {
-    type:   "reveal",
-    label:  "Try it: Reaction at B",
-    title:  "Quick Check — Reaction at B",
-
-    // image:     "images/module-01_01.svg",   // optional figure above the prompt
-    // imageWidth:"480px",
-
-    prompt: `<p>For the beam from the worked example (6 m span, 12 kN load at 2 m
-             from A), have a go at finding the reaction at <strong>B</strong> on
-             paper. When you're ready, reveal the worked solution to check your
-             method.</p>`,
-
-    buttonText: "Show solution",     // optional (default "Show solution")
-    hideText:   "Hide solution",     // optional (default "Hide solution")
-
-    answer: `<p><strong>Taking moments about A (ΣM<sub>A</sub> = 0):</strong></p>
-             <p>R<sub>B</sub> × 6 = 12 × 2 = 24</p>
-             <p>R<sub>B</sub> = 24 ÷ 6 = <strong>4 kN</strong></p>`
-  },
-
-  // EXAMPLE HOTSPOT
-  {
-    type:  "hotspot",
-    label: "Find the Maximum Moment",
-    title: "Where is the Bending Moment greatest?",
-  
-    prompt: `<p>Click the point on the beam where the <strong>bending moment is
-            maximum</strong>.</p>`,
-  
-    image:    "images/module-01_01.svg",
-    maxWidth: "700px",               // optional
-  
-    hotspots: [
-      { x: 10, y: 40, w: 12, h: 20 },                 // a wrong region
-      { x: 44, y: 35, w: 14, h: 28, correct: true },  // the correct region
-      { x: 78, y: 40, w: 12, h: 20 }                  // another wrong region
-    ],
-  
-    explanation: `The maximum bending moment occurs under the point load, where
-                  the shear force passes through zero.`
-  },
-
-  /* ============================================================================
-   QUIZ ("Test Your Knowledge") — a multi-question sub-sequence in one slide.
-
-   Appears ONCE in the sidebar. Internally runs: intro → N questions → results.
-   - One attempt per question; advances on answer (right or wrong).
-   - Results page shows score, a review table, and a Retry button.
-   - Completing it (reaching results) gates the module, regardless of score.
-
-   Each question has a "kind": "mcq" or "input".
-     mcq   → options array, one with correct:true (same shape as the mcq slide)
-     input → numeric answer + tolerance + optional unit (like a Worked Example step)
-
-   Any question may include an optional image / imageWidth (shown above it).
-   ============================================================================ */
-
-  {
-    type:  "quiz",
-    label: "Test Your Knowledge",
-    title: "Test Your Knowledge",
-
-    intro:     "Answer the following questions to complete the module. You have one attempt per question, but you can retry the whole quiz as many times as you like.",
-    startText: "Start Quiz",          // optional (default "Start Quiz")
+    label: "Identify the Reaction",
+    title: "Identifying Support Reactions",
 
     questions: [
+      {multi: true,
+        question: `<p>The problem above shows a person standing on a ladder, in contact with the ground and wall. The FBD shows all external forces acting on the ladder. </p>
+        <p><strong>Which forces are reaction forces?</strong> (Select all that apply)</p>`,
+        
+        image: "images/mcq-ladder.png",
 
-      // ── An MCQ question ──
-      {
-        kind:     "mcq",
-        question: `<p>The maximum bending moment in a simply supported beam under a
-                  central point load <strong>P</strong> over span <strong>L</strong> is:</p>`,
         options: [
-          { text: "PL / 2" },
-          { text: "PL / 4", correct: true },
-          { text: "PL / 8" },
-          { text: "PL" }
-        ]
-      },
+          { text: "$F_{N1}$", correct: true},
+          { text: "$F_m$"},
+          { text: "$F_g$"},
+          { text: "$F_f$", correct: true},
+          { text: "$F_{N2}$", correct: true},
+          { text: "None."}
+        ],
+        explanation: `The weight of the person and ladder are imposing an action on the ladder. To prevent the ladder from moving, forces normal to the wall and floor <strong>react</strong> to the load, as well as the friction of the floor.`,
+      }]
+  },
 
-      // ── An input (numeric) question ──
-      {
-        kind:      "input",
-        question:  `<p>A simply supported beam of span <strong>4 m</strong> carries a
-                    UDL of <strong>6 kN/m</strong>. What is the maximum bending
-                    moment (in kNm)?</p>
-                    <p><em>Recall M<sub>max</sub> = wL²/8</em></p>`,
-        answer:    12,
-        tolerance: 0.1,
-        unit:      "kNm"
-      },
+  /*Slide 5*/
+  {
+    type:      "info",
+    partStart: "Calculating Reactions?",
+    label:     "Why Calculate Reactions",
+    title:     "Why Calculate Reactions",
 
-      // ── An image-based MCQ question ──
-      {
-        kind:     "mcq",
-        // image:    "images/some-diagram.svg",   // optional figure above the question
-        question: `<p>Which support condition provides a reaction moment?</p>`,
-        options: [
-          { text: "Pin" },
-          { text: "Roller" },
-          { text: "Fixed", correct: true }
-        ]
-      }
+    blocks: [
+      { type: "text",
+        html:`<p>Support reactions allow engineers to determine how external loads are transferred from a structure to its supports.</p>
+        <p>different structural members can be supported by others, forming a <strong>load path</strong>, as seen below.</p>
+          ` },
+      
+      { type: "image",
+        src:     "images/Slide 5.png",
+        width:   "600px",
+        caption: "Fig. 1" },
 
+        {type: "text",
+          html: `<p>Unknowns in a system include support reactions and internal actions. <strong>Solving for the support reactions first, then enables us to later determine
+          internal effects</strong> such as axial forces, shear forces, and bending moments - crucial for design.</p>`
+        }
     ]
   },
 
+  /*Slide 7*/
+  {
+    type:      "info",
+    label:     "How to Calculate Reactions",
+    title:     "How to Calculate Reactions",
 
-  // FINAL SLIDE:   Module completion
+    blocks: [
+      { type: "text",
+        html:`The process for calculating reactions of a structure are as follows:<ol>
+                <li><strong>Determine if the structure is determinate. </strong>
+                  <ul><li>In 2D, we have 3 equations of equilibrium, therefore we can solve at most 3 unknown reactions.</li></ul>
+                <li><strong>Draw the Free Body Diagram of the entire structure:</strong>
+                  <ul>
+                    <li>Include all the members
+                    <li>Include all applied loads
+                    <li>Replace all supports with equivalent reaction forces and/or moment
+                  </ul>
+                <li><strong>Use Equations of Equilibrium</strong>
+                  <ul>
+                    <li>$\\rightarrow &Sigma;F_x=0$
+                    <li>$\\uparrow &Sigma;F_y=0$
+                    <li>$\\curvearrowleft&Sigma;M=0$
+                  </ul>
+                <li><strong>Solve these equations simultaneously for the unknown reactions</strong>
+              </ol>
+          ` },
+      
+      { type: "image",
+        src:     "images/Slide 7.png",
+        width:   "800px" },
+    ]
+  },
+
+  /*Slide 8*/
+  {
+    type:      "steps",
+    label:     "Worked Example",
+    title:     "How to Calculate Reactions - Worked Example",
+
+    image: "images/Slide 8.png",
+    imageScale: 1.5,
+
+    problem: `<p>Consider the frame shown. At $A$, there is a pin support, and at $B$ there is a roller support. Work through the steps below to solve the unknown reactions</p>`,
+
+    steps: [
+      { instruction: `Use equilibrium of horizontal forces to find $H_a$. Use negative if it acts in the opposite direction as shown.`,
+        unit: "kN",
+        answer: 3,
+        tolerance: 0,
+        explanation: `$\\rightarrow \\Sigma F_x = H_a - 3 = 0$`
+      },
+      { instruction: `Use equilibrium of moments to find $V_b$. Use negative if it acts in the opposite direction as shown.`,
+        hint:`When selecting a reference point to take moments about, consider a location where the force $V_a$ does not contribute, therefore leaving only one unknown.`,
+        hintCollapsed: true,
+        unit: "kN",
+        answer: -1.8,
+        tolerance: 0,
+        explanation: `$\\curvearrowleft \\Sigma M_A = 5\\mathrm{m} \\times V_a + 3 \\mathrm{kN} \times 3 \mathrm{m} = 0$`
+      },
+      { instruction: `Finally, use equilibrium of vertical forces to find $V_a$. Use negative if it acts in the opposite direction as shown.`,
+        unit: "kN",
+        answer: 1.8,
+        tolerance: 0,
+        explanation: `$\\uparrow \\Sigma F_y = V_a + V_b = V_a - 1.8 = 0$`
+      },
+    ]
+  },
+
+  /*Slide 9*/
+  {
+    type: "interactive-diagram",
+    label: "Draw the Reactions",
+    title: "Your Turn Now - Find all reactions",
+    image: "images/Slide 9.jpg",
+    imageWidth: "500px",
+
+    prompt: "<p>Click each point below and draw the required reaction forces. Click <strong>Check</strong> to check your responses.",
+
+    itemTypes: {
+      force: {
+        label: "Force",
+        draw: {
+          shape: "arrow",
+          color: "#c62828",
+          length: 70
+        },
+        labelTemplate: "{mag} kN",
+
+        fields: [
+          {
+            id: "dir",
+            label: "Direction",
+            type: "select",
+            options: [
+              {value: "up", label: "upward ↑", draw: {angle: 270}},
+              {value: "down", label: "downward ↓", draw: {angle: 90}},
+              {value: "left", label: "leftward ←", draw: {angle: 180}},
+              {value: "right", label: "rightward →", draw: {angle: 0}},
+            ],
+          },
+          {
+            id: "mag",
+            label: "Magnitude",
+            type: "number",
+            unit: "kN",
+            tolerance: 0.01
+          }
+        ]
+      }
+    },
+
+    "nodes": [
+      {
+        x: 12,
+        y: 20,
+        label: "A",
+        title: "Support A (pin)",
+        answers: [
+          [
+            {
+              itemType: "force",
+              values: {
+                dir: "left",
+                mag: 80
+              }
+            },
+            {
+              itemType: "force",
+              values: {
+                dir: "up",
+                mag: 60
+              }
+            },
+          ]
+        ]
+      },
+      {
+        x: 12,
+        y: 85,
+        label: "B",
+        hint: `<p>Take moments about A. Then the lever arms are simple to determine, and the reaction at B solved.</p>`,
+        title: "Support B (roller)",
+        answers: [
+          [
+            {
+              itemType: "force",
+              values: {
+                dir: "right",
+                mag: 80
+              }
+            }
+          ]
+        ],
+      }
+    ]
+  },
+
+  /*CLOSING SLIDE (22)*/
   {
     type:         "final",
     label:        "Module Complete",
     title:        "Well done!",
-    subtitle:     "You've completed the Bending Moments module.",
+    subtitle:     "You've completed this module.",
     buttonText:   "Save and Close",
     showRating:   true,
+    showFeedback: true,
     bugReportUrl: "https://forms.office.com/your-bug-report-form"
   }
-
 
 ];

@@ -329,17 +329,33 @@ const moduleData = [
     blocks: [
     { type: "text",
       html: `<p><strong>If a structure is in equilibrium, then any section of that structure is also in equilibrium</strong></p>`},
-    {type: "text",
-        html:`<p>When drawing a FBD, we could choose to isolate the entire body, which would show all external forces acting on it.<p>
+    /* {type: "text",
+        html:`<p><p>
       <p>However, we could also draw a FBD that considers <strong>only sections of some bodies</strong>. This sub-structure must also be in equilibrium. Therefore, at the <strong>sections (cuts)</strong>
       internal forces must exist that balance the system.</p>`
-    },
-    {type: "image",
-      src:""
-    },
+    }, */
+
+    {type: "columns",
+        widths: [50, 50],
+        columns: [
+          [{type:"text",
+            html:`<p>When drawing a FBD, we could choose to isolate the entire body, which would only show all external forces acting on it, and no internal actions.</p>
+            `},
+            { type: "image",
+        src:     "images/beam-fbd-animated.svg",
+        width:   "400px"}],
+          [{type:"text",
+            html:`<p>We could also draw a FBD that considers <strong>only sections of some bodies</strong>. At the <strong>sections (cuts)</strong>
+      internal forces must exist that balance the system.</p>`},
+            { type: "image",
+        src:     "images/beam-section-cut-animated.svg",
+        width:   "400px"}],
+        ]
+      },
+
     {type: "text",
-      html: `<p>These internal actions have a physical meaning. They represent that ability of the material itself to resist applied loads. this could be resisting tension/compression, resisting shearing, resisting bending, or resisting torsion.</p>
-      <p>When the rope in the above image is pulled, the material does not simply fall away from itself - the material possesses a resistance to the applied load, and this resistance increases as the load is increased. 
+      html: `<p>These internal actions have a physical meaning. <strong>They represent that ability of the material itself to resist applied loads</strong>. this could be resisting tension/compression, resisting shearing, resisting bending, or resisting torsion.</p>
+      <p>When the rope in the above structure is pulled, the material does not simply fall away from itself - the material possesses a resistance to the applied load, and this resistance increases as the load is increased. 
       Using <strong>equilibrium of sections</strong> allows us to measure these internal actions!</p>`
     }
     ],
