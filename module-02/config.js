@@ -63,7 +63,7 @@ const moduleData = [
     blocks: [
       { type: "text",
         html: `<p> It is easiest to first understand <strong>Newton’s 2nd Law,</strong> the law of force and acceleration.</p>
-        <p> Consider a box of mass $m$ that is <strong>moving</strong>. If it is accelerating horizontally at acceleration $a$, the net force associated with this motion is $F$.</p>
+        <p> Consider a box of mass $m$ that is <strong>moving</strong>. If it is accelerating horizontally at acceleration $a$, the net force associated with this motion is $F_x$.</p>
             <p>You can think of an object’s mass $m$ as its resistance to acceleration (change of velocity) when a net force is applied.</p>
         ` },
         {type: "equation",
@@ -77,10 +77,11 @@ const moduleData = [
         caption: "Fig. 1 - Block on a flat plane" },
 
         {type: "text",
-          html: `<p>In general, the acceleration of a body can be represented by vector $\\mathbf{a}$, which has both magnitude and direction. 
+          html: `<p>In general, the acceleration of a body can be represented by vector $\\mathbf{a}$, which has both magnitude and direction in 3D space. 
           The magnitude and direction of this acceleration is related to the resultant force vector $\\mathbf{F}$ acting on the body</p>
           <p>$\\Sigma \\mathbf{F} = m \\mathbf{a}$</p>
-          <p>In 2D, it is easiest to define a coordinate system (typically Cartesian) and split this equilibrium condition into individual equations in the $x$ and $y$ directions.`
+          <p>In 2D, it is often easiest to define a coordinate system (typically Cartesian) and split this equilibrium condition into individual equations in the $x$ and $y$ directions.
+          <p>$\\Sigma F_x = m a_x\\ ,\\qquad \\Sigma F_y = m a_y$</p>`
         },
 
     ]
@@ -89,7 +90,7 @@ const moduleData = [
   /*Slide 4*/
   {
     type:      "info",
-    label:     "Newton's 3rd Law of Motion",
+    label:     "Newton's 3rd Law",
     title:     "Newton’s Laws of Motion​",
 
     blocks: [
@@ -103,7 +104,7 @@ const moduleData = [
       { type: "image",
         src:     "images/Slide 4.png",
         width:   "600px",
-        caption: "Fig. 2" },
+        caption: "Fig. 2 - Block resting on a flat surface" },
 
         {type: "text",
           html:`<p>By Newton's 2nd Law, <strong>therefore the resultant force must also be zero </strong>, and this <strong>equilibrium equation</strong> can be used to find the magnitude of the normal force $N$:</p>`
@@ -274,7 +275,6 @@ const moduleData = [
   /*Slide 11*/
   {
     type:      "info",
-    partStart: "Static Equilibrium - Overturning",
     label:     "Equilibrium: Overturning​",
     title:     "Equilibrium: Overturning​",
 
@@ -300,8 +300,8 @@ const moduleData = [
     title: "Equilibrium: Overturning​",
 
     intro: `<p>
-            This ladder has a self-weight $W$ that, when placed aginst contact points A and B, prevents it from moving. The force $P$ is disturbing it, potentially causing it to rotate about point A.</p>
-            <p>Select the resultants below that would define the <strong>disturbing moment</strong> and the <strong>resisting moment</strong>.
+            The ladder below has a self-weight $W$ acting through its centre of mass. When placed aginst contact points A and B, this force prevents it from moving. The force $P$ is disturbing it, potentially causing it to rotate about point A.</p>
+            <p>Select the resultant quantities below that would define the <strong>disturbing moment</strong> and the <strong>resisting moment</strong>.
             </p>`,
 
     text: `<p>(1) We can use [[$↻&Sigma;M_A$]] ...to find <strong>the disturbing moment.</strong></p>
