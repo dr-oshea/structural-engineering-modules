@@ -15,8 +15,15 @@
          { text: "80 kNm", correct: true },   // exactly ONE correct
          { text: "160 kNm" }
        ],
-       explanation: `Shown once answered correctly.`
-     }
+       explanation: `Shown once answered correctly.`,
+
+       hint: `Take moments about A.`,   // OPTIONAL help, shown between the
+       hintCollapsed: true              //   question and the options. With
+     }                                  //   hintCollapsed it starts folded
+                                        //   behind a "Show hint" toggle, so
+                                        //   students can try unaided first.
+                                        //   Set it per QUESTION when a slide
+                                        //   has several.
 
    ── SEVERAL QUESTIONS (one sidebar entry, asked in sequence) ──
    Supply a `questions` array instead. Each entry takes the same fields as a
@@ -75,6 +82,8 @@ function mcqQuestions(slide) {
     question:    slide.question,
     options:     slide.options,
     explanation: slide.explanation,
+    hint:          slide.hint,
+    hintCollapsed: slide.hintCollapsed,
     image:       slide.image,
     imageWidth:  slide.imageWidth,
     imageHeight: slide.imageHeight,
@@ -124,6 +133,8 @@ function renderMCQSlide(slide) {
     <div class="mcq-question">
       ${q.question}
     </div>
+
+    ${hintHTML(q)}
 
     ${q.multi ? `
       <p class="mcq-multi-instruction">
