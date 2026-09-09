@@ -4,328 +4,443 @@ const moduleMeta = {
 };
 
 const moduleData = [
+
+  /*Slide 1*/
   {
-    type: "splash",
-    label: "Home page",
-    title: "Calculating Reactions",
-    subtitle: "Interactive Revision Modules for structural engineering",
+    type:       "splash",
+    label:      "Home page",
+    title:      "Solving Trusses",
+    subtitle:   "Interactive Revision Modules for structural engineering",
     buttonText: "Start Module"
+    // The contents list is generated automatically from the partStart
+    // fields below — nothing to maintain here.
   },
 
+  /*Slide 2*/
   {
-    type: "context",
+    type:  "context",
     label: "Context/Motivation",
-    title: "Calculating Reactions",
-    image: "images/context-beam-engineer.jpg",
-    text: `<p>Support reactions fix a structure in place. How much force is required in reaction to applied loads to achieve this?</p>
-          <p> Calculating support reactions is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
+    title: "Truss Structures",
+    image: "images/Slide 2.png",
+    text:  `<p>
+            A truss is a system of members that carries load into the supports. Plane trusses are 2D truss structures commonly used in roofs and bridges as shown.
+            </p>`
   },
 
-
-  // INFO SLIDE:   What is a reaction? 
+  /*PART 1*/
+  /*Slide 3*/
   {
-    type: "info",
-    label: "What is a Reaction Force?",
-    title: "What is a Reaction Force?",
-
-    content: `
-      <p>Reaction forces arise in response to applid loads</p>
-
-      <ul>
-        <li>Pin support</li>
-        <li>Roller support</li>
-        <li>Fixed support</li>
-      </ul>
-    `,
-
-    image: "images/truss.svg"
-  },
-
-
-  // INFO SLIDE:   Relationship between Shear and Bending
-  {
-    type: "info",
-    label: "Relationship V and M",
-    title: "Relationship between Shear Force and Bending Moment",
+    type:      "info",
+    partStart: "What is a Truss",
+    label:     "Truss Members",
+    title:     "What are Truss Members",
 
     blocks: [
-      {
-        type: "text",
-        html: `<p>Shear force is the derivative of the bending moment. This means
-               the slope of the bending moment diagram at any point equals the
-               shear force at that point.</p>`
-      },
-      {
-        type: "equation",
-        html: `V(x) = dM(x) / dx`
-      },
-      {
-        type: "text",
-        html: `<p>We use this relationship to:</p>
-               <ul>
-                 <li>Locate maximum bending moments (where V = 0)</li>
-                 <li>Sketch one diagram from the other</li>
-                 <li>Check the consistency of our results</li>
-               </ul>`
-      }
+      { type: "text",
+        html: `<ul>
+              <li>A truss structure is a system of members that carries load into the supports. </li>
+              <li>They are designed to be efficient in terms of amount of material used.</li>
+              <li>Individual truss members are therefore <strong>designed to only take axial loading</strong>, and exist in one of three forms:
+                <ul>
+                  <li>Tension (T),
+                  <li>Compression (C), or
+                  <li>Zero-force.
+                </ul>
+              </ul>` },
+
+      { type: "image",
+        src:     "images/Slide 3.png",
+        width:   "600px",
+        caption: "Fig. 1" },
+
     ]
   },
 
+  /*Slide 4*/
   {
-    type:  "steps",
-    label: "Worked Example: Beam Reactions",
-    title: "Simply Supported Beam — Finding Reactions",
+  type:  "cloze",
+  label: "Truss Structures",
+  title: "Truss Members",
+  intro: `<p>For members to only experience axial forces (and not shear or bend), engineers must design trusses such that:</p>
+          <ol>
+            <li>All connections to be pinned (negligible rotational stiffness), and
+            <li>External forces are only applied at joints.
+          </ol>`,
 
-    image: "images/module-01_01.svg",   // beam figure shown above the problem
-  
-    problem: `
-      <p>
-        A simply supported beam <strong>AB</strong> has a span of <strong>6 m</strong>.
-        A point load of <strong>12 kN</strong> acts vertically downward at a point
-        <strong>2 m from A</strong>.
-      </p>
-      <p>Work through the steps below to find the support reactions and the
-      maximum bending moment.</p>
-    `,
-  
-    steps: [
-  
-      {
-        instruction: `Taking moments about <strong>A</strong>, find the vertical
-                      reaction at <strong>B</strong>.
-                      <br><em>Hint: ΣM<sub>A</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      4,
-        tolerance:   0.05,
-        explanation: `ΣM_A = 0 → R_B × 6 = 12 × 2 = 24 → R_B = 24 ÷ 6 = <strong>4 kN</strong>`
-      },
-  
-      {
-        instruction: `Using vertical equilibrium, find the reaction at <strong>A</strong>.
-                      <br><em>Hint: ΣF<sub>y</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      8,
-        tolerance:   0.05,
-        explanation: `ΣF_y = 0 → R_A + R_B = 12 → R_A = 12 − 4 = <strong>8 kN</strong>`
-      },
-  
-      {
-        instruction: `Calculate the bending moment at the point load
-                      (i.e. at <strong>x = 2 m</strong> from A).
-                      <br><em>Hint: consider only the forces to the left of the section.</em>`,
-        image:       "images/module-01_step3_cut.svg",  // optional per-step hint figure
-        unit:        "kNm",
-        answer:      16,
-        tolerance:   0.05,
-        explanation: `M(x=2) = R_A × 2 = 8 × 2 = <strong>16 kNm</strong>
-                      — this is also the peak of the bending moment diagram.`
-      }
- 
-    ]
+  text: `<p><strong>Example:</strong> For the roof truss shown, the:</p>
+          <ol>
+            <li>[[roof sheeting]] connects to the
+            <li>[[purlins]] which connect to
+            <li>[[truss joints]].
+          </ol>`,
+  image: "images/Slide 4.png",
+  imageWidth: "720px",
+  explanation: `Now the truss can be analysed as a 2D planar truss, and the axial force of each member found`
   },
 
-  
-  // CARDS:   Extra Info on Bending Moment
+  /*Slide 5*/
   {
-    type: "cards",
-    label: "Key Concepts",
-    title: "Key Concepts",
+    type:      "info",
+    partStart: "Zero-force Members",
+    label:     "Zero-force Members",
+    title:     "Zero-force Members",
 
-    intro: `<p>Here are three foundational concepts that underpin bending moment
-            analysis. <strong>Click each card</strong> to reveal its definition.</p>`,
+    blocks: [
+      { type: "text",
+        html: `<p>Our objective is to determine the internal axial force in all members of a truss. 
+        Before any detailed calculations are performed, it is often best to <strong>identify any zero-force members</strong></p>`},
 
-    cards: [
-      {
-        front: "📐 Equilibrium",
-        back: "Sum of forces = 0 and sum of moments = 0"
-      },
-      {
-        front: "🧩 Free Body Diagrams",
-        back: "Used to isolate and understand forces in structures"
-      },
-      {
-        front: "🏗️ Load Paths",
-        back: "Describes how forces travel through structures"
-      }
+        {type: "text",
+        html:`<p>Zero-force members can be identified using two simple rules:​</p>
+        
+        <div style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 50px;
+        ">
+          <div>
+            <p><strong>Rule 1: Two perpendicular members meeting at a joint with no external load</strong></p>
+            <p>
+              $&rarr;$ both are <span style="color: red;">zero-force.</span>
+            </p>
+            <img
+            src="images/Slide 5 - 1.png"
+            style="
+              width: 25%;
+              max-width: 500px;
+              height: auto;
+              margin-top: 15px;
+            "
+            >
+          </div>
+
+          <div>
+            <p><strong>Rule 2: Three members meeting at a joint with no external load and two are parallel</strong></p>
+            <p>
+              $&rarr;$ the perpendicular member is <span style="color: red;">zero-force.</span>
+            </p>
+            <img
+            src="images/Slide 5 - 2.png"
+            style="
+              width: 35%;
+              max-width: 500px;
+              height: auto;
+              margin-top: 15px;
+            "
+            >
+          </div>
+        </div>        
+        ` },
+
     ]
   },
 
-
-  // MCQ SLIDE:   Quiz on max bending moment
+  /*Slide 6*/
   {
     type:  "mcq",
-    label: "Quiz: Max Bending Moment",
-    title: "Multiple Choice: Bending Moment",
-
-    question: `
-      <p>
-        A simply supported beam of span <strong>8 m</strong> carries a
-        <strong>uniformly distributed load of 10 kN/m</strong> over its entire length.
-      </p>
-      <p>What is the <strong>maximum bending moment</strong> in the beam?</p>
-    `,
-
-    options: [
-      { text: "40 kNm"  },
-      { text: "80 kNm",  correct: true },
-      { text: "160 kNm" },
-      { text: "320 kNm" }
-    ],
-
-    explanation: `M_max = wL² / 8 = 10 × 8² / 8 = <strong>80 kNm</strong>, occurring at midspan.`
-  },
-
-
-  // ── EXAMPLE: image-based MCQ (uncomment & supply SVGs to use) ──────────────
-  // {
-  //   type:  "mcq",
-  //   label: "Quiz: Identify the BMD",
-  //   title: "Which is the correct Bending Moment Diagram?",
-  //   image: "images/module-01_bmd_question.svg",   // the beam + loading shown above options
-  //   question: `<p>For the beam shown above, select the correct bending moment diagram.</p>`,
-  //   options: [
-  //     { image: "images/bmd_option_a.svg" },
-  //     { image: "images/bmd_option_b.svg", correct: true },
-  //     { image: "images/bmd_option_c.svg" },
-  //     { image: "images/bmd_option_d.svg" }
-  //   ],
-  //   explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
-  // },
-
-    // EXAMPLE GEOGEBRA
-    {
-    type:  "embed",
-    label: "Interactive: Mohr's Circle",
-    title: "Drag the slider to transform the stresses",
-  
-    intro: `<p>Please wait a moment for the applet to load. Try rotating the element and observing how the values of stress change. When are the normal stresses maximum and minimum?</p>`,
-  
-    src:         "https://www.geogebra.org/material/iframe/id/xjmmtgqt/width/1203/height/768/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false",
-    aspectRatio: "16 / 10",          // optional — default is 16/9
-    maxWidth:    "820px",            // optional
-    caption:     "GeoGebra applet — interact directly above."
-  },
-
-  // EXAMPLE REVEAL
-  {
-    type:   "reveal",
-    label:  "Try it: Reaction at B",
-    title:  "Quick Check — Reaction at B",
-
-    // image:     "images/module-01_01.svg",   // optional figure above the prompt
-    // imageWidth:"480px",
-
-    prompt: `<p>For the beam from the worked example (6 m span, 12 kN load at 2 m
-             from A), have a go at finding the reaction at <strong>B</strong> on
-             paper. When you're ready, reveal the worked solution to check your
-             method.</p>`,
-
-    buttonText: "Show solution",     // optional (default "Show solution")
-    hideText:   "Hide solution",     // optional (default "Hide solution")
-
-    answer: `<p><strong>Taking moments about A (ΣM<sub>A</sub> = 0):</strong></p>
-             <p>R<sub>B</sub> × 6 = 12 × 2 = 24</p>
-             <p>R<sub>B</sub> = 24 ÷ 6 = <strong>4 kN</strong></p>`
-  },
-
-  // EXAMPLE HOTSPOT
-  {
-    type:  "hotspot",
-    label: "Find the Maximum Moment",
-    title: "Where is the Bending Moment greatest?",
-  
-    prompt: `<p>Click the point on the beam where the <strong>bending moment is
-            maximum</strong>.</p>`,
-  
-    image:    "images/module-01_01.svg",
-    maxWidth: "700px",               // optional
-  
-    hotspots: [
-      { x: 10, y: 40, w: 12, h: 20 },                 // a wrong region
-      { x: 44, y: 35, w: 14, h: 28, correct: true },  // the correct region
-      { x: 78, y: 40, w: 12, h: 20 }                  // another wrong region
-    ],
-  
-    explanation: `The maximum bending moment occurs under the point load, where
-                  the shear force passes through zero.`
-  },
-
-  /* ============================================================================
-   QUIZ ("Test Your Knowledge") — a multi-question sub-sequence in one slide.
-
-   Appears ONCE in the sidebar. Internally runs: intro → N questions → results.
-   - One attempt per question; advances on answer (right or wrong).
-   - Results page shows score, a review table, and a Retry button.
-   - Completing it (reaching results) gates the module, regardless of score.
-
-   Each question has a "kind": "mcq" or "input".
-     mcq   → options array, one with correct:true (same shape as the mcq slide)
-     input → numeric answer + tolerance + optional unit (like a Worked Example step)
-
-   Any question may include an optional image / imageWidth (shown above it).
-   ============================================================================ */
-
-  {
-    type:  "quiz",
-    label: "Test Your Knowledge",
-    title: "Test Your Knowledge",
-
-    intro:     "Answer the following questions to complete the module. You have one attempt per question, but you can retry the whole quiz as many times as you like.",
-    startText: "Start Quiz",          // optional (default "Start Quiz")
+    label: "Zero-force Members",
+    title: "Try it yourself",
 
     questions: [
-
-      // ── An MCQ question ──
       {
-        kind:     "mcq",
-        question: `<p>The maximum bending moment in a simply supported beam under a
-                  central point load <strong>P</strong> over span <strong>L</strong> is:</p>`,
+        question:`<p>The following truss contains zero-force members.</p>
+                  <img 
+                    src="images/Slide 6.png" 
+                    alt="Truss diagram"
+                    style="display: block; max-width: 700px; width: 60%; margin: 20px auto;"
+                  >
+                  <p>For the <strong>member CD</strong>, which rule explains why it is a zero-force member?</p>`,
         options: [
-          { text: "PL / 2" },
-          { text: "PL / 4", correct: true },
-          { text: "PL / 8" },
-          { text: "PL" }
-        ]
+          { text: "<strong>Rule 1:</strong> Two members meeting at a joint with no external load $&rarr;$ both are <span style=\"color: red;\">zero-force.</span>​" },
+          { text: "<strong>Rule 2:</strong> Three members meeting at a joint with no external load and two are parallel $&rarr;$ the non-parallel member is <span style=\"color: red;\">zero-force.</span>​", correct: true },
+        ],
+        explanation: `Correct! Consider equilibrium of horizontal forces at C.`
       },
-
-      // ── An input (numeric) question ──
       {
-        kind:      "input",
-        question:  `<p>A simply supported beam of span <strong>4 m</strong> carries a
-                    UDL of <strong>6 kN/m</strong>. What is the maximum bending
-                    moment (in kNm)?</p>
-                    <p><em>Recall M<sub>max</sub> = wL²/8</em></p>`,
-        answer:    12,
-        tolerance: 0.1,
-        unit:      "kNm"
-      },
-
-      // ── An image-based MCQ question ──
-      {
-        kind:     "mcq",
-        // image:    "images/some-diagram.svg",   // optional figure above the question
-        question: `<p>Which support condition provides a reaction moment?</p>`,
+        question:`<p>The following truss contains zero-force members.</p>
+                  <img 
+                    src="images/Slide 6.png" 
+                    alt="Truss diagram"
+                    style="display: block; max-width: 700px; width: 60%; margin: 20px auto;"
+                  >
+                  <p>For the <strong>member GH</strong>, which rule explains why it is a zero-force member?</p>`,
         options: [
-          { text: "Pin" },
-          { text: "Roller" },
-          { text: "Fixed", correct: true }
-        ]
-      }
+          { text: "<strong>Rule 1:</strong> Two members meeting at a joint with no external load $&rarr;$ both are <span style=\"color: red;\">zero-force.</span>​", correct: true },
+          { text: "<strong>Rule 2:</strong> Three members meeting at a joint with no external load and two are parallel $&rarr;$ the non-parallel member is <span style=\"color: red;\">zero-force.</span>​"},
+        ],
+        explanation: `Correct! Consider equilibrium of horizontal or vertical forces at G.`
+      },
+      {
+        question:`<p>The following truss contains zero-force members.</p>
+                  <img 
+                    src="images/Slide 6.png" 
+                    alt="Truss diagram"
+                    style="display: block; max-width: 700px; width: 60%; margin: 20px auto;"
+                  >
+                  <p>For the <strong>member GE</strong>, which rule explains why it is a zero-force member?</p>`,
+        options: [
+          { text: "<strong>Rule 1:</strong> Two members meeting at a joint with no external load $&rarr;$ both are <span style=\"color: red;\">zero-force.</span>​", correct: true },
+          { text: "<strong>Rule 2:</strong> Three members meeting at a joint with no external load and two are parallel $&rarr;$ the non-parallel member is <span style=\"color: red;\">zero-force.</span>​"},
+        ],
+        explanation: `Correct! Consider equilibrium of horizontal or vertical forces at G.`
+      },
+      {
+        question:`<p>The following truss contains zero-force members.</p>
+                  <img 
+                    src="images/Slide 6.png" 
+                    alt="Truss diagram"
+                    style="display: block; max-width: 700px; width: 60%; margin: 20px auto;"
+                  >
+                  <p>For the <strong>member IJ</strong>, which rule explains why it is a zero-force member?</p>`,
+        options: [
+          { text: "<strong>Rule 1:</strong> Two members meeting at a joint with no external load $&rarr;$ both are <span style=\"color: red;\">zero-force.</span>​" },
+          { text: "<strong>Rule 2:</strong> Three members meeting at a joint with no external load and two are parallel $&rarr;$ the non-parallel member is <span style=\"color: red;\">zero-force.</span>​", correct: true },
+        ],
+        explanation: `Correct! Consider equilibrium of vertical forces at I.`
+      },
+    ]
+  },
+
+  /*Slide 7*/
+  {
+    type:      "info",
+    partStart: "Method of Joints",
+    label:     "Particle Equilibrium",
+    title:     "Particle Equilibrium of Joints",
+
+    blocks: [
+      { type: "text",
+        html: `<p>A joint in a truss connects 2 or more members. If we isolate the joint, we essentially have the model of a particle with the line of action of all forces acting through its centre.</p>
+        <p>Therefore, no moment is generated.​​</p>
+        
+        <div style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 50px;
+        ">
+          <div>
+            <img
+              src="images/Slide 7.png" 
+              style="width: 100%;"
+              alt="Figure 1"
+            />
+          </div>
+
+          <div>
+            <p>This is <strong>particle equilibrium</strong>, and so:</p>
+
+            <ul>
+              <li>Force equilibrium equations apply:
+              <ul>
+                <li>$&uarr;&Sigma;F_y=0$
+                <li>$&rarr;&Sigma;F_x=0$
+              </ul>
+            </ul>
+
+            <ul>
+              <li>Though moment equilibrium does not provide any useful information:
+            </ul>
+
+            <p>Therefore, at <strong>each joint we have two (2) equations of equilibrium</strong>, and can solve at most two unknowns meeting at a joint.</p>
+          </div>
+        </div>        
+        ` },
 
     ]
   },
 
+  /*Slide 8*/
+  {
+    type:      "info",
+    label:     "Step-by-step Process",
+    title:     "Method of Joints",
 
-  // FINAL SLIDE:   Module completion
+    blocks: [
+      {type: "text",
+        html: `<p>The <strong>method of joints</strong> approach to solving the internal axial force of truss members uses particle equilibrium at each joint in the truss.</p>`
+      },
+      { type: "text",
+        html: `<p>The step-by-step process follows:</p>
+        <ol><strong>
+          <li>Identify and ignore any zero-force members.
+          <li>Think about path/sequence of analysis (pick a starting joint with at most two unknowns attached to it).
+          <li>Find support reactions using equations of equilibrium for overall structure.
+            <ul>
+              <li>$&uarr;&Sigma;F_y=0$
+              <li>$&rarr;&Sigma;F_x=0$
+              <li>$↺ &Sigma; M = 0$
+            </ul>
+          <li>Pick a starting joint and apply particle equilibrium, repeat this at appropriate joints until all relevant member forces are found.
+            <ul>
+              <li>$&uarr;&Sigma;F_y=0$
+              <li>$&rarr;&Sigma;F_x=0$
+            </ul>
+        </strong></ol>
+          ` },
+    ]
+  },
+
+  /*Slide 9-15*/
+  {
+    type:  "mcq",
+    label: "Quiz 1",
+    title: "Quiz 1 – Find internal axial forces in all members​",
+
+    questions: [
+      /*Slide 9*/
+      { multi: true,
+        question:`<p>1. Identify and ignore any zero-force members.​</p>
+                  <p><u>Select any zero-force member(s):</u>​</p>`,
+        options: [
+          { text: "AB" },
+          { text: "AD" },
+          { text: "BC" },
+          { text: "BD", correct: true },
+          { text: "CD" }
+        ],
+        explanation: `Correct!"`
+      },
+      /*Slide 10*/
+      { multi: true,
+        question:`<p>2. Think about path/sequence of analysis (pick a starting joint).​​</p>
+                  <p><u>Which node(s) are best to start at?​</u>​</p>`,
+        options: [
+          { text: "A", correct: true },
+          { text: "B" },
+          { text: "C", correct: true },
+          { text: "D"}
+        ],
+        explanation: `Correct!"`
+      },
+      /*Slide 11*/
+      { type: "cloze",
+        intro:`<p>2. Think about path/sequence of analysis (pick a starting joint).​​</p>
+                  <p><u>Which node(s) are best to start at?​</u>​</p>`,
+        text: [
+          { text: "A", correct: true },
+          { text: "B" },
+          { text: "C", correct: true },
+          { text: "D"}
+        ],
+        explanation: `Correct!"`
+      },
+
+      { type: "cloze",
+        intro: `<p>Complete the load path below.</p>`,
+        text: `<p>(1) [[roof sheeting]] connects to the</p>
+        <p>(2) [[purlins]] which connect to the</p>
+        <p>(3) [[truss joints]].</p>`,
+        distractors: ["rafters", "bracing"], // fit no blank — more words than gaps
+        image: "images/roof-truss.svg",
+        imagePosition: "right", // or "below"
+        explanation: `Shown once every blank is right.`
+      },
+
+
+    ]
+  },
+
+  /*PART 2*/
+  /*Slide 16*/
+    {
+    type:      "info",
+    partStart: "Method of Sections",
+    label:     "Step-by-step Process",
+    title:     "Method of Sections",
+
+    blocks: [
+      {type: "text",
+        html: `<p>The <strong>method of sections</strong> approach to solving the internal axial force of truss members uses equilibrium of sections.</p>`
+      },
+      { type: "text",
+        html: `<p>Step-by-step process:</p>
+        <ol>
+          <li>Identify and ignore any zero-force members.
+          <li>Think about section cut location and extent. Cut through at most three members with unknown axial force.
+          <li><strong>IF NEEDED,</strong> Find support reactions using equations of equilibrium for overall structure.
+            <ul>
+              <li>$&uarr;&Sigma;F_y=0$
+              <li>$&rarr;&Sigma;F_x=0$
+              <li>$↺ &Sigma; M = 0$
+            </ul>
+          <li>Use equations of equilibrium, to determine internal axial force of relevant members.
+            <ul>
+              <li>$&uarr;&Sigma;F_y=0$
+              <li>$&rarr;&Sigma;F_x=0$
+              <li>$↺ &Sigma; M = 0$
+            </ul>
+        </ol>
+          ` },
+    ]
+  },
+
+  /*Slide 17-21*/
+  {
+    type:  "mcq",
+    label: "Quiz 2",
+    title: "Quiz 2 – Find internal axial forces in BC, GC, GF​",
+
+    questions: [
+      /*Slide 17*/
+      { multi: true,
+        question:`<p>1. Identify and ignore any zero-force members.​</p>
+                  <p><u>Select any zero-force member(s):</u>​</p>`,
+        options: [
+          { text: "AB" },
+          { text: "AG" },
+          { text: "BG", correct: true },
+          { text: "BC" },
+          { text: "CG" }
+        ],
+        explanation: `Correct!"`
+      },
+      /*Slide 18*/
+      { 
+        question:`<p>2. Think about section cut location and extent​​​</p>
+                  <p><u>Which section cut should be taken?​​</u>​</p>`,
+        options: [
+          { text: "a-a", correct: true },
+          { text: "b-b" },
+          { text: "c-c" }
+        ],
+        explanation: `Correct!"`
+      },
+      /*Slide 19*/
+      { 
+        question:`<p>2. Think about section cut location and extent​​​</p>
+                  <p><u>Which extent should we consider to make analysis simpler?​​</u>​</p>`,
+        options: [
+          { text: "Left-hand side", correct: true },
+          { text: "Right-hand side" }
+        ],
+        explanation: `Correct!"`
+      },
+
+      { type: "cloze",
+        intro: `<p>Complete the load path below.</p>`,
+        text: `<p>(1) [[roof sheeting]] connects to the</p>
+        <p>(2) [[purlins]] which connect to the</p>
+        <p>(3) [[truss joints]].</p>`,
+        distractors: ["rafters", "bracing"], // fit no blank — more words than gaps
+        image: "images/roof-truss.svg",
+        imagePosition: "right", // or "below"
+        explanation: `Shown once every blank is right.`
+      },
+
+
+    ]
+  },
+
+  /*CLOSING SLIDE (22)*/
   {
     type:         "final",
     label:        "Module Complete",
     title:        "Well done!",
-    subtitle:     "You've completed the Bending Moments module.",
+    subtitle:     "You've completed this module.",
     buttonText:   "Save and Close",
     showRating:   true,
+    showFeedback: true,
     bugReportUrl: "https://forms.office.com/your-bug-report-form"
   }
-
 
 ];
