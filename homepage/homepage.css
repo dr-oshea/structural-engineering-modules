@@ -178,7 +178,7 @@
 
 body {
   background-image:
-    linear-gradient(rgba(242,242,242,0.50), rgba(242,242,242,0.54)),
+    linear-gradient(rgba(242,242,242,0.90), rgba(242,242,242,0.94)),
     url("images/homepage-bg.webp");
   background-size: cover;
   background-position: center center;
@@ -247,4 +247,11 @@ body {
   color: var(--unsw-indigo);
   text-decoration: none;
   border-bottom: 1px solid var(--unsw-yellow);
+}
+
+/* Status line before the backend has answered — deliberately non-committal:
+   claiming "Not yet completed" to a student who HAS finished would be wrong. */
+.hp-card-checking {
+  font-style: italic;
+  opacity: 0.55;
 }

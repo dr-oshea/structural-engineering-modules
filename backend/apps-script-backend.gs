@@ -49,12 +49,22 @@ function doGet(e) {
       var course  = e.parameter.course;
 
       var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-      var rows  = sheet.getDataRange().getValues(); // includes header row
+
+      // Read ONLY columns A–D (timestamp, student, course, module).
+      // getDataRange() would pull every column, including the free-text
+      // comments in column G — thousands of long strings the homepage has no
+      // use for. Reading four narrow columns instead keeps this fast as the
+      // sheet grows through the term.
+      var lastRow = sheet.getLastRow();
+      if (lastRow < 2) {
+        return jsonResponse({ completed: [], dates: {} });   // header only
+      }
+      var rows = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
 
       var completed = [];   // module IDs (kept for backward compatibility)
       var dates     = {};   // module ID -> most recent completion date (YYYY-MM-DD)
 
-      for (var i = 1; i < rows.length; i++) {   // start at 1: skip header
+      for (var i = 0; i < rows.length; i++) {   // header already excluded
         var rowTime    = rows[i][0];  // column A (timestamp)
         var rowStudent = rows[i][1];  // column B
         var rowCourse  = rows[i][2];  // column C

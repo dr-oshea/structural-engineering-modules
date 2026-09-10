@@ -58,6 +58,11 @@ async function recordCompletion({ moduleId, rating, comment }) {
    Called by the homepage. Returns an array of module IDs, e.g.
    ["module-01-bending-moments"]. On any failure returns [] — the homepage
    then simply shows everything as not-yet-completed.                          */
+// How long to wait for the progress lookup before giving up. Apps Script
+// spends 1–3 s cold-starting a container on the first request of a session,
+// almost regardless of how much data the sheet holds, so this is generous.
+const PROGRESS_TIMEOUT_MS = 8000;
+
 async function fetchProgress() {
   if (!trackingEnabled()) {
     console.log("[api] Tracking off — no progress to fetch (this is fine).");
@@ -72,7 +77,17 @@ async function fetchProgress() {
             + `&course=${encodeURIComponent(ctx.course)}`;
 
   try {
-    const response = await fetch(url);
+    // Give up after a while rather than leaving the page waiting. Apps Script
+    // occasionally stalls under load, and a homepage that never settles is
+    // worse than one showing no ticks — the tiles are all still usable.
+    const controller = (typeof AbortController !== "undefined")
+      ? new AbortController() : null;
+    const timer = controller
+      ? setTimeout(() => controller.abort(), PROGRESS_TIMEOUT_MS) : null;
+
+    const response = await fetch(url, controller ? { signal: controller.signal } : {});
+    if (timer) clearTimeout(timer);
+
     const data = await response.json();
     // Return the completed IDs as an array (so existing .includes() still works),
     // with the per-module completion dates attached as a .dates property.

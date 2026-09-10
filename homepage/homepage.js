@@ -40,7 +40,40 @@ async function renderHomepage() {
     </div>
   `;
 
-  const completed = await fetchProgress();   // [] when tracking is off
+  // ── Draw the tiles IMMEDIATELY, then fill in progress when it arrives ──
+  //
+  // The module list comes from local config, so it needs no network at all.
+  // Waiting on the backend before drawing anything turned Apps Script's
+  // cold-start (1–3 s, regardless of how much data there is) into that many
+  // seconds of blank page.
+  //
+  // Instead: paint the tiles now using the last-known progress from this
+  // session, then re-paint when the real answer comes back. On a repeat visit
+  // the ticks are correct instantly; on a first visit they appear a moment
+  // later.
+  const cached = recallProgress();
+  let completed = cached || Object.assign([], { dates: {} });
+
+  // Do we actually KNOW a module's status yet? On a first visit we don't —
+  // and saying "Not yet completed" before the backend answers would state
+  // something false to a student who has in fact finished it. So until the
+  // answer lands, the status line says "checking…" rather than asserting.
+  // A cached answer counts as known: it's this student's own result from
+  // moments ago, and the real answer overwrites it within seconds.
+  let progressKnown = Boolean(cached) || !getStudentContext().isTracked;
+
+  fetchProgress().then(fresh => {
+    if (!fresh) return;
+    rememberProgress(fresh);
+    completed = fresh;
+    progressKnown = true;
+    paintSections();                       // re-draw with the real answer
+  }).catch(() => {
+    // Offline, or the lookup timed out. Stop saying "checking…" — the ticks
+    // are unknown, but the tiles work perfectly well without them.
+    progressKnown = true;
+    paintSections();
+  });
 
   // ── Join: course IDs → catalog entries, grouped by category ──
   const sorted = sortModuleIds(course.modules);
@@ -55,7 +88,10 @@ async function renderHomepage() {
   });
 
   // ── Render one section per category ──
+  // A named function, because it runs twice: once immediately, and again when
+  // the progress fetch returns.
   const sections = document.getElementById("hp-sections");
+  function paintSections() {
   sections.innerHTML = groups.map(g => `
     <section class="hp-section">
       <h2 class="hp-section-title">${g.category ? g.category.name : "Other"}</h2>
@@ -86,9 +122,11 @@ async function renderHomepage() {
           if (ctx.student) params.set("sid", ctx.student);
           if (ctx.course)  params.set("course", ctx.course);
           const moduleUrl = `../${m.folder}/index.html?${params.toString()}`;
-          const footText = isDone
-            ? (doneDate ? `Completed ${formatDoneDate(doneDate)}` : "Completed")
-            : "Not yet completed";
+          const footText = !progressKnown
+            ? `<span class="hp-card-checking">checking…</span>`
+            : isDone
+              ? (doneDate ? `Completed ${formatDoneDate(doneDate)}` : "Completed")
+              : "Not yet completed";
           return `
             <a class="hp-card ${isDone ? "hp-card-done" : ""}" href="${moduleUrl}">
               <div class="hp-card-status">${isDone ? "✓" : ""}</div>
@@ -101,7 +139,46 @@ async function renderHomepage() {
       </div>
     </section>
   `).join("");
+  }
+
+  paintSections();          // draw now; the fetch above re-draws when it lands
 }
+
+
+// ─── Remembering progress between visits ────────────────────────────────────
+//
+// The backend answer is cached for the browser session, so a student returning
+// to the homepage sees their ticks instantly rather than waiting on a fresh
+// round-trip. It's only ever a display shortcut — the real answer replaces it
+// a moment later, and it's scoped per student+course so switching courses (or
+// sharing a machine) can't show the wrong ticks.
+function progressKey() {
+  const ctx = getStudentContext();
+  return `srm-progress:${ctx.student || "?"}:${ctx.course || "?"}`;
+}
+
+function rememberProgress(list) {
+  try {
+    sessionStorage.setItem(progressKey(), JSON.stringify({
+      completed: Array.from(list),
+      dates: list.dates || {}
+    }));
+  } catch (e) { /* storage unavailable — no cache, no problem */ }
+}
+
+function recallProgress() {
+  try {
+    const raw = sessionStorage.getItem(progressKey());
+    if (!raw) return null;
+    const v = JSON.parse(raw);
+    const out = Array.isArray(v.completed) ? v.completed.slice() : [];
+    out.dates = v.dates || {};
+    return out;
+  } catch (e) {
+    return null;
+  }
+}
+
 
 renderHomepage();
 
