@@ -11,7 +11,7 @@
    After setting up the Google Apps Script backend (see the roadmap §3),
    paste its Web app URL (ending in /exec) between the quotes.
    Leave empty to run with tracking off.                                       */
-const BACKEND_URL = "";
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwN8fDdrGFwSwAt3CS6kDA29OIUKSRCdWF1S6AaqXov7EBrWfM24bz5FwcwhDcqWjXG/exec";
 /* ──────────────────────────────────────────────────────────────────────────── */
 
 
