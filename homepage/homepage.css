@@ -255,3 +255,34 @@ body {
   font-style: italic;
   opacity: 0.55;
 }
+
+/* Shown when the progress lookup failed — distinct from "nothing completed",
+   because those are very different things to tell a student. */
+.hp-progress-warning {
+  max-width: 760px;
+  margin: 0 auto 26px;
+  padding: 12px 18px;
+  background: rgba(255,130,0,0.10);
+  border: 1px solid rgba(255,130,0,0.35);
+  border-left: 4px solid var(--unsw-orange);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #7a4a10;
+  text-align: left;
+}
+
+.hp-retry-btn {
+  margin-left: 10px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px;
+  background: var(--unsw-orange);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.hp-retry-btn:hover { background: #e07000; transform: none; }

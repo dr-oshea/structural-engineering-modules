@@ -58,12 +58,20 @@ async function recordCompletion({ moduleId, rating, comment }) {
    Called by the homepage. Returns an array of module IDs, e.g.
    ["module-01-bending-moments"]. On any failure returns [] — the homepage
    then simply shows everything as not-yet-completed.                          */
-// How long to wait for the progress lookup before giving up. Apps Script
-// spends 1–3 s cold-starting a container on the first request of a session,
-// almost regardless of how much data the sheet holds, so this is generous.
-const PROGRESS_TIMEOUT_MS = 8000;
+// How long to wait for the progress lookup before giving up.
+//
+// Apps Script cold-starts a container on the first request of a session, and
+// under load that can take well over ten seconds — far longer than the 1–3 s
+// it takes once warm. A short timeout here produces the worst possible
+// symptom: the FIRST visit times out and shows nothing completed, then a
+// refresh works because the container is now warm.
+//
+// So: wait generously, and retry once before giving up.
+const PROGRESS_TIMEOUT_MS = 25000;
+const PROGRESS_RETRIES    = 1;
 
-async function fetchProgress() {
+async function fetchProgress(attempt) {
+  attempt = attempt || 0;
   if (!trackingEnabled()) {
     console.log("[api] Tracking off — no progress to fetch (this is fine).");
     const empty = [];
@@ -95,9 +103,21 @@ async function fetchProgress() {
     completed.dates = (data.dates && typeof data.dates === "object") ? data.dates : {};
     return completed;
   } catch (err) {
-    console.warn("[api] Could not fetch progress (ignored):", err);
-    const empty = [];
-    empty.dates = {};
-    return empty;
+    // Retry once — a cold start that overran the timeout usually succeeds
+    // straight afterwards, because the container is now warm.
+    if (attempt < PROGRESS_RETRIES) {
+      console.warn("[api] Progress lookup failed, retrying…", err);
+      return fetchProgress(attempt + 1);
+    }
+
+    // IMPORTANT: return null, not an empty array.
+    //
+    // An empty array means "this student has completed nothing", which the
+    // homepage would display as fact. A failed lookup is a different thing
+    // entirely — we simply don't know — and the caller must be able to tell
+    // the two apart, or a student who has finished everything is shown a
+    // page saying they've finished nothing.
+    console.warn("[api] Could not fetch progress after retrying:", err);
+    return null;
   }
 }

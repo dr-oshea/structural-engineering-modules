@@ -60,18 +60,26 @@ async function renderHomepage() {
   // answer lands, the status line says "checking…" rather than asserting.
   // A cached answer counts as known: it's this student's own result from
   // moments ago, and the real answer overwrites it within seconds.
-  let progressKnown = Boolean(cached) || !getStudentContext().isTracked;
+  let progressKnown  = Boolean(cached) || !getStudentContext().isTracked;
+  let progressFailed = false;
 
   fetchProgress().then(fresh => {
-    if (!fresh) return;
+    if (fresh === null) {
+      // The lookup FAILED — which is not the same as "nothing completed".
+      // Saying "Not yet completed" here would tell a student who has finished
+      // modules that they haven't. Say we couldn't check, and offer a retry.
+      progressFailed = true;
+      progressKnown  = true;
+      paintSections();
+      return;
+    }
     rememberProgress(fresh);
     completed = fresh;
     progressKnown = true;
     paintSections();                       // re-draw with the real answer
   }).catch(() => {
-    // Offline, or the lookup timed out. Stop saying "checking…" — the ticks
-    // are unknown, but the tiles work perfectly well without them.
-    progressKnown = true;
+    progressFailed = true;
+    progressKnown  = true;
     paintSections();
   });
 
@@ -92,7 +100,12 @@ async function renderHomepage() {
   // the progress fetch returns.
   const sections = document.getElementById("hp-sections");
   function paintSections() {
-  sections.innerHTML = groups.map(g => `
+  sections.innerHTML = (progressFailed ? `
+    <div class="hp-progress-warning">
+      Couldn't load your completed modules just now — everything still works,
+      and your progress is safe.
+      <button class="hp-retry-btn" onclick="retryProgress()">Try again</button>
+    </div>` : "") + groups.map(g => `
     <section class="hp-section">
       <h2 class="hp-section-title">${g.category ? g.category.name : "Other"}</h2>
       <div class="hp-grid">
@@ -124,9 +137,11 @@ async function renderHomepage() {
           const moduleUrl = `../${m.folder}/index.html?${params.toString()}`;
           const footText = !progressKnown
             ? `<span class="hp-card-checking">checking…</span>`
-            : isDone
-              ? (doneDate ? `Completed ${formatDoneDate(doneDate)}` : "Completed")
-              : "Not yet completed";
+            : (progressFailed && !isDone)
+              ? `<span class="hp-card-checking">completion unavailable</span>`
+              : isDone
+                ? (doneDate ? `Completed ${formatDoneDate(doneDate)}` : "Completed")
+                : "Not yet completed";
           return `
             <a class="hp-card ${isDone ? "hp-card-done" : ""}" href="${moduleUrl}">
               <div class="hp-card-status">${isDone ? "✓" : ""}</div>
@@ -140,6 +155,19 @@ async function renderHomepage() {
     </section>
   `).join("");
   }
+
+  // Let the warning banner's button have another go
+  retryProgress = () => {
+    progressFailed = false;
+    progressKnown  = false;
+    paintSections();
+    fetchProgress().then(fresh => {
+      if (fresh === null) { progressFailed = true; }
+      else { rememberProgress(fresh); completed = fresh; }
+      progressKnown = true;
+      paintSections();
+    }).catch(() => { progressFailed = true; progressKnown = true; paintSections(); });
+  };
 
   paintSections();          // draw now; the fetch above re-draws when it lands
 }
@@ -179,6 +207,9 @@ function recallProgress() {
   }
 }
 
+
+// Exposed for the "Try again" button on the warning banner.
+let retryProgress = () => {};
 
 renderHomepage();
 
