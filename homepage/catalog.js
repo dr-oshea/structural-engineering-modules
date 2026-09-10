@@ -102,6 +102,31 @@ const CATALOG = {
       title: "Cross Section Properties", 
       category: "solids", order: 1,
       status: "coming-soon" },
+
+      { id: "module-11-axial-stress",   folder: "module-10",
+      title: "Finding stress due to Axial Force", 
+      category: "solids", order: 2,
+      status: "coming-soon" },
+
+      { id: "module-12-bending-stress",   folder: "module-10",
+      title: "Finding stress due to Bending", 
+      category: "solids", order: 3,
+      status: "coming-soon" },
+
+      { id: "module-13-shear-stress",   folder: "module-10",
+      title: "Finding stress due to Shear Force", 
+      category: "solids", order: 4,
+      status: "coming-soon" },
+
+      { id: "module-14-elongations",   folder: "module-10",
+      title: "Elongation of Bars", 
+      category: "solids", order: 5,
+      status: "coming-soon" },
+
+      { id: "module-15-deflections",   folder: "module-10",
+      title: "Calculating Deflections of Beams", 
+      category: "solids", order: 6,
+      status: "coming-soon" },
     
       // { id: "module-05-equilibrium",  folder: "module-05",
     //   title: "Equilibrium & Reactions",          category: "statics", order: 1 },

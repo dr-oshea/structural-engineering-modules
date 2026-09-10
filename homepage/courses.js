@@ -41,7 +41,12 @@ const COURSES = {
       "module-05-trusses",
       "module-06-distributed-loads",
       "module-07-internal-hinges",
-      "module-10-cross-section"
+      "module-10-cross-section",
+      "module-11-axial-stress",
+      "module-12-bending-stress",
+      "module-13-shear-stress",
+      "module-14-elongations",
+      "module-15-deflections"
     ]
   },
 
