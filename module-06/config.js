@@ -18,9 +18,9 @@ const moduleData = [
 
   /*Slide 2*/
   { type: "context",
-    label: "Cotext/Motivation",
+    label: "Context/Motivation",
     title: "Why do we have distributed loads?",
-    image: "images/context.png",
+    image: "images/context.jpg",
     text:`Loads such as self-weight, floor loads, and soil pressures are often distributed across a structure. This module shows how these loads can be represented by equivalent point loads, making support reaction calculations and subsequent analysis more straightforward.`
   },
 
@@ -185,7 +185,7 @@ const moduleData = [
         caption: "Fig. 2" },
 
       {type: "text",
-        html: `<p>In practice, most distributed laods have simple shapes (e.g. triangular, rectangular), and therefore there are simple formulas to determine their areas and centroids.</p>`
+        html: `<p>In practice, most distributed loads have simple shapes (e.g. triangular, rectangular), and therefore there are simple formulas to determine their areas and centroids.</p>`
       }
     ]
   },
@@ -297,6 +297,7 @@ const moduleData = [
   /*Slide 10*/
   {
     type:      "info",
+    partStart: "Other Cases",
     label:     "Composite approach",
     title:     "Trapezoidal Load - Composite approach",
 
