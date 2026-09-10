@@ -4,328 +4,375 @@ const moduleMeta = {
 };
 
 const moduleData = [
+
+  /*Slide 1*/
   {
-    type: "splash",
-    label: "Home page",
-    title: "Calculating Reactions",
-    subtitle: "Interactive Revision Modules for structural engineering",
+    type:       "splash",
+    label:      "Home page",
+    title:      "Solving Problems with Internal Hinges​",
+    subtitle:   "Interactive Revision Modules for structural engineering",
     buttonText: "Start Module"
+    // The contents list is generated automatically from the partStart
+    // fields below — nothing to maintain here.
   },
 
+  /*MISSING*/
   {
-    type: "context",
+    type:  "context",
     label: "Context/Motivation",
-    title: "Calculating Reactions",
-    image: "images/context-beam-engineer.jpg",
-    text: `<p>Support reactions fix a structure in place. How much force is required in reaction to applied loads to achieve this?</p>
-          <p> Calculating support reactions is a foundational skill crucial to many of your Structural Engineering courses at UNSW. </p>`
+    title: "MISSING",
+    image: "images/your-motivating-image.jpg",
+    text:  `<p>
+            A truss is a system of members that carries load into the supports. Plane trusses are 2D truss structures commonly used in roofs and bridges as shown below:
+            </p>`
   },
 
-
-  // INFO SLIDE:   What is a reaction? 
+  /*PART 1*/
+  /*Slide 2*/
   {
-    type: "info",
-    label: "What is a Reaction Force?",
-    title: "What is a Reaction Force?",
-
-    content: `
-      <p>Reaction forces arise in response to applid loads</p>
-
-      <ul>
-        <li>Pin support</li>
-        <li>Roller support</li>
-        <li>Fixed support</li>
-      </ul>
-    `,
-
-    image: "images/truss.svg"
-  },
-
-
-  // INFO SLIDE:   Relationship between Shear and Bending
-  {
-    type: "info",
-    label: "Relationship V and M",
-    title: "Relationship between Shear Force and Bending Moment",
+    type:      "info",
+    partStart: "Review of Static Determinacy​",
+    label:     "Review of Static Determinacy​",
+    title:     "Review of Static Determinacy​",
 
     blocks: [
-      {
-        type: "text",
-        html: `<p>Shear force is the derivative of the bending moment. This means
-               the slope of the bending moment diagram at any point equals the
-               shear force at that point.</p>`
-      },
-      {
-        type: "equation",
-        html: `V(x) = dM(x) / dx`
-      },
-      {
-        type: "text",
-        html: `<p>We use this relationship to:</p>
-               <ul>
-                 <li>Locate maximum bending moments (where V = 0)</li>
-                 <li>Sketch one diagram from the other</li>
-                 <li>Check the consistency of our results</li>
-               </ul>`
-      }
+      { type: "text",
+        html: `<p>Whether a structure is unstable (will fall over), statically determinant (stable and solvable using only equilibrium equations) or statically indeterminant (stable but unsolvable using equilibrium equations) depends on the following expressions:​</p>
+        
+        <div style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 50px;
+        ">
+          <div>
+            <p><strong><u>Beams and frames:</u></strong></p>
+            <p>$D=r+3m-3j-c$</p>
+            <p><strong><u>For Trusses:</u></strong></p>
+            <p>$D=r+m-2j$</p>
+          </div>
+
+          <div>
+            <p>$D<0&rarr;$ Unstable</p>
+            <p>$D=0&rarr;$ Stable, Determinant</p>
+            <p>$D>0&rarr;$ Stable, Indeterminant</p>
+          </div>
+        </div>
+
+        <p><u>Where:</u></p>
+        <p>$D=$ degree of indeterminacy</p>
+        <p>$r=$ Number of reactions</p>
+        <p>$m=$ Number of members</p>
+        <p>$j=$ Number of <u>joints</u></p>
+        <p>$c=$ Number of releases introduced from internal hinges</p>
+      `},
     ]
   },
 
+  /*Slide 3*/
   {
-    type:  "steps",
-    label: "Worked Example: Beam Reactions",
-    title: "Simply Supported Beam — Finding Reactions",
+    "type": "steps",
+    "label": "Review of Static Determinacy​",
+    "title": "Quiz 1 - Static Determinacy​",
 
-    image: "images/module-01_01.svg",   // beam figure shown above the problem
-  
-    problem: `
-      <p>
-        A simply supported beam <strong>AB</strong> has a span of <strong>6 m</strong>.
-        A point load of <strong>12 kN</strong> acts vertically downward at a point
-        <strong>2 m from A</strong>.
-      </p>
-      <p>Work through the steps below to find the support reactions and the
-      maximum bending moment.</p>
-    `,
-  
-    steps: [
-  
+    "image": "images/Slide 3.png",
+    "imageWidth": "620px",
+    "imagePosition": "above",
+
+    "problem": "<p>What is the degree of indeterminacy for this beam?​</p><p>Enter a number for each variable in the beams and frames equation below:</p><p>$D=r+3m-3j-c$</p>",
+    "steps": [
       {
-        instruction: `Taking moments about <strong>A</strong>, find the vertical
-                      reaction at <strong>B</strong>.
-                      <br><em>Hint: ΣM<sub>A</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      4,
-        tolerance:   0.05,
-        explanation: `ΣM_A = 0 → R_B × 6 = 12 × 2 = 24 → R_B = 24 ÷ 6 = <strong>4 kN</strong>`
+        "instruction": "What is the value of $r$?​",
+        "unit": "",
+        "answer": 5,
+        "tolerance": 0,
+        "explanation": "Correct! There are 5 unknown reactions."
       },
-  
       {
-        instruction: `Using vertical equilibrium, find the reaction at <strong>A</strong>.
-                      <br><em>Hint: ΣF<sub>y</sub> = 0</em>`,
-        unit:        "kN",
-        answer:      8,
-        tolerance:   0.05,
-        explanation: `ΣF_y = 0 → R_A + R_B = 12 → R_A = 12 − 4 = <strong>8 kN</strong>`
+        "instruction": "What is the value of $m$?​",
+        "unit": "",
+        "answer": 3,
+        "tolerance": 0,
+        "explanation": "Correct! There are 3 members."
       },
-  
       {
-        instruction: `Calculate the bending moment at the point load
-                      (i.e. at <strong>x = 2 m</strong> from A).
-                      <br><em>Hint: consider only the forces to the left of the section.</em>`,
-        image:       "images/module-01_step3_cut.svg",  // optional per-step hint figure
-        unit:        "kNm",
-        answer:      16,
-        tolerance:   0.05,
-        explanation: `M(x=2) = R_A × 2 = 8 × 2 = <strong>16 kNm</strong>
-                      — this is also the peak of the bending moment diagram.`
+        "instruction": "What is the value of $j$?​",
+        "unit": "",
+        "answer": 4,
+        "tolerance": 0,
+        "explanation": "Correct! There are 4 joints."
+      },
+      {
+        "instruction": "What is the value of $c$?​",
+        "unit": "",
+        "answer": 0,
+        "tolerance": 0,
+        "explanation": "Correct! There are no internal hinges."
+      },
+      {
+        "instruction": "Therefore, what is the value of $D$?​",
+        "unit": "",
+        "answer": 2,
+        "tolerance": 0,
+        "explanation": "Correct! Since $D>0$, the beam is Stable, Indeterminate."
       }
- 
     ]
   },
 
-  
-  // CARDS:   Extra Info on Bending Moment
+  /*Slide 4*/
   {
-    type: "cards",
-    label: "Key Concepts",
-    title: "Key Concepts",
+    "type": "steps",
+    "label": "Review of Static Determinacy​",
+    "title": "Quiz 1 - Static Determinacy​",
 
-    intro: `<p>Here are three foundational concepts that underpin bending moment
-            analysis. <strong>Click each card</strong> to reveal its definition.</p>`,
+    "image": "images/Slide 4.png",
+    "imageWidth": "620px",
+    "imagePosition": "above",
 
-    cards: [
+    "problem": "<p>What if an internal hinge is introduced? What is the degree of indeterminacy?​​</p><p>Enter a number for each variable in the beams and frames equation below:</p><p>$D=r+3m-3j-c$</p>",
+    "steps": [
       {
-        front: "📐 Equilibrium",
-        back: "Sum of forces = 0 and sum of moments = 0"
+        "instruction": "What is the value of $r$?​",
+        "unit": "",
+        "answer": 5,
+        "tolerance": 0,
+        "explanation": "Correct! There are 5 unknown reactions."
       },
       {
-        front: "🧩 Free Body Diagrams",
-        back: "Used to isolate and understand forces in structures"
+        "instruction": "What is the value of $m$?​",
+        "unit": "",
+        "answer": 3,
+        "tolerance": 0,
+        "explanation": "Correct! There are 3 members."
       },
       {
-        front: "🏗️ Load Paths",
-        back: "Describes how forces travel through structures"
+        "instruction": "What is the value of $j$?​",
+        "unit": "",
+        "answer": 4,
+        "tolerance": 0,
+        "explanation": "Correct! There are 4 joints."
+      },
+      {
+        "instruction": "What is the value of $c$?​",
+        "unit": "",
+        "answer": 1,
+        "tolerance": 0,
+        "explanation": "Correct! There is 1 internal hinge."
+      },
+      {
+        "instruction": "Therefore, what is the value of $D$?​",
+        "unit": "",
+        "answer": 1,
+        "tolerance": 0,
+        "explanation": "Correct! Since $D>0$, the beam is Stable, Indeterminate."
       }
     ]
   },
 
+  /*Slide 5*/
+  {
+    "type": "steps",
+    "label": "Review of Static Determinacy​",
+    "title": "Quiz 1 - Static Determinacy​",
 
-  // MCQ SLIDE:   Quiz on max bending moment
+    "image": "images/Slide 5.png",
+    "imageWidth": "620px",
+    "imagePosition": "above",
+
+    "problem": "<p>What is the degree of indeterminacy of this Warren truss?​​</p><p>Enter a number for each variable in the truss equation below:</p><p>$D=r+m-2j$</p>",
+    "steps": [
+      {
+        "instruction": "What is the value of $r$?​",
+        "unit": "",
+        "answer": 3,
+        "tolerance": 0,
+        "explanation": "Correct! There are 3 unknown reactions."
+      },
+      {
+        "instruction": "What is the value of $m$?​",
+        "unit": "",
+        "answer": 11,
+        "tolerance": 0,
+        "explanation": "Correct! There are 11 members."
+      },
+      {
+        "instruction": "What is the value of $j$?​",
+        "unit": "",
+        "answer": 7,
+        "tolerance": 0,
+        "explanation": "Correct! There are 7 joints."
+      },
+      {
+        "instruction": "Therefore, what is the value of $D$?​",
+        "unit": "",
+        "answer": 0,
+        "tolerance": 0,
+        "explanation": "Correct! Since $D=0$, the truss is Stable, Determinate."
+      }
+    ]
+  },
+
+  /*Part 2*/
+  /*Slide 6*/
+  {
+    type:      "info",
+    partStart: "Reactions of Frames with an Internal Hinge​",
+    label:     "Reactions of Frames with an Internal Hinge​",
+    title:     "Reactions of Frames with an Internal Hinge​",
+
+    blocks: [
+      { type: "text",
+        html:`<p>Consider the following frame, the <strong><span style="color: #7030a0;">reactions</span></strong> and their <strong><span style="color: #e97132;">lines of action</span></strong> are overlayed.</p>
+              <p>There is an <strong><span style="color: #4ea72e;">internal hinge</span></strong> at C.​</p>
+          ` },
+      
+      { type: "image",
+        src:     "images/Slide 6.png",
+        width:   "600px",
+        caption: "Fig. 1" },
+    ]
+  },
+
+  /*Slide 7*/
+  {
+    type:      "info",
+    label:     "Reactions of Frames with an Internal Hinge​",
+    title:     "Reactions of Frames with an Internal Hinge​",
+
+    blocks: [
+      { type: "text",
+        html:`<p>There are 4 <strong><span style="color: #7030a0;">reactions</span></strong>. Notice how there is no location to take the moment equilibrium such that only 1 <strong><span style="color: #7030a0;">reaction</span></strong> is isolated (with non-zero lever arm)?​</p>
+          ` },
+      
+      { type: "image",
+        src:     "images/Slide 7.png",
+        width:   "600px",
+        caption: "Fig. 2" },
+    ]
+  },
+
+  /*Slide 8*/
+  {
+    type:      "info",
+    label:     "Reactions of Frames with an Internal Hinge​",
+    title:     "Reactions of Frames with an Internal Hinge​",
+
+    blocks: [
+      { type: "text",
+        html: `<p>We can split up this frame into two separate FBD’s based on the <strong><span style="color: #4ea72e;">internal hinge</span></strong>. Notice how the <strong><span style="color: #4ea72e;">internal hinge</span></strong> has <u>equal but opposite</u> reactions between the two FBD’s?​</p>
+        
+        <div style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 50px;
+        ">
+          <div>
+            <img
+              src="images/Slide 8 - 1.png" 
+              style="width: 80%;"
+              alt="Left-hand side"
+            />
+          </div>
+
+          <div>
+            <img
+              src="images/Slide 8 - 2.png" 
+              style="width: 100%;"
+              alt="Right-hand side"
+            />
+          </div>
+
+        </div>
+        
+        ` },
+    ]
+  },
+
+  /*Slide 9-11*/
   {
     type:  "mcq",
-    label: "Quiz: Max Bending Moment",
-    title: "Multiple Choice: Bending Moment",
-
-    question: `
-      <p>
-        A simply supported beam of span <strong>8 m</strong> carries a
-        <strong>uniformly distributed load of 10 kN/m</strong> over its entire length.
-      </p>
-      <p>What is the <strong>maximum bending moment</strong> in the beam?</p>
-    `,
-
-    options: [
-      { text: "40 kNm"  },
-      { text: "80 kNm",  correct: true },
-      { text: "160 kNm" },
-      { text: "320 kNm" }
-    ],
-
-    explanation: `M_max = wL² / 8 = 10 × 8² / 8 = <strong>80 kNm</strong>, occurring at midspan.`
-  },
-
-
-  // ── EXAMPLE: image-based MCQ (uncomment & supply SVGs to use) ──────────────
-  // {
-  //   type:  "mcq",
-  //   label: "Quiz: Identify the BMD",
-  //   title: "Which is the correct Bending Moment Diagram?",
-  //   image: "images/module-01_bmd_question.svg",   // the beam + loading shown above options
-  //   question: `<p>For the beam shown above, select the correct bending moment diagram.</p>`,
-  //   options: [
-  //     { image: "images/bmd_option_a.svg" },
-  //     { image: "images/bmd_option_b.svg", correct: true },
-  //     { image: "images/bmd_option_c.svg" },
-  //     { image: "images/bmd_option_d.svg" }
-  //   ],
-  //   explanation: `Option B is correct — the moment peaks under the point load and is zero at both pinned supports.`
-  // },
-
-    // EXAMPLE GEOGEBRA
-    {
-    type:  "embed",
-    label: "Interactive: Mohr's Circle",
-    title: "Drag the slider to transform the stresses",
-  
-    intro: `<p>Please wait a moment for the applet to load. Try rotating the element and observing how the values of stress change. When are the normal stresses maximum and minimum?</p>`,
-  
-    src:         "https://www.geogebra.org/material/iframe/id/xjmmtgqt/width/1203/height/768/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false",
-    aspectRatio: "16 / 10",          // optional — default is 16/9
-    maxWidth:    "820px",            // optional
-    caption:     "GeoGebra applet — interact directly above."
-  },
-
-  // EXAMPLE REVEAL
-  {
-    type:   "reveal",
-    label:  "Try it: Reaction at B",
-    title:  "Quick Check — Reaction at B",
-
-    // image:     "images/module-01_01.svg",   // optional figure above the prompt
-    // imageWidth:"480px",
-
-    prompt: `<p>For the beam from the worked example (6 m span, 12 kN load at 2 m
-             from A), have a go at finding the reaction at <strong>B</strong> on
-             paper. When you're ready, reveal the worked solution to check your
-             method.</p>`,
-
-    buttonText: "Show solution",     // optional (default "Show solution")
-    hideText:   "Hide solution",     // optional (default "Hide solution")
-
-    answer: `<p><strong>Taking moments about A (ΣM<sub>A</sub> = 0):</strong></p>
-             <p>R<sub>B</sub> × 6 = 12 × 2 = 24</p>
-             <p>R<sub>B</sub> = 24 ÷ 6 = <strong>4 kN</strong></p>`
-  },
-
-  // EXAMPLE HOTSPOT
-  {
-    type:  "hotspot",
-    label: "Find the Maximum Moment",
-    title: "Where is the Bending Moment greatest?",
-  
-    prompt: `<p>Click the point on the beam where the <strong>bending moment is
-            maximum</strong>.</p>`,
-  
-    image:    "images/module-01_01.svg",
-    maxWidth: "700px",               // optional
-  
-    hotspots: [
-      { x: 10, y: 40, w: 12, h: 20 },                 // a wrong region
-      { x: 44, y: 35, w: 14, h: 28, correct: true },  // the correct region
-      { x: 78, y: 40, w: 12, h: 20 }                  // another wrong region
-    ],
-  
-    explanation: `The maximum bending moment occurs under the point load, where
-                  the shear force passes through zero.`
-  },
-
-  /* ============================================================================
-   QUIZ ("Test Your Knowledge") — a multi-question sub-sequence in one slide.
-
-   Appears ONCE in the sidebar. Internally runs: intro → N questions → results.
-   - One attempt per question; advances on answer (right or wrong).
-   - Results page shows score, a review table, and a Retry button.
-   - Completing it (reaching results) gates the module, regardless of score.
-
-   Each question has a "kind": "mcq" or "input".
-     mcq   → options array, one with correct:true (same shape as the mcq slide)
-     input → numeric answer + tolerance + optional unit (like a Worked Example step)
-
-   Any question may include an optional image / imageWidth (shown above it).
-   ============================================================================ */
-
-  {
-    type:  "quiz",
-    label: "Test Your Knowledge",
-    title: "Test Your Knowledge",
-
-    intro:     "Answer the following questions to complete the module. You have one attempt per question, but you can retry the whole quiz as many times as you like.",
-    startText: "Start Quiz",          // optional (default "Start Quiz")
+    label: "Quiz 2 – Support Reactions​",
+    title: "Quiz 2 – Support Reactions​",
 
     questions: [
-
-      // ── An MCQ question ──
       {
-        kind:     "mcq",
-        question: `<p>The maximum bending moment in a simply supported beam under a
-                  central point load <strong>P</strong> over span <strong>L</strong> is:</p>`,
+        question: `<p>Focusing on the left-hand side FBD first… Which location should we take the moment equilibrium?​</p>`,
+        image: "images/Slide 9.png",
+        imageWidth: "400px",
         options: [
-          { text: "PL / 2" },
-          { text: "PL / 4", correct: true },
-          { text: "PL / 8" },
-          { text: "PL" }
-        ]
+          { text: "$$+↻&Sigma;M_A=0$$... to get an expression for $C_x$ and $C_y$", correct: true },
+          { text: "$$+↻&Sigma;M_C=0$$... to get an expression for $A_x$ and $A_y$" }
+        ],
+        explanation: `$+↻&Sigma;M_A=0=-600(0.75)-C_y(1.5\\cos60)+C_x(1.5\\sin60)\\\\$
+                      Solve for $C_x:\\\\$
+                      $C_x=\\frac{450+1.5\\cos60C_y}{1.5\\sin60}$ Eqn. (1)`
       },
-
-      // ── An input (numeric) question ──
       {
-        kind:      "input",
-        question:  `<p>A simply supported beam of span <strong>4 m</strong> carries a
-                    UDL of <strong>6 kN/m</strong>. What is the maximum bending
-                    moment (in kNm)?</p>
-                    <p><em>Recall M<sub>max</sub> = wL²/8</em></p>`,
-        answer:    12,
-        tolerance: 0.1,
-        unit:      "kNm"
-      },
-
-      // ── An image-based MCQ question ──
-      {
-        kind:     "mcq",
-        // image:    "images/some-diagram.svg",   // optional figure above the question
-        question: `<p>Which support condition provides a reaction moment?</p>`,
+        question: `<p>Now, focusing on the right-hand side FBD…​ Which location should we take the moment equilibrium?​</p>`,
+        image: "images/Slide 10.png",
+        imageWidth: "400px",
         options: [
-          { text: "Pin" },
-          { text: "Roller" },
-          { text: "Fixed", correct: true }
-        ]
-      }
-
+          { text: "$$+↻&Sigma;M_B=0$$... to get an expression for $C_x$ and $C_y$", correct: true },
+          { text: "$$+↻&Sigma;M_C=0$$... to get an expression for $B_x$ and $B_y$" }
+        ],
+        explanation: `$+↻&Sigma;M_B=0=-C_x(1)-C_y(1)+500(1)\\\\$
+                      Solve for $C_x:\\\\$
+                      $C_x=-C_y+500$ Eqn. (2)`
+      },
+      {
+        question: `<p>From the LHS of C, we determined the following equation:​​</p>
+                   <p>$C_x=\\frac{450+1.5\\cos60C_y}{1.5\\sin60}$ Eqn. (1)</p>
+                   <p>From the RHS of C, we determined the following equation:</p>
+                   <p>$C_x=-C_y+500$ Eqn. (2)</p>
+                   <p>By equating Eqn. (1) and (2) we can solve for $C_x$ and $C_y$</p>
+                   <p>What are the values of these hinge equations?</p>`,
+        image: "images/Slide 11.png",
+        imageWidth: "400px",
+        options: [
+          { text: "$C_y=97.4$ N;$\\\\$ $C_x=402.6$ N", correct: true },
+          { text: "$C_y=202.6$ N;$\\\\$ $C_x=107.4$ N" },
+          { text: "$C_y=304.7$ N;$\\\\$ $C_x=117.4$ N" }
+        ],
+        explanation: `Correct!`
+      },
     ]
   },
 
+  /*Slide 12*/
+  {
+    type:  "cloze",
+    label: "Quiz 2 – Support Reactions",
+    title: "Quiz 2 – Support Reactions",
 
-  // FINAL SLIDE:   Module completion
+    intro: `<p>In the previous step, we solved the unknown reactions at the internal hinge.</p>
+            <p>Now the remainder of the reaction can be solved:</p>
+            <p>Match the correct reactions into the lines of working out:</p>`,
+
+    text: `<p>$\\uparrow+\\Sigma F_y=0=A_y-97.4-600\\sin30$</p>
+           <p>$A_y=$[[$397.4$ N]]</p>
+           <p>$\\rightarrow+\\Sigma F_x=0=A_x-402.6+600\\cos30$</p>
+           <p>$A_x=$[[$-117$ N]]</p>
+           <p>$\\uparrow+\\Sigma F_y=0=B_y+97.4$</p>
+           <p>$B_y=$[[$-97.4$ N]]</p>
+           <p>$\\rightarrow+\\Sigma F_x=0=B_x+402.6-500$</p>
+           <p>$B_x=$[[$97.4$ N]]</p>`,
+
+    image:         "images/Slide 12.png",
+    imagePosition: "right",           // or "below" to stack it under the text
+    imageWidth:    "200px",
+
+    explanation: `Correct!`
+  },
+
+  /*CLOSING SLIDE (22)*/
   {
     type:         "final",
     label:        "Module Complete",
     title:        "Well done!",
-    subtitle:     "You've completed the Bending Moments module.",
+    subtitle:     "You've completed this module.",
     buttonText:   "Save and Close",
     showRating:   true,
+    showFeedback: true,
     bugReportUrl: "https://forms.office.com/your-bug-report-form"
   }
-
 
 ];

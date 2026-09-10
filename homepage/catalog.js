@@ -96,8 +96,7 @@ const CATALOG = {
 
     { id: "module-07-internal-hinges", folder: "module-07",
       title: "Handling Internal Hinges",     
-      category: "statics", order: 7,
-      status: "coming-soon"},     
+      category: "statics", order: 7},     
 
     { id: "module-10-cross-section",   folder: "module-10",
       title: "Cross Section Properties", 
