@@ -69,6 +69,9 @@ const moduleData = [
       { text: "34 kNm" }
     ],
 
+    hint: `Cut the beam at $D$, revealing the internal bending moment. Take moments about the cut to solve for the internal moment.`,
+    hintCollapsed: true,
+
     explanation: `<p>Take a cut at point D, and use equilibrium on either the left section or right section.</p>
     <p> On the left:</p>
     <p> $\\Sigma M_{cut} = 0 = M_D + (2 \\times 3 \\times 3/2) + (15 \\times 6) - 14.5 \\times 8, \\qquad \\therefore M_D = 17\\ \\mathrm{kNm}$</p>
@@ -135,9 +138,9 @@ const moduleData = [
       { x: 97, y: 20, w: 2, h: 2 }                  // another wrong region
     ],
   
-    explanation: `<p><strong> Using $M = dV / dx$, the maximum bending moment occurs where
+    explanation: `<p><strong> A maximum/minimum point occurs where the derivative is zero. Since $M = dV / dx$, maximum bending moment occurs where
                   the shear force diagram passes through zero. </strong></p>
-                  <p><strong>Using V(x) = 0, we can then solve for the location of this maximum moment.</strong></p>`
+                  <p><strong>Using $V(x) = 0$, we could then solve for $x$ to get the location of this maximum moment.</strong></p>`
   },
   
 
@@ -172,8 +175,8 @@ const moduleData = [
       },
       {
         type: "text",
-        html: `<p>For a horizontal (beam) member, this means <strong>plotting positive bending moments downwards, when assuming positive bending moments cause elements to bend concave up</strong></p>
-        <p> Extra thought is required determining the tension side of a frame.</p>`
+        html: `<p>For a horizontal (beam) member, this means <strong>plotting positive bending moments downwards</strong> (when assuming positive bending moments cause elements to bend concave up, as shown below)</p>
+        <p> Extra thought is required determining the tension side of a frame. <strong>Please watch the video on the next page for more information.</strong></p>`
       },
       {
         type: "image",
@@ -183,6 +186,15 @@ const moduleData = [
         caption:  "Fig. 2 - Typically positive sign convention for internal bending moment."
       },
     ]
+  },
+
+  {type: "embed",
+    label: "Video Explanation",
+    title: "Explained: Drawing on the tension side",
+    intro: "<strong>Please wait a moment for this video to load.</strong>. This video is <u>optional</u> to watch. Feel free to continue with the module",
+
+    src:"https://www.loom.com/embed/09e94bf82fa847298a55aeb54d8a46d3",
+    caption: "Dr Daniel O'Shea, UNSW Sydney"
   },
 
   //  EXAMPLE: image-based MCQ (uncomment & supply SVGs to use) ──────────────
@@ -213,13 +225,16 @@ const moduleData = [
     blocks: [
       {
         type: "text",
-        html: `<p>There are two main ways to draw a BMD. The first is to determine the bending moment function $M(x)$ for ranges of $x$ that divide different members or where loading type changes. These functions can then be plotted to form the BMD.</p>
-        <p> For the beam below, we would need to find bending moment functions for the ranges</p>
-        <ul>
-        <li> A to B </li>
-        <li> B to C (function changes after B since point load is introduced)</li>
-        <li> C to D (function changes after C since UDL is introduced)</li>
-        <li> C to E (function changes after D since UDL finishes)</li>`
+        html: `<p>There are two main ways to draw a BMD. The first is the <strong>algebraic approach</strong></p>
+        <p> Here, using section cuts and equilibrium, we algebraically determine the bending moment function $M(x)$ for various ranges of $x$. These ranges are wherever a member changes or the loading changes. These functions can then be plotted to form the BMD.</p>`},
+      {type: "text",
+        html:`<p> For the beam below, we would need to find bending moment functions for the ranges</p>
+        <ol>
+        <li> <strong>A to B</strong> </li>
+        <li> <strong>B to C </strong>&emsp; (the function $M(x)$ changes after B, since the point load is introduced)</li>
+        <li> <strong>C to D </strong>&emsp; (the function $M(x)$ changes after C, since UDL is introduced)</li>
+        <li> <strong>D to E </strong>&emsp; (the function $M(x)$ changes after D, since UDL finishes)</li>
+        </ol>`
       },
       
       {
@@ -261,20 +276,22 @@ const moduleData = [
   
       {
         instruction: `Taking moments about <strong>A</strong>, find the vertical
-                      reaction at <strong>E</strong>.
-                      <br><em>Hint: ΣM<sub>A</sub> = 0</em>`,
+                      reaction at <strong>E</strong>.`,
         unit:        "kN",
         answer:      10.2,
         tolerance:   0.05,
+        hint: `Use $\\Sigma M_A  = 0$`,
+        hintCollapsed: true,
         explanation: `$\\Sigma\ M_A = 0,\\qquad \\therefore \ \ R_E \\times 10 = 12 \\times 2 + 4 \\times 3 \\times (5 + 3/2),\\qquad  \\therefore \ \ R_B = 10.2$ kN`
       },
   
       {
-        instruction: `Using vertical equilibrium, find the vertical reaction at <strong>A</strong>.
-                      <br><em>Hint: ΣF<sub>y</sub> = 0</em>`,
+        instruction: `Using vertical equilibrium, find the vertical reaction at <strong>A</strong>.`,
         unit:        "kN",
         answer:      13.8,
         tolerance:   0.05,
+        hint: `Use $\\Sigma F_y  = 0$`,
+        hintCollapsed: true,
         explanation: `$\\Sigma\ F_y = 0, \\qquad \\therefore \ \ R_A + R_B = 12 + 4 \\times 3, \\qquad \\therefore \ \  R_A = 13.8$ kN`
       },
   
@@ -285,6 +302,8 @@ const moduleData = [
         unit:        "kNm",
         answer:      27.6,
         tolerance:   0.05,
+        hint: `We know that $R_A = 10.2\\text{ kN}$. Substitute $x = 2$ to the function shown for the location at $B$.`,
+        hintCollapsed: true,
         explanation: `$M(x=2) = R_A \\times 2 = 27.6$ kNm.`
       },
 
@@ -295,6 +314,8 @@ const moduleData = [
         unit:        "kNm",
         answer:      33,
         tolerance:   0.05,
+        hint: `We know that $R_A = 10.2\\text{ kN}$. Substitute $x$ for the location of $C$ into the function shown.`,
+        hintCollapsed: true,
         explanation: `$M(x=5) = R_A \\times 2 - P \\times (5 - 2) = 33$ kNm.`
       },
 
@@ -305,6 +326,8 @@ const moduleData = [
         unit:        "kNm",
         answer:      20.4,
         tolerance:   0.05,
+        hint: `We know that $R_A = 10.2\\text{ kN}$. Substitute $x$ for the location of $D$ into the function shown.`,
+        hintCollapsed: true,
         explanation: `$M(x=8) = R_A \\times 2  - P \\times (8 - 2) - 3 \\times (8 - 5)^2 / 2 = 20.4$ kNm`
       },
 
@@ -318,6 +341,25 @@ const moduleData = [
         explanation: `$M(x=10) = R_A \\times 2  - P \\times (10 - 2) - 3 \\times 4 \\times (10 - 9 + 3/2) = 0 $ kNm — this is expected at an external roller support.`
       }
  
+    ]
+  },
+
+  {type: "info",
+    label: "Worked Example: Complete",
+    requires: true,
+    title: "Plotting the functions",
+
+    blocks: [
+      {type: "text",
+        html:`Now that the functions have been determined, they can be plotted on the tension side of the beam to draw the BMD.</p>
+        <p><ol><li><strong>First plot the magnitudes at the critical locations as calculted in the previous step</strong></li>
+        <li><strong>Then, sketch in the curve between points based on the order of the polynomial (e.g. constant, linear, parabolic, cubic...)</li></ol></p>`
+      },
+      {type: "image",
+        src: "images/module-04-beam-bm.svg",
+        width: "700px",
+        caption: "Fig. 1 - BMD drawn on the tension side for Worked Example on previous page."
+      }
     ]
   },
 
@@ -345,29 +387,29 @@ const moduleData = [
       },     
       {
         type: "image",
-        src: "images/sfd-bmd-01.svg",
+        src: "images/beam-V-M.png",
         width:  "1200px",
         alt:  "Beam, SFD, BMD",
-        caption:  "Fig. 1 - An example beam, SFD and BMD",
+        caption:  "Fig. 1 - An example beam, SFD and BMD (Pearson Education, 2024)",
       },
       {
         type: "text",
-        html: `<p>First, draw the axes for the SFD and BMD. Then commencing at $V = 0$ at an external point of the structure, follow the current rules:<\p>
+        html: `<p><strong>Drawing the SFD</strong>&emps; First, draw the axes. Then commencing at $V = 0$ at an external point of the structure, follow the current rules:<\p>
         <ol>
-        <li>Progress along a member, where at a point $x$ the slope is equal to the value of any distributed load at same $x$</li>
+        <li>Along a member, at a point $x$ the <strong>slope of V</strong> is equal to the <strong>value of any distributed load</strong> at same $x$</li>
         <li>At a point force, 'Jump' in the direction of the point force on the SFD.</li>
-        <li>Point moments have no effect on the SFD.</li>
-        <li>The difference in value between any two points on the SFD is equal to the area beneath the distrubted load spanning those points.</li>
+        <li>Point moments have no effect on the SFD. They can be ignored</li>
+        <li>The difference in value between any two points on the SFD is equal to the area beneath the distributed load spanning those points.</li>
         </ol>`
       },
       
       {
         type: "text",
-        html: `<p>Next, commencing at $M = 0$ at an external point of the structure, follow the current rules:<\p>
+        html: `<p><strong>Drawing the BMD</strong>&emps; First, draw the axes. Then commencing at $M = 0$ at an external point of the structure, follow the current rules:<\p>
         <ol>
-        <li>Progress along a member, where at a point $x$ the slope is equal to the value of any SFD at same $x$</li>
-        <li>At a point moment, 'Jump' on the BMD hat magnitude.</li>
-        <li>Point forces have no effect on the BMD.</li>
+        <li>Along a member, at a point $x$ the <strong>slope of M</strong> is equal to the <strong>value of the SFD</strong> at same $x$</li>
+        <li>At a point moment, 'Jump' on the BMD with that magnitude.</li>
+        <li>Point forces have no effect on the BMD. They can be ignored</li>
         <li>The difference in value between any two points on the BMD is equal to the area beneath the SFD spanning those points.</li>
         </ol>`
       },
@@ -389,23 +431,23 @@ const moduleData = [
   imageWidth: "720px",
   hotspots: [
     { x: 15, y: 42, marker: "A", title: "Shear Force",
-      content: `<p>Discontinuity in SFD equal to magnitude of point force (reaction at A)</p>` },
+      content: `<p>'Jump' in SFD equal to magnitude of point force (reaction at A = 13.8 kN)</p>` },
     { x: 32, y: 38, marker: "B", title: "Shear Force",
-      content: `<p>Shear force remains constant until point B, since distributed load is zero.</p>` },
+      content: `<p>Shear force remains constant until point B, since the distributed load is zero between A and B.</p>` },
     { x: 30, y: 50, marker: "C", title: "Shear Force",
-      content: `<p>Discontinuity in SFD equal to magnitude of point force $P$</p>` },
+      content: `<p>'Jump' in SFD equal to magnitude of point force $P$. Shear is 13.8 kN - 12 kN = 1.8 kN.</p>` },
     { x: 48, y: 50, marker: "D", title: "Shear Force",
-      content: `<p>Shear force remains constant B to C, since distributed load is zero.</p>` },
+      content: `<p>Shear force remains constant B to C, since distributed load is zero between B and C.</p>` },
     { x: 66, y: 56, marker: "E", title: "Shear Force",
       content: `<p>Shear force decreases linearly C to D, since distributed load is <strong>constant and negative</strong>.</p>
       <p>The value is determined by: </p>
-      <p> $V_D = V_C + \\int_{x_C}^{x_D} w(x) dx = 1.8 -$ [Area beneath UDL] $= 1.8 - (4 \\times 3) = -10.2$ <strong> kN</strong>` },
+      <p> $V_D = V_C + \\int_{x_C}^{x_D} w(x) dx = 1.8 - \\text{(Area beneath UDL)} = 1.8 - (4 \\times 3) = -10.2$ <strong> kN</strong>` },
     { x: 90, y: 58, marker: "F", title: "Shear Force",
-      content: `<p>Shear force remains constant E to F, since distributed load is zero.</p>
+      content: `<p>Shear force remains constant E to F, since distributed load is zero between E and F.</p>
       <p>The SFD has a discontinnuous jump equal to the magnitude of the point force at E (reaction), returning to zero as expected.</p>` },
 
     { x: 15, y: 80, marker: "G", title: "Bending Moment",
-      content: `<p>The BMD starts at zero, and is njot affected by the point force at A.</p>` },  
+      content: `<p>The BMD starts at zero, and is not affected by the point force at A.</p>` },  
     { x: 30, y: 85, marker: "H", title: "Bending Moment",
       content: `<p>The BMD increases linearly (notice downwards is positive) between A and B since SFD is <strong>constant and positive</strong>.</p>
       <p>The value at B is determined by: </p>
@@ -413,15 +455,15 @@ const moduleData = [
     { x: 48, y: 88, marker: "I", title: "Bending Moment",
       content: `<p>The BMD increases linearly (notice downwards is positive) between B and C since SFD is <strong>constant and positive, though smaller than it was between A and B</strong>.</p>
       <p>The value at C is determined by: </p>
-      <p> $M_C = M_B + \\int_{x_B}^{x_C} V(x) dx = 27.6 + $ [Area beneath SFD] $= 27.6 + (1.8 \\times 3) = 33$ <strong> kNm</strong>` },
+      <p> $M_C = M_B + \\int_{x_B}^{x_C} V(x) dx = 27.6 + \\text{(Area beneath SFD)} = 27.6 + (1.8 \\times 3) = 33$ <strong> kNm</strong>` },
     { x: 68, y: 85, marker: "J", title: "Bending Moment",
       content: `<p>The BMD is quadratic between C and D with slope initally positive, then gradually getting more and more negative, due to the linear SFD.</p>
       <p>The value at D is determined by: </p>
-      <p> $M_D = M_C + \\int_{x_C}^{x_D} V(x) dx = 33 + $ [Area beneath SFD] $= 27.6 + (1/2 \\times (1.8-10.2) \\times 3) = 20.4$ <strong> kNm</strong>` },
+      <p> $M_D = M_C + \\int_{x_C}^{x_D} V(x) dx = 33 + \\text{(Area beneath SFD)} = 27.6 + (1/2 \\times (1.8-10.2) \\times 3) = 20.4$ <strong> kNm</strong>` },
     { x: 90, y: 80, marker: "K", title: "Bending Moment",
       content: `<p>The BMD is linear decreasing between D and E, since the SFD is constant and negative.</p>
       <p>The value at E is determined by: </p>
-      <p> $M_E = M_D + \\int_{x_D}^{x_E} V(x) dx = 20.4 + $ [Area beneath SFD] $= 20.4 + (-10.2 \\times 2) = 0$ <strong> kNm</strong></p>
+      <p> $M_E = M_D + \\int_{x_D}^{x_E} V(x) dx = 20.4 + \\text{(Area beneath SFD)} = 20.4 + (-10.2 \\times 2) = 0$ <strong> kNm</strong></p>
       <p>... returning to zero as expected.</p>` },
   ]
 },
