@@ -91,7 +91,7 @@ const moduleData = [
   {
     type:      "info",
     label:     "Newton's 3rd Law",
-    title:     "Newton’s Laws of Motion​",
+    title:     "Newton’s Third Law of Motion​",
 
     blocks: [
       { type: "text",
@@ -119,12 +119,13 @@ const moduleData = [
   /*Slide 5*/
   {
     type:      "info",
-    label:     "Equations of Equilibrium",
-    title:     "Equations of Equilibrium",
+    label:     "Newton's 1st Law",
+    title:     "Newton's First Law of Motion",
 
     blocks: [
       { type: "text",
-        html: `<p>In structural engineering, we desire structures that are in static equilibrium. Therefore, there is <strong>no resultant force or moment acting on the structure</strong>:</p>`
+        html: `<p>This brings us to Newton's First Law of Motion, the law of inertia also known as the <strong>law of static equilibrium</strong>.</p>
+        <p>In structural engineering, we desire structures that are in static equilibrium. Therefore, there is <strong>no resultant force or moment acting on the structure</strong>:</p>`
       },
       {type: "equation",
       latex: String.raw`\Sigma \mathbf{F} = \mathbf{0}, \qquad\qquad \Sigma \mathbf{M} = \mathbf{0}`},
@@ -176,7 +177,7 @@ const moduleData = [
     type:      "info",
     partStart: "Equilibrium of Bending Moments​",
     label:     "Bending Moments",
-    title:     "Bending Moment: Line of Action & Lever Arm​",
+    title:     "Bending Moment​",
 
     blocks: [
       { type: "text",
@@ -210,11 +211,11 @@ const moduleData = [
   {
     type:      "info",
     label:     "Line of Action & Lever Arm​",
-    title:     "Bending Moment: Line of Action & Lever Arm​",
+    title:     "Line of Action & Lever Arm​",
 
     blocks: [
       { type: "text",
-        html: `<p>All forces have a <strong><span style="color: #e97132;">line of action</span></strong>. The line of action of a is an infinite line extending along the direction of the vector.​</p>
+        html: `<p>All forces have a <strong><span style="color: #e97132;">line of action</span></strong>. The line of action of a force is an infinite line extending along the direction of the vector.​</p>
                <p>The <strong>perpendicular distance from the reference point to the line of action of a force</strong> is called the <strong><span style="color: #196b24;">lever arm</span></strong>.</p>
                <p>The moment generated about the reference point is the magnitude of the force multiplied by its lever arm distance</p>
         ` },
@@ -253,7 +254,9 @@ const moduleData = [
         "unit": "Newtons",
         "answer": 1200,
         "tolerance": 0,
-        "explanation": "Correct!"
+        "explanation": "Correct!",
+        "hint": `Read the figure carefully. Make sure you use correct units.`,
+        "hintCollapsed": true,
       },
       {
         "instruction": "In the above equation, what is the value that replaces $\\text{lever arm}$?​",
@@ -264,10 +267,12 @@ const moduleData = [
       },
       {
         "instruction": "Therefore, what is the value of the moment reaction $M_A$?​",
-        "unit": "Newton metres",
+        "unit": "Nm",
         "answer": 2400,
         "tolerance": 0,
-        "explanation": "Correct!"
+        "explanation": "Correct!",
+        "hint": `Make sure you use correct units of Nm.`,
+        "hintCollapsed": true,
       }
     ]
   },
@@ -300,13 +305,13 @@ const moduleData = [
     title: "Equilibrium: Overturning​",
 
     intro: `<p>
-            The ladder below has a self-weight $W$ acting through its centre of mass. When placed aginst contact points A and B, this force prevents it from moving. The force $P$ is disturbing it, potentially causing it to rotate about point A.</p>
+            The ladder below has a self-weight $W$ acting through its centre of mass. When placed against contact points A and B, this force prevents it from moving. The force $P$ is disturbing it, potentially causing it to rotate about point A.</p>
             <p>Select the resultant quantities below that would define the <strong>disturbing moment</strong> and the <strong>resisting moment</strong>.
             </p>`,
 
     text: `<p>(1) We can use [[$↻&Sigma;M_A$]] ...to find <strong>the disturbing moment.</strong></p>
            <p>(2) We can use [[$↺&Sigma;M_A$]] ...to find <strong>the resisting moment.</strong></p>\
-           <p>If <strong>disturbing moment $=$ resisting moment</strong>, then system is in equilibrium.</p>
+           <p>If <strong>disturbing moment $\\leq$ resisting moment</strong>, then system is in equilibrium.</p>
            <p>If <strong>disturbing moment $>$ resisting moment</strong>, then overturning will occur.</p>`,
 
     // Extra words that fit nowhere — students must discriminate
@@ -328,7 +333,7 @@ const moduleData = [
 
     blocks: [
     { type: "text",
-      html: `<p><strong>If a structure is in equilibrium, then any section of that structure is also in equilibrium</strong></p>`},
+      html: `<p><strong>If a structure is in equilibrium, then any section of that structure is also in equilibrium</strong>.</p>`},
     /* {type: "text",
         html:`<p><p>
       <p>However, we could also draw a FBD that considers <strong>only sections of some bodies</strong>. This sub-structure must also be in equilibrium. Therefore, at the <strong>sections (cuts)</strong>
@@ -393,7 +398,7 @@ const moduleData = [
   },
   {type: "info",
     label: "Sign Convention",
-    title: "Sign Convetion of Internal Actions",
+    title: "Sign Convention of Internal Actions",
 
     blocks: [
        {type: "columns",
@@ -401,8 +406,9 @@ const moduleData = [
         columns: [
           [{type: "text",
           html: `<p>By Newton's 3rd law, at either side of a section the internal actions must be <strong>equal in magnitude</strong> and <strong>opposite in direction</strong>.</p>
+          <p>Consider a segment of a beam, that exposes the equal and opposite internal actions on either side:</p>
           <ul><li>We assume a positive <strong>axial force</strong> $N$ is in tension, i.e. pointing away from the face</li>
-          <li>We assume a positive <strong>shear force</strong> $V$ causes a segment to rotate clockwise</li>
+          <li>We assume a positive <strong>shear force</strong> $V$ causes a segment to rotate clockwise, i.e. acting downwards left of a cut, upwards right of a cut</li>
           <li>We assume a positive <strong>bending moment</strong> $M$ causes a segment to bend concave up</li></ul>`},
         ],
           [{ type: "image",

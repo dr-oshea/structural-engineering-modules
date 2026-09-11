@@ -32,7 +32,7 @@ const moduleData = [
     type:      "cards",
     partStart: "Types of Supports",
     label:     "Three main types",
-    title:     "Recap – The Three main reaction Types",
+    title:     "Recap – The Three main reaction types",
     intro: `<p>There are three main types of supports used in structural analysis. Each can be replaced by a set of reaction forces and moment, depending on the motions which they restrict​.</p>
     <p><strong>Reaction forces prevent translational displacements</strong> from occurring at a point.</p> 
     <p><strong>Moment reactions prevent rotational displacements</strong> from occurring at a point.</p>`,
@@ -42,6 +42,34 @@ const moduleData = [
     { front: "Pin Support", back: "Two reactions. One vertical force, one horizontal force." },
     { front: "Fixed Support", back: "Three reactions. One vertical force, one horizontal force and one moment." }
   ]
+  },
+
+  {
+    type:      "info",
+    partStart: "Types of Supports",
+    label:     "Three main types",
+    title:     "Recap – The Three main reaction types",
+
+    blocks: [
+      {type: "text",
+        html: `<p>There are three main types of supports used in structural analysis. Each can be replaced by a set of reaction forces and moment, depending on the motions which they restrict​.</p>
+    <p><strong>Reaction forces prevent translational displacements</strong> from occurring at a point.</p> 
+    <p><strong>Moment reactions prevent rotational displacements</strong> from occurring at a point.</p>`
+      },
+      {type: "columns", widths: [30, 30, 30], columns: [
+        [{type: "text", html: `<p><strong>Roller Support</strong></p><p>One reaction​ force (Perpendicular to surface)</p>`},
+          {type: "image", src: "images/roller-support.png", width: "220px"},
+        ],
+        [{type: "text", html: `<p><strong>Pin Support</strong></p><p>Two reactions. One vertical force, one horizontal force.</p>`},
+          {type: "image", src: "images/pin-support.png", width: "200px"},
+          
+        ],
+        [{type: "text", html: `<p><strong>Fixed Support</strong></p><p>Three reactions. Vertical and horizontal forces and a moment.</p>`},
+          {type: "image", src: "images/fixed-support.png", width: "200px"},
+          
+        ],
+      ]},
+    ],
   },
 
   /*Slide 4*/
@@ -72,14 +100,14 @@ const moduleData = [
   /*Slide 5*/
   {
     type:      "info",
-    partStart: "Calculating Reactions?",
+    partStart: "Calculating Reactions",
     label:     "Why Calculate Reactions",
     title:     "Why Calculate Reactions",
 
     blocks: [
       { type: "text",
         html:`<p>Support reactions allow engineers to determine how external loads are transferred from a structure to its supports.</p>
-        <p>different structural members can be supported by others, forming a <strong>load path</strong>, as seen below.</p>
+        <p>Different structural members can be supported by others, forming a <strong>load path</strong>, as seen below.</p>
           ` },
       
       { type: "image",
@@ -151,7 +179,7 @@ const moduleData = [
         unit: "kN",
         answer: -1.8,
         tolerance: 0,
-        explanation: `$\\curvearrowleft \\Sigma M_A = 5\\mathrm{m} \\times V_a + 3 \\mathrm{kN} \times 3 \mathrm{m} = 0$`
+        explanation: `$\\curvearrowleft \\Sigma M_A = 5\\mathrm{m} \\times V_a + 3 \\mathrm{kN} \\times 3 \\mathrm{m} = 0$`
       },
       { instruction: `Finally, use equilibrium of vertical forces to find $V_a$. Use negative if it acts in the opposite direction as shown.`,
         unit: "kN",
