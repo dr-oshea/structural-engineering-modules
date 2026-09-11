@@ -38,7 +38,7 @@ const moduleData = [
     blocks: [
       { type: "text",
         html: `<p>We solve for any unkown internal and external forces acting on our structure using equations of equilibrium. Equilibrium provides us with a finite number of equations that can be used.
-        Therefore, it is important to compare the number of unknowns to be solvd with the number of equations available to us</p>
+        Therefore, it is important to compare the number of unknowns to be solved with the number of equations available to us</p>
         <p>This is called the <strong>static determinancy</strong> of the structure. </p>
         <p>Whether a structure is unstable (will fall over), statically determinant (stable and solvable using only equilibrium equations) 
         or statically indeterminant (stable but unsolvable using equilibrium equations) depends on the following expressions:​</p>`
@@ -132,28 +132,28 @@ const moduleData = [
     "problem": "<p><strong>What if an internal hinge is introduced? What is the degree of indeterminacy?​​</strong></p><p>Enter a number for each variable in the beams and frames equation below:</p><p>$D=r+3m-3j-c$</p>",
     "steps": [
       {
-        "instruction": "What is the value of $r$?​",
+        "instruction": "What is the value of $r$ (number of unknown reactions)​",
         "unit": "",
         "answer": 5,
         "tolerance": 0,
         "explanation": "Correct! There are 5 unknown reactions."
       },
       {
-        "instruction": "What is the value of $m$?​",
+        "instruction": "What is the value of $m$?​ (number of members)​",
         "unit": "",
         "answer": 3,
         "tolerance": 0,
         "explanation": "Correct! There are 3 members."
       },
       {
-        "instruction": "What is the value of $j$?​",
+        "instruction": "What is the value of $j$? (number of joints)​",
         "unit": "",
         "answer": 4,
         "tolerance": 0,
         "explanation": "Correct! There are 4 joints."
       },
       {
-        "instruction": "What is the value of $c$?​",
+        "instruction": "What is the value of $c$?​ (number of hinges)​",
         "unit": "",
         "answer": 1,
         "tolerance": 0,
@@ -179,24 +179,24 @@ const moduleData = [
     "imageWidth": "620px",
     "imagePosition": "above",
 
-    "problem": "<p><strong>What is the degree of indeterminacy of this Warren truss?​​M/strong></p><p>Enter a number for each variable in the truss determinacy equation below:</p><p>$D=r+m-2j$</p>",
+    "problem": "<p><strong>What is the degree of indeterminacy of this Warren truss?​​</strong></p><p>Enter a number for each variable in the truss determinacy equation below:</p><p>$D=r+m-2j$</p>",
     "steps": [
       {
-        "instruction": "What is the value of $r$?​",
+        "instruction": "What is the value of $r$ (number of unknown reactions)​",
         "unit": "",
         "answer": 3,
         "tolerance": 0,
         "explanation": "Correct! There are 3 unknown reactions."
       },
       {
-        "instruction": "What is the value of $m$?​",
+        "instruction": "What is the value of $m$?​ (number of members)​",
         "unit": "",
         "answer": 11,
         "tolerance": 0,
         "explanation": "Correct! There are 11 members."
       },
       {
-        "instruction": "What is the value of $j$?​",
+        "instruction": "What is the value of $j$ (number of joints)?​",
         "unit": "",
         "answer": 7,
         "tolerance": 0,
@@ -223,7 +223,7 @@ const moduleData = [
     blocks: [
       {type: "text",
         html:`An internal hinge is a connection between two beam members that allows rotation at the joint. The relative position of the two connecting members is of interest.</p>
-        <p>Though the joint itself can move in space, the two members cannot translate horizontally or vertically away from eachother. At the hinge, each member must push/pull the other to remain connected.</p>
+        <p>Though the joint itself can move in space, the two members cannot translate horizontally or vertically away from each other. At the hinge, each member must therefore push/pull the other to remain connected.</p>
         <p>However, the orientation of each member can change relative to the other freely at the hinge. There is no moment preventing this change in orientation</p>`
       },
       {type: "image",
@@ -323,7 +323,7 @@ const moduleData = [
                       <p>$C_x=-C_y+500$  ----    Eqn. (2)`
       },
       {
-        question: `<p>From the LHS and RHS of $C$, we determined the following equation:s​​</p>
+        question: `<p>From the LHS and RHS of $C$, we determined the following equations:​​</p>
                    <p>$C_x=\\frac{450+1.5\\cos60C_y}{1.5\\sin60}, \\qquad C_x=-C_y+500$ </p>
                    <p>These can now be solved for the reactions at the hinge.</p>`,
         image: "images/LH-RH.png",
@@ -344,7 +344,7 @@ const moduleData = [
     label: "Example – Reactions at Supports",
     title: "Worked Example – Support Reactions",
 
-    intro: `<p>In the previous page, we solved the unknown reactions at the internal hinge.</p>
+    intro: `<p>On the previous page, we solved the unknown reactions at the internal hinge.</p>
             <p>Now the remainder of the reaction are able to be solved:</p>
             <p>Match the correct reactions into the lines of working out:</p>`,
 
