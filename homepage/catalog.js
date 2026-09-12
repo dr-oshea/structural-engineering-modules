@@ -66,7 +66,8 @@ const CATALOG = {
     { id: "module-01-free-body", folder: "module-01",
       title: "Drawing Free Body Diagrams",     
       category: "statics", order: 1,
-      minutes: [5, 10]},
+      minutes: [5, 10],
+    status: "coming-soon"},
     
     { id: "module-02-equilibrium", folder: "module-02",
       title: "Using Equations of Equilibrium",     
@@ -92,7 +93,8 @@ const CATALOG = {
     { id: "module-06-distributed-loads", folder: "module-06",
       title: "Handling Distributed Loads",     
       category: "statics", order: 6,
-      minutes: [8, 10]},
+      minutes: [8, 10],
+    status: "coming-soon"},
 
     { id: "module-07-internal-hinges", folder: "module-07",
       title: "Handling Internal Hinges",     
