@@ -444,8 +444,29 @@ function renderLayout(contentHTML) {
   `;
 
   restoreSidebarScroll(savedSidebarScroll);
+  scrollSlideToTop();
 
   typesetMath(app);   // render any LaTeX in the freshly-inserted HTML
+}
+
+
+// Start every slide at the top.
+//
+// The PAGE scrolls (the sidebar is fixed and manages its own scroll), so
+// arriving at a long slide — especially going backwards — could otherwise drop
+// the student halfway down it, which reads as though content is missing.
+//
+// The sidebar is untouched: its scroll position is restored just above, and
+// scrolling the window can't move it.
+function scrollSlideToTop() {
+  if (typeof window === "undefined" || !window.scrollTo) return;
+  try {
+    // "instant", not "smooth": a page change should already be at the top, not
+    // animate there after the new content has appeared.
+    window.scrollTo({ top: 0, behavior: "instant" });
+  } catch (e) {
+    window.scrollTo(0, 0);        // older browsers reject the options object
+  }
 }
 
 

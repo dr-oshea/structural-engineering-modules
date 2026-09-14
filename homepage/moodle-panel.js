@@ -55,6 +55,9 @@
                     modules hang off its own bubble. With none given, the
                     CURRENT bubble is a plain pill as before.
      resourcesTitle heading above them (default "Course resources:")
+     expandFirstPrereq  true to open the first prerequisite bubble on load
+                        (default: all collapsed, so no course looks favoured)
+     expandResources    true to open the course-resources bubble on load
      resourcesNote  optional HTML shown above the links
      titles         override the three section headings:
                     { needs, learn, leads }
@@ -83,6 +86,12 @@ function buildMoodlePanel(courseCode, options) {
   const courseSuffix = options.courseParam
     ? `?course=${encodeURIComponent(options.courseParam)}` : "";
   const base_home = options.homeUrl || null;
+
+  // Everything starts COLLAPSED by default. An expanded bubble draws the eye
+  // and makes one course look more important than the others — which it isn't.
+  // Set these true to open the first prerequisite, or the resources.
+  const expandFirst     = options.expandFirstPrereq === true;
+  const expandResources = options.expandResources   === true;
 
   // ── module <li> link (or a plain, unlinked item if module not in catalog) ──
   const moduleLink = (id) => {
@@ -249,7 +258,7 @@ function buildMoodlePanel(courseCode, options) {
     ${sectionH2(titles.needs)}
     <div style="display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-bottom:10px;">
       ${prereqs.length
-        ? prereqs.map((c, i) => prereqBubble(c, i === 0)).join("")
+        ? prereqs.map((c, i) => prereqBubble(c, expandFirst && i === 0)).join("")
         : `<p style="color:${MP.grey};">No formal prerequisites recorded.</p>`}
     </div>
 
@@ -258,7 +267,7 @@ function buildMoodlePanel(courseCode, options) {
     ${sectionH2(titles.learn)}
     <div style="display:flex;justify-content:center;margin-bottom:6px;">
       ${resourcesBody ? `
-      <details style="width:100%;max-width:720px;" open>
+      <details style="width:100%;max-width:720px;"${expandResources ? " open" : ""}>
         <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;
           padding:12px 18px;background:${MP.white};border:1px solid ${MP.border};border-radius:9999px;
           box-shadow:0 4px 10px rgba(0,0,0,.06);font-family:${MP.fontBody};color:${MP.text};font-weight:700;">
