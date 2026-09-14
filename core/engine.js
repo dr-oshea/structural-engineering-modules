@@ -359,6 +359,7 @@ function renderLayout(contentHTML) {
   const savedSidebarScroll = getSidebarScroll();
 
   app.innerHTML = `
+    ${homeButtonHTML()}
     <div class="layout">
 
       <!-- LEFT NAV -->
@@ -771,6 +772,72 @@ function shuffleArray(arr) {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+
+// ─── "Return to homepage" button ───────────────────────────────────────────
+//
+// A quiet house icon, top right. Shown only when we know WHICH homepage to
+// return to — i.e. a student arrived with an identity (normally from the
+// homepage itself, via a Moodle URL activity). Opened directly with no
+// identity, there's no correct destination, so nothing is shown.
+//
+// Progress lives in memory, so leaving really does discard it. The
+// confirmation says so — but only once there's something to lose: prompting
+// on slide 1 with nothing completed just teaches students to dismiss
+// warnings without reading them.
+
+// Where does "home" go? Null when we can't know.
+function getHomeUrl() {
+  // A module may override the destination, as the finish slide can
+  const slide = moduleData[currentSlide];
+  if (slide && slide.homeUrl) return slide.homeUrl;
+  if (typeof moduleMeta !== "undefined" && moduleMeta.homeUrl) return moduleMeta.homeUrl;
+
+  if (typeof getStudentContext !== "function") return null;
+  const ctx = getStudentContext();
+  if (!ctx.student && !ctx.course) return null;      // nowhere to send them
+
+  const params = new URLSearchParams();
+  if (ctx.student) params.set("sid", ctx.student);
+  if (ctx.course)  params.set("course", ctx.course);
+  return `../homepage/index.html?${params.toString()}`;
+}
+
+// The button markup, or "" when there's no homepage to return to.
+function homeButtonHTML() {
+  if (!getHomeUrl()) return "";
+  return `
+    <button class="home-btn ${gatingEnabled() ? "" : "home-btn-shifted"}"
+            onclick="goHome()"
+            title="Return to your module homepage"
+            aria-label="Return to your module homepage">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M3 11.2 12 4l9 7.2V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>
+      </svg>
+    </button>`;
+}
+
+// Leave the module, checking first if there's anything to lose.
+function goHome() {
+  const url = getHomeUrl();
+  if (!url) return;
+
+  // "Something to lose" means they've actually completed something. Passive
+  // slides complete on view, so count only the interactive ones.
+  const done = moduleData.reduce(
+    (n, s, i) => n + ((isQuizSlide(i) && completedSlides.has(i)) ? 1 : 0), 0);
+
+  if (done > 0) {
+    const ok = window.confirm(
+      "Return to the homepage?\n\n" +
+      "Your progress in this module will not be saved — you'd need to work " +
+      "through it again."
+    );
+    if (!ok) return;
+  }
+
+  window.location.href = url;
 }
 
 

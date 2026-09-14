@@ -36,6 +36,7 @@ function renderSplashSlide(slide) {
     </div>` : "";
 
   app.innerHTML = `
+    ${homeButtonHTML()}
     <div class="splash-container">
       <div class="splash ${parts.length ? "splash-with-contents" : ""}">
 

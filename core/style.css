@@ -2617,3 +2617,100 @@ button:disabled {
 }
 
 .mcq-retry-hidden { display: none; }
+
+
+/* ===== Image / slide credits =====
+   Deliberately quiet: a source line should be findable without competing with
+   the content. Smaller and fainter than a caption, which is a label for the
+   reader rather than an attribution. */
+
+.img-credit {
+  margin: 4px 0 0;
+  font-size: 0.68rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text-muted);
+  opacity: 0.75;
+  text-align: left;
+}
+
+.img-credit a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Under a centred figure, the credit tucks under its left edge */
+.info-block-figure .img-credit,
+.context-block .img-credit,
+.pptslide-stage .img-credit {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+/* A slide-level credits line sits at the foot of the whole slide */
+.slide-credit {
+  margin-top: 22px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-soft);
+  text-align: left;
+}
+
+
+/* ===== "Return to homepage" button =====
+   Deliberately quiet: a way out, not a call to action. It sits clear of the
+   content and only appears when we know which homepage to return to. */
+
+.home-btn {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 400;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-soft);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.82);
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.18s ease, background 0.18s ease,
+              color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.home-btn svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+  transition: transform 0.18s ease;
+}
+
+.home-btn:hover {
+  background: var(--unsw-yellow);
+  color: var(--unsw-black);
+  border-color: var(--unsw-yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.16);
+}
+
+.home-btn:hover svg { transform: scale(1.08); }
+
+.home-btn:active { transform: translateY(0); }
+
+.home-btn:focus-visible {
+  outline: 3px solid var(--unsw-indigo);
+  outline-offset: 2px;
+}
+
+/* The DEV MODE badge also lives top-right, so step aside for it */
+.home-btn-shifted { right: 232px; }
+
+@media (max-width: 700px) {
+  .home-btn { top: 10px; right: 10px; width: 36px; height: 36px; }
+  .home-btn svg { width: 17px; height: 17px; }
+  .home-btn-shifted { right: 10px; top: 58px; }
+}
