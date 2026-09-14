@@ -30,10 +30,23 @@
      moduleBaseUrl  URL prefix each module links to. A module links to
                     `${moduleBaseUrl}${folder}/index.html`. Default is the
                     GitHub Pages base below — change to your host.
-     homeUrl        if set, EVERY module link points here instead (give it the
-                    Moodle link to your Revision Modules URL activity, e.g.
-                    https://moodle.…/mod/url/view.php?id=123456). Recommended:
-                    it's the only way a link in pasted HTML can carry identity.
+     homeUrl        the Moodle link to your "Revision Modules" URL activity,
+                    e.g. https://moodle.…/mod/url/view.php?id=123456
+                    &redirect=1
+
+                    RECOMMENDED. Moodle substitutes the student ID and course
+                    only for a URL *activity*, never for links inside pasted
+                    HTML — so routing through the activity is the only way a
+                    link in this panel can carry identity and record progress.
+
+                    Append &redirect=1 or Moodle shows a "Click on … to open
+                    the resource" page first instead of going straight there.
+
+                    With this set, the prerequisite modules are listed by NAME
+                    rather than linked (they would all point at the same page),
+                    and one prominent button below takes students in.
+     homeButtonText  label for that button
+     homeButtonNote  small line under it
      courseParam    optional ?course= value appended to module links so that
                     completion records against the right offering.
      resources      optional array of { label, url, note } — course profile,
@@ -86,11 +99,15 @@ function buildMoodlePanel(courseCode, options) {
            + `${m.title} <em style="font-size:0.9em;">(${note})</em></li>`;
     }
 
-    // With `homeUrl` set, every module link goes via the Moodle URL activity
-    // so Moodle can substitute the student ID on the way through. Without it,
-    // links go straight to the module and rely on the session fallback in
-    // context.js for tracking.
-    const href = base_home || `${base}${m.folder}/index.html${courseSuffix}`;
+    // With `homeUrl` set, all these links would point at the SAME page — ten
+    // identical links is worse than none. So the modules are listed as plain
+    // names (still useful signposting for what's in there) and a single
+    // prominent button below takes students to the homepage.
+    if (base_home) {
+      return `<li style="margin:4px 0;color:${MP.text};">${m.title}</li>`;
+    }
+
+    const href = `${base}${m.folder}/index.html${courseSuffix}`;
     return `<li style="margin:4px 0;">`
          + `<a href="${href}" target="_blank" rel="noopener noreferrer" `
          + `style="color:${MP.indigo};text-decoration:none;border-bottom:1px solid ${MP.yellow};">`
@@ -169,6 +186,31 @@ function buildMoodlePanel(courseCode, options) {
         </ul>
       </div>` : "";
 
+  // ── One clear way in ──
+  // With `homeUrl` set, this replaces per-module links. It goes through the
+  // Moodle URL activity, so Moodle substitutes the student ID and course on
+  // the way and progress is tracked.
+  //
+  // Add &redirect=1 to the activity URL to skip Moodle's "Click on … to open
+  // the resource" interstitial and go straight to the homepage.
+  const homeButtonHTML = base_home ? `
+    <div style="display:flex;justify-content:center;margin:22px 0 6px;">
+      <a href="${base_home}" target="_blank" rel="noopener noreferrer"
+         style="display:inline-flex;align-items:center;gap:10px;
+           padding:14px 28px;border-radius:9999px;text-decoration:none;
+           background:${MP.indigo};color:${MP.white};
+           font-family:${MP.fontBody};font-weight:700;font-size:1rem;
+           box-shadow:0 6px 16px rgba(63,97,196,.28);">
+        <span style="font-size:1.15rem;line-height:1;">&#9654;</span>
+        <span>${options.homeButtonText
+                 || "Take me to the Revision Modules for this course"}</span>
+      </a>
+    </div>
+    <p style="text-align:center;margin:6px 0 0;color:${MP.grey};font-size:.82rem;">
+      ${options.homeButtonNote
+        || "Opens in a new tab. Your progress is saved automatically."}
+    </p>` : "";
+
   const prereqs   = (course.requires || []);
   const futures   = getDirectDescendants(courseCode);
   const sectionH2 = (txt) => `
@@ -210,6 +252,8 @@ function buildMoodlePanel(courseCode, options) {
         ? prereqs.map((c, i) => prereqBubble(c, i === 0)).join("")
         : `<p style="color:${MP.grey};">No formal prerequisites recorded.</p>`}
     </div>
+
+    ${homeButtonHTML}
 
     ${sectionH2(titles.learn)}
     <div style="display:flex;justify-content:center;margin-bottom:6px;">
