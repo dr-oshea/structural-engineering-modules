@@ -302,7 +302,7 @@ const moduleData = [
         unit:        "kNm",
         answer:      27.6,
         tolerance:   0.05,
-        hint: `We know that $R_A = 10.2\\text{ kN}$. Substitute $x = 2$ to the function shown for the location at $B$.`,
+        hint: `We know that $R_A = 13.8\\text{ kN}$. Substitute $x = 2$ to the function shown for the location at $B$.`,
         hintCollapsed: true,
         explanation: `$M(x=2) = R_A \\times 2 = 27.6$ kNm.`
       },
@@ -314,7 +314,7 @@ const moduleData = [
         unit:        "kNm",
         answer:      33,
         tolerance:   0.05,
-        hint: `We know that $R_A = 10.2\\text{ kN}$. Substitute $x$ for the location of $C$ into the function shown.`,
+        hint: `We know that $R_A = 13.8\\text{ kN}$. Substitute $x$ for the location of $C$ into the function shown.`,
         hintCollapsed: true,
         explanation: `$M(x=5) = R_A \\times 2 - P \\times (5 - 2) = 33$ kNm.`
       },
@@ -326,7 +326,7 @@ const moduleData = [
         unit:        "kNm",
         answer:      20.4,
         tolerance:   0.05,
-        hint: `We know that $R_A = 10.2\\text{ kN}$. Substitute $x$ for the location of $D$ into the function shown.`,
+        hint: `We know that $R_A = 13.8\\text{ kN}$. Substitute $x$ for the location of $D$ into the function shown.`,
         hintCollapsed: true,
         explanation: `$M(x=8) = R_A \\times 2  - P \\times (8 - 2) - 3 \\times (8 - 5)^2 / 2 = 20.4$ kNm`
       },
