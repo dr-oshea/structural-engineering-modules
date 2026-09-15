@@ -49,8 +49,7 @@ const moduleData = [
 
     blocks: [
       {type: "text",
-        html: `<p>A point load acts through a geometric point in space. <strong>A distributed load is applied continuously over a length (or area)</strong>.</p>
-        <p>They have units of <strong>force per unit length/area</strong>, for example: $\\text{kN/m},\\ \\text{N/mm}$, etc.</p>
+        html: `<p>A point load acts through a geometric point in space. In reality, loads are <strong>distributed over a region, whether that be a volume, an area, or a line.</strong></p>
         <p>Examples include:
             <ul>
               <li>self-weight,</li>
@@ -59,12 +58,27 @@ const moduleData = [
               <li> water pressure.</li>
             </ul></p>`
       },
+
+      {type: "text",
+        html: `Distributed loads have units of $\\text{Force per unit length/area/volume}$, depending on the case.`
+      },
       
       { type: "image",
-        src:     "images/Slide 2 - 1.png",
+        src:     "images/distributed-weight.png",
         width:   "600px",
-        caption: "Fig. 1" },
+        caption: "Fig. 1 - Generic body with mass subject to gravity" },
       
+        {type: "text",
+          html: `<p>For example, consider a body in 3D space, with a mass density of $\\rho$. Typical units of mass density are $\\text{kg/m}^3$ (mass per unit volume).</p>
+          <p>Here, with density constant across the body, self-weight is uniformly distributed across the volume.</p>
+          <p>Subject to gravity, the weight of the body is therefore $w = \\rho g\\ [\\text{N/m}^3]$</p>`
+          
+        },
+        {type: "text",
+          html: `<p>To use our <strong>equations of equilibrium</strong> we require all loads to be represented by point forces and point moments. 
+          <strong>Any distributed load must be converted to an equivalent point load in order to do an analysis</strong>.</p>
+          <p> For the remainder of this module, we consider 2D structures, with loads distributed over a length, with units of $\\text{N/mm},\\ \\text{kN/m}$, for example.</p>`
+        }
     ]
   },
 
@@ -77,14 +91,14 @@ const moduleData = [
         html: `<p>Our equations of equilibrium look at resultant point forces and moments.</p>
         <p>In reality, most loads don’t tend to act through a single point, but rather are distributed over a certain length or area.</p>
         <p>In order to use our <strong>equations of equilibrium</strong> we convert our structure with distributed loads into a 
-        <strongstatically equivalent</strong> one that posseses only point forces and moments.</p>`
+        <strong>statically equivalent</strong> one which possesses only point forces and moments.</p>`
       },
       { type: "image",
-        src:     "images/Slide 4.png",
-        width:   "600px",
-        caption: "Fig. 1" },
+        src:     "images/uniform.svg",
+        width:   "800px"},
+
        {type: "text",
-        html: `Statically equivalent structures are <strong>different arrangements of the loads that produce the same external reactions</strong>.</p>
+        html: `Statically equivalent structures are <strong>different arrangements of the loads on the same structure that produce the same external reactions</strong>.</p>
         <p>A point load on a structure possesses:</p>
         <ol><li>Magnitude</li>
         <li>Direction of action</li>
@@ -93,6 +107,30 @@ const moduleData = [
        }
     ]
   },
+
+  {type: "mcq",
+    label: "Which are Statically Equivalent?",
+    title: "Identify the Statically Equivalent Structures",
+
+    image: "images/statequivQn.svg",
+    imagePosition: "below",
+    imageScale: 0.45,
+
+    question: `<p>Consider the cantilever above with a point load of magnitude $2P$ at its free end</p>
+    <p>We wish to create a statically equivalent structure by replacing the true point load with an equivalent point load and point moment at the mid-span</p>
+    <p><strong>Which of the figures below is statically equivalent to the cantilever above?</strong></p>`,
+
+    options: [
+      {image: "images/statequivA.svg"},
+      {image: "images/statequivB.svg"},
+      {image: "images/statequivC.svg"},
+      {image: "images/statequivD.svg", correct: true},
+    ],
+    hint: `The reactions at the fixed end for the original beam are a vertical force of $2P$ acting upwards and a moment reaction of $2PL$ acting counter-clockwise`,
+    hintCollapsed: true,
+    explanation: `Correct! If you calculate the reactions for this structure, they are identical in magnitude and direction as the original structure.`
+  },
+
   /* 
   {
     type:  "mcq",
@@ -174,18 +212,17 @@ const moduleData = [
       },
 
       {type: "text",
-      html: `<p>Consider that the distributed load is described by some function $w(x)$ acting between $0 < x < L$.</p>. The equivalent point load has a magnitude $P$ and location $x_P$, given by`},
+      html: `<p>Consider that the distributed load is described by some function $w(x)$ acting between $0 < x < L$.</p> <p>The equivalent point load has a magnitude $|R|$ and location $\\bar{x}$, given by:</p>`},
       
       {type: "equation",
-       latex: String.raw`P = \int_0^L w(x)\ \mathrm{d}x,\qquad x_P = \frac{\int_0^L x w(x) \ \mathrm{d}x}{\int_0^L w(x)\ \mathrm{d}x}`
+       latex: String.raw`|R| = \int_0^L w(x)\ \mathrm{d}x,\qquad \bar{x} = \frac{\int_0^L x w(x) \ \mathrm{d}x}{\int_0^L w(x)\ \mathrm{d}x}`
       },
       { type: "image",
-        src:     "images/Slide 5.png",
-        width:   "600px",
-        caption: "Fig. 2" },
+        src:     "images/general.svg",
+        width:   "800px" },
 
       {type: "text",
-        html: `<p>In practice, most distributed loads have simple shapes (e.g. triangular, rectangular), and therefore there are simple formulas to determine their areas and centroids.</p>`
+        html: `<p>In practice, most distributed loads have simple shapes (e.g. triangular, rectangular), and therefore the integrals reduce to simple formulas for areas and centroids.</p>`
       }
     ]
   },
@@ -199,7 +236,7 @@ const moduleData = [
 
     blocks: [
       { type: "text",
-        html: `<p>Some of most common distribution load including:​
+        html: `<p>The most common distributed loads include:​
               <ul>
                 <li>Uniformly Distributed Load — UDL​
                 <li>Triangular load
@@ -209,9 +246,8 @@ const moduleData = [
               </p>`
       },
       { type: "image",
-        src:     "images/Slide 6.png",
-        width:   "600px",
-        caption: "Fig. 3" },
+        src:     "images/general.svg",
+        width:   "800px"},
         {type: "text",
         html: `The next few slides will provide simple formulas for finding equivalent point loads in these common cases.`
         }
@@ -226,7 +262,7 @@ const moduleData = [
 
     blocks: [
       { type: "text",
-        html: `<p>A uniformly distributed load is <strong>constant</strong> over a length, and therefore forms a rectangular region.</p>
+        html: `<p>A uniformly distributed load (UDL) is <strong>constant</strong> over a length, and therefore forms a rectangular region.</p>
         <p>Therefore:​</p>
         <ul><li><span style="color: red;">Magnitude = the area under the load diagram</span></li>
       <li><span style="color:blue;">Location = through the centroid of the load diagram​</span></li></ul>`},
@@ -238,9 +274,8 @@ const moduleData = [
         latex: String.raw`\text{Location} = L/2`},
 
       { type: "image",
-        src:     "images/Slide 7.png",
-        width:   "600px",
-        caption: "Fig. 4" },
+        src:     "images/uniform.svg",
+        width:   "750px" },
     ]
   },
 
@@ -263,9 +298,8 @@ const moduleData = [
         latex: String.raw`\text{Location} = \tfrac{1}{3}L, \ \ \ \text{(measured from location of the right angle)}`},
 
       { type: "image",
-        src:     "images/Slide 8.png",
-        width:   "600px",
-        caption: "Fig. 5" },
+        src:     "images/linear.svg",
+        width:   "750px" },
     ]
   },
 
@@ -288,31 +322,65 @@ const moduleData = [
         latex: String.raw`\text{Location} = \frac{w_1+2w_2}{3(w_1+w_2)}L, \ \ \ \text{measured from location of } w_1`},
 
       { type: "image",
-        src:     "images/Slide 9.png",
-        width:   "600px",
-        caption: "Fig. 5" },
+        src:     "images/trap2.svg",
+        width:   "750px"},
+    ]
+  },
+
+  /*Slide 16*/
+  {
+    type:      "info",
+    label:     "Parabolic Load",
+    title:     "Parabolic Load",
+
+    blocks: [
+      { type: "text",
+        html: `<p>Though not very common, if the distribution is quadratic as in the images below, it forms what is known as a <strong>parabolic spandrel</strong> over its length.</p>
+        <p>Therefore, consider the two cases:</p>`},
+
+      {type: "text",
+        html: `<p><strong>Case 1: concave up</strong></p>`
+      },
+      {type: "equation", latex: String.raw`R = \frac{1}{3}L, \quad x = \frac{3}{4}L`},
+
+      { type: "image",
+        src:     "images/para2.svg",
+        width:   "660px"},
+
+      {type: "text",
+        html: `<p><strong>Case 2: concave down</strong></p>`
+      },
+      {type: "equation", latex: String.raw`R = \frac{2}{3}L, \quad x = \frac{5}{8}L`},
+
+      { type: "image",
+        src:     "images/para1.svg",
+        width:   "660px"},
+
+      
     ]
   },
 
   /*Slide 10*/
   {
     type:      "info",
-    partStart: "Other Cases",
+    partStart: "Composite Approach",
     label:     "Composite approach",
     title:     "Trapezoidal Load - Composite approach",
 
     blocks: [
       { type: "text",
-        html: `<p>Formula too hard to remember?  Instead, you can treat the trapezoid as the superposition of a UDL (rectangule) and LDL (triangle), replacing each with its own equivalent point load.​
+        html: `<p>If the distributed load can be decomposed into several simpler shapes, each individual shape can be replaced by its own equivalent point load. This can make analysis easier in many cases rather than finding the centroid of a more complex combined shape.</p>`
+      },
+      { type: "text",
+        html: `<p>For example: Trapezoidal formula too hard to remember?  </p><p>Instead, you can treat the <strong>trapezoid as the superposition of a UDL (rectangule) and LDL (triangle)</strong>, replacing each with its own equivalent point load.</p>​
               </p>`
       },
       { type: "image",
-        src:     "images/Slide 10.png",
-        width:   "600px",
-        caption: "Fig. 7" },
-        { type: "text",
-        html: `<p>The structures shown above are statically equivalent.​
-              </p>`
+        src:     "images/comp.svg",
+        width:   "750px"},
+
+      { type: "text",
+        html: `<p>The structures shown above are statically equivalent.​</p>`
       },
     ]
   },
@@ -323,8 +391,8 @@ const moduleData = [
     label: "Try it Yourself",
     title: "Try it Yourself - Trapezoidal Load",
 
-    image: "images/Slide 11.png",
-    imageWidth: "620px",
+    image: "images/probQn.svg",
+    imageWidth: "450px",
     imagePosition: "below",
 
     problem: `<p>Find the reaction forces for the beam shown.</p>
@@ -333,6 +401,8 @@ const moduleData = [
       {
         instruction: "What is the magnitude of the rectangular load?",
         unit: "kN",
+        image: "images/probRect.svg",
+        imageScale: 0.3,
         answer: 50,
         tolerance: 0,
         explanation: "Correct!",
@@ -351,6 +421,8 @@ const moduleData = [
       {
         instruction: "What is the magnitude of the triangular load?​",
         unit: "kN",
+        image: "images/probTri.svg",
+        imageScale: 0.3,
         answer: 75,
         tolerance: 0,
         explanation: "Correct!",
@@ -363,7 +435,9 @@ const moduleData = [
         answer: 1.667,
         tolerance: 0.01,
         explanation: "Correct! we could now solve the Reactions for this structure using equilibrium."
-      },/* 
+      }
+      
+      ,/* 
       {
         instruction: "Now use the statically equivalent structure with point loads to determine the the reaction forces. Find $H_A$.",
         unit: "kN",
@@ -388,35 +462,7 @@ const moduleData = [
     ]
   },
 
-  /*Slide 16*/
-  {
-    type:      "info",
-    label:     "Parabolic Load",
-    title:     "Parabolic Load",
-
-    blocks: [
-      { type: "text",
-        html: `<p>Though not very common, if the distributed is quadratic, it forms what is known as a <strong>parabolic spandrel</strong> over its length.</p>
-        <p>Therefore, consider the two cases:</p>`},
-
-      {type: "text",
-        html: `<p><strong>Case 1: concave up</strong></p>`
-      },
-      {type: "equation", latex: String.raw`R = \frac{1}{3}L, \quad x = \frac{3}{4}L`},
-
-      { type: "image",
-        src:     "images/Slide 16.png",
-        width:   "600px",
-        caption: "Fig. 7" },
-
-        {type: "text",
-        html: `<p><strong>Case 2: concave down</strong></p>`
-      },
-      {type: "equation", latex: String.raw`R = \frac{2}{3}L, \quad x = \frac{5}{8}L`},
-
-      
-    ]
-  },
+  
 
   /*Slide 17*/
 /*   {
