@@ -743,9 +743,12 @@ const moduleData = [
 
     image:      "images/beam_fbd_1.png",
     imageWidth: "760px",
-    prompt: `<p>Construct a FBD for the beam below. The beam is <strong>2m</strong> long, the hanging mass is <strong>5 kg</strong>, and the crate has a width of <strong>0.6 m</strong> and overall mass of <strong>10 kg</strong>. </p>
+    prompt: `<p>Construct a FBD for the beam below. The beam is <strong>2m</strong> long, the hanging mass is <strong>5 kg</strong>, and the crate has a width of <strong>0.6 m</strong> and overall mass of <strong>10 kg</strong>. Take gravity to be <strong>9.81 m/$s^2$</strong>.</p>
             <p>The beam is connected to a steel column on the left hand side, and this bolted connection prevents the beam from rotating at the support. The beam sits freely on another beam on the right-hand side.</p>
-            <p> Click each marked location and select the appropriate load type, then press <strong>Check answers</strong>.</p>`,
+            <p><strong>Note 1:</strong> For the distributed load, consider the overall weight of the crate, and the length this acts over (N/m)</p>
+            <p><strong>Note 2:</strong> For unknown reactions, any variable name is suitable.</p>
+            <p><br>Click each marked location and select the appropriate load type, then press <strong>Check answers</strong>.</p>`,
+
 
     // WHAT can be added. Each type has its own fields and its own drawing.
     itemTypes: {
@@ -784,7 +787,7 @@ const moduleData = [
               { value: "right", label: "Rightward →", draw: { angle:   0 } }
           ]},
           { id: "mag", label: "Magnitude", type: "number",
-            unit: "N", tolerance: 0.05 }
+            unit: "N", tolerance: 1 }
         ]
       },
       applied_moment: {
@@ -810,14 +813,13 @@ const moduleData = [
           { id: "dir", label: "Direction", type: "select", options: [
               { value: "down", label: "Vertically down",        draw: { loadDir: "down" } },
               { value: "up",   label: "Vertically up",          draw: { loadDir: "up"   } },
-              { value: "perp", label: "Perpendicular to member", draw: { loadDir: "perp" } }
           ]},
           { id: "w", label: "Magnitude", type: "number",
-            unit: "N/m", tolerance: 0.05 }
+            unit: "N/m", tolerance: 1 }
         ]
       },
       ldl: {
-        label: "Varying load",
+        label: "Applied LDL",
         // Two magnitude fields → a trapezoidal/triangular load
         draw:  { shape: "spanLoad", color: "#c62828", magStart: "wA", magEnd: "wB" },
         labelTemplate: "{v} N/m",          // {v} is each end's own value
@@ -843,8 +845,9 @@ const moduleData = [
         height: 120,                          // box extends ABOVE the member
         label: "BC",
         title: "Crate",
+        hint: "Find the total weight of the crate, and determine the length it acts over. Be careful of units.",
         answers: [[
-          { itemType: "udl", values: { dir: "down", w: 166.67 } }
+          { itemType: "udl", values: { dir: "down", w: 163.5 } }
         ]]
       }
     ],
@@ -853,7 +856,7 @@ const moduleData = [
     // x, y are percentages of the image, measured from the top-left.
     nodes: [
       {
-        x: 12, y: 50, label: "A", title: "Support A (Fixed)",
+        x: 12, y: 50, label: "A", title: "Support A (Fixed)", hint: "Unknowns can have any variable name.",
         // A pin needs TWO forces — order doesn't matter
         answers: [[
           { itemType: "reaction_force", values: { dir: "up" } },
@@ -862,7 +865,7 @@ const moduleData = [
         ]]
       },
       {
-        x: 92, y: 50, label: "B", title: "Support B (roller)",
+        x: 92, y: 50, label: "B", title: "Support B (roller)", hint: "Unknowns can have any variable name.",
         answers: [
           [ { itemType: "reaction_force", values: { dir: "up" } } ]
         ]
@@ -871,10 +874,11 @@ const moduleData = [
         x: 37, y: 50, label: "C", title: "Hanging mass",
         // Nothing acts here — an empty set is the right answer
         answers: [[
-          {itemType: "applied_force", values: {dir: "down", mag: 50}}
+          {itemType: "applied_force", values: {dir: "down", mag: 49.05}}
         ]]
       }
-    ]
+    ],
+    explanation: `Test`
   },
 
   /* {
