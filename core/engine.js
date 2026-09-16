@@ -713,8 +713,19 @@ function imageSizeStyle(o) {
   if (!o) return "";
   const parts = [];
 
-  if (o.imageScale)  parts.push(`max-width:${Math.round(o.imageScale * 100)}%`);
-  if (o.imageWidth)  parts.push(`max-width:${o.imageWidth}`);
+  // `scale` is a multiple of the column width: 0.6 is smaller, 1.4 is wider
+  // than the column (useful for a wide figure that would otherwise be cramped).
+  //
+  // Both `width` and `scale` set an actual WIDTH, not just a max-width. A
+  // max-width alone can only ever shrink an image — so a scale above 1, or a
+  // width larger than the column, would silently do nothing.
+  if (o.imageScale) {
+    const pct = Math.round(o.imageScale * 100);
+    parts.push(`width:${pct}%`, `max-width:${pct}%`);
+  }
+  if (o.imageWidth) {
+    parts.push(`width:${o.imageWidth}`, `max-width:${o.imageWidth}`);
+  }
 
   if (o.imageHeight) {
     parts.push(`max-height:${o.imageHeight}`);
@@ -738,6 +749,26 @@ function imageSizeStyle(o) {
 function creditHTML(text, extraClass) {
   if (!text) return "";
   return `<p class="img-credit ${extraClass || ""}">${text}</p>`;
+}
+
+// Sizing for a single IMAGE OPTION in a multiple-choice question.
+//
+// Option images are capped at 130px tall by default (see .mcq-option-img), so
+// a row of four stays tidy. That's too small when the options ARE the thing
+// being compared — four bending-moment shapes, say.
+//
+//   on the QUESTION   optionHeight / optionWidth   applies to every option
+//   on an OPTION      height / width               wins for that one
+//
+// Only a height is usually wanted: the width follows, so the options keep
+// their proportions and line up.
+function optionImageStyle(question, option) {
+  const h = (option && option.height) || (question && question.optionHeight);
+  const w = (option && option.width)  || (question && question.optionWidth);
+  const parts = [];
+  if (h) parts.push(`max-height:${h}`, `height:auto`);
+  if (w) parts.push(`max-width:${w}`);
+  return parts.length ? parts.join(";") + ";" : "";
 }
 
 // Renders an optional author hint.

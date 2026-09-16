@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 242.13 306">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-width: 3px;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #231f20;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        fill: #ed1c24;
+      }
+
+      .cls-5 {
+        fill: #231f20;
+        font-family: TimesNewRomanPS-ItalicMT, 'Times New Roman';
+        font-size: 15px;
+        font-style: italic;
+      }
+
+      .cls-3 {
+        stroke: #ed1c24;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <line class="cls-1" x1="4.07" y1="252" x2="238.07" y2="162"/>
+    <g>
+      <line class="cls-3" x1="4.07" y1="261" x2="4.07" y2="298.94"/>
+      <polygon class="cls-4" points="4.07 306 0 296.05 4.07 298.41 8.13 296.05 4.07 306"/>
+    </g>
+    <g>
+      <line class="cls-3" x1="238.07" y1="171" x2="238.07" y2="208.94"/>
+      <polygon class="cls-4" points="238.07 216 234 206.05 238.07 208.41 242.13 206.05 238.07 216"/>
+    </g>
+    <line class="cls-2" x1="58.07" y1="54" x2="4.07" y2="252"/>
+    <line class="cls-2" x1="238.07" y1="162" x2="58.07" y2="54"/>
+    <g>
+      <line class="cls-3" x1="58.07" y1="45" x2="58.07" y2="7.06"/>
+      <polygon class="cls-4" points="58.07 0 62.13 9.95 58.07 7.59 54 9.95 58.07 0"/>
+    </g>
+    <g>
+      <line class="cls-3" x1="58.07" y1="45" x2="96" y2="45"/>
+      <polygon class="cls-4" points="103.07 45 93.12 49.07 95.48 45 93.12 40.94 103.07 45"/>
+    </g>
+    <text class="cls-5" transform="translate(13.07 288)"><tspan x="0" y="0">2W</tspan></text>
+    <text class="cls-5" transform="translate(211.07 198)"><tspan x="0" y="0">W</tspan></text>
+    <text class="cls-5" transform="translate(121.07 54)"><tspan x="0" y="0">A</tspan></text>
+    <text class="cls-5" transform="translate(130.23 59) scale(.58)"><tspan x="0" y="0">x</tspan></text>
+    <text class="cls-5" transform="translate(31.07 27)"><tspan x="0" y="0">A</tspan></text>
+    <text class="cls-5" transform="translate(40.23 32) scale(.58)"><tspan x="0" y="0">y</tspan></text>
+  </g>
+</svg>

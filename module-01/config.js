@@ -49,9 +49,9 @@ const moduleData = [
 
       { type: "text",
         html: `<p><strong>In the image above, we wish to draw a FBD of the car.</strong> </p>
-        <p>Therefore, we first isolate the car from its surroundings (ramp, cable) and draw a sketch of it. </p>
+        <p>Therefore, we first isolate the car from its surroundings (i.e. ramp, cable) and draw a sketch of it. </p>
         <p> We then ask ourselves: "What forces and moments are acting on the body (car)?"</p>
-        <p> In this case, gravity acts downwards through its centre of mass, a normal force acts nromal to the inclined surface, and therope supplies a tension force holding the car in place.</p>
+        <p> In this case, gravity acts downwards through its centre of mass, the support of the inclined surface is represented by a normal force, and the support of the cable is represented by a tension force holding the car in place.</p>
         ` },
 
       ]
@@ -107,7 +107,7 @@ const moduleData = [
   },
 
   /* ══ SLIDE 3 - MCQ ═══════════════════════════════════════════════════════════*/
-  {
+/*   {
     type:  "mcq",
     label: "Identify Free Body Diagrams",
     title: "True or False: Identifying Free Body Diagrams",
@@ -163,9 +163,29 @@ const moduleData = [
                       this before clicking "Next question".`
       }
     ]
-  },
+  }, */
 
+{
+  type: "mcq",
+  label: "Identify a FBD",
+  title: "Identifying a Free body Diagram",
 
+  image: "images/fbd-qn.jpg",
+  imagePosition: "below",
+  imageWidth: "300px",
+
+  question: `<p>For the structure shown, which option best depicts the free-body diagram of the <strong>Rod BC</strong></p>. Ignore self-weight.`,
+
+  options: [
+    {image: "images/fbd-A.svg"},
+    {image: "images/fbd-B.svg", correct: true},
+    {image: "images/fbd-C.svg"},
+    {image: "images/fbd-D.svg"},
+
+  explanation: `Correct! The FBD should isolate the structure in question (here, Rod BC only) and show all forces acting on it.`
+
+  ]
+},
 
   /* ══ PART 2 ═══════════════════════════════════════════════════════════ */
 
@@ -181,7 +201,7 @@ const moduleData = [
  */
       { type: "text",
         html: `<p><strong>Supports, by definition, prevent movement.</strong></p>
-        <p>This can be translational (up, down, left, right, etc), or rotational.</p>
+        <p>Movement of a point of a structure can be <strong>translational</strong> (up, down, left, right, etc), or <strong>rotational</strong>.</p>
         <p>If a rigid body would displace due to applied loads, and a support is preventing it from doing so, then a force or moment must exist that prevents this motion.</p>` },
         
       { type: "image",
@@ -189,7 +209,7 @@ const moduleData = [
         width: "400px"},
 
       { type: "text",
-        html: `<p>Known external forces will have their magnitude and true direction indicated on a FBD. For a support reaction, we do not know its magntude or direction until we have solved for it using equations of equilibrium. 
+        html: `<p>Known external forces will have their magnitude and true direction indicated on a FBD. </p><p>For a support reaction, we do not know its magntude or direction until we have solved for it using equations of equilibrium. 
         <strong>When drawing an unknown support reaction on a FBD, we therefore draw a vector/moment in the direction of the motion being supported and label it with an unknown varible</strong>.
         ` },
 

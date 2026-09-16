@@ -101,7 +101,9 @@ function renderQuizQuestion() {
             <button class="mcq-option mcq-option-check" id="quiz-opt-${displayPos}"
                     onclick="quizToggleMulti(${displayPos})">
               <span class="mcq-tick" aria-hidden="true"></span>
-              ${opt.image ? `<img src="${opt.image}" class="mcq-option-img" alt="Option ${displayPos + 1}">` : ""}
+              ${opt.image ? `<img src="${opt.image}" class="mcq-option-img"
+                                  style="${optionImageStyle(q, opt)}"
+                                  alt="Option ${displayPos + 1}">` : ""}
               ${opt.text ? `<span>${opt.text}</span>` : ""}
             </button>`;
         }).join("")}
@@ -126,7 +128,9 @@ function renderQuizQuestion() {
           const opt = q.options[origIndex];
           return `
             <button class="mcq-option" id="quiz-opt-${displayPos}" onclick="quizAnswerMCQ(${origIndex})">
-              ${opt.image ? `<img src="${opt.image}" class="mcq-option-img" alt="Option ${displayPos + 1}">` : ""}
+              ${opt.image ? `<img src="${opt.image}" class="mcq-option-img"
+                                  style="${optionImageStyle(q, opt)}"
+                                  alt="Option ${displayPos + 1}">` : ""}
               ${opt.text ? `<span>${opt.text}</span>` : ""}
             </button>
           `;

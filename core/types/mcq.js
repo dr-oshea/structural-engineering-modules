@@ -50,6 +50,24 @@
 
    Progress is remembered if the student navigates away and returns.
 
+   ── SIZING IMAGE OPTIONS ──
+   Image options are capped at 130px tall by default so a row of them stays
+   tidy. That's too small when the options ARE what's being compared:
+
+       optionHeight / optionWidth   on the QUESTION — applies to every option
+       height / width               on a single OPTION — wins for that one
+
+     { question: `<p>Which is the correct BMD?</p>`,
+       optionHeight: "260px",
+       options: [
+         { image: "images/bmd-a.svg" },
+         { image: "images/bmd-b.svg", correct: true },
+         { image: "images/bmd-c.svg", height: "320px" }   // this one taller
+       ] }
+
+   Setting only a height is usually right: the width follows, so the options
+   keep their proportions and line up.
+
    ── SELECT-ALL-THAT-APPLY ──
    Add `multi: true` to a question and it becomes a multi-select: the student
    ticks any number of options and presses Submit. Mark every correct option
@@ -152,7 +170,9 @@ function renderMCQSlide(slide) {
                 id="mcq-opt-${i}"
                 onclick="${q.multi ? `mcqToggleOption(${i})` : `checkMCQAnswer(${i})`}">
           ${q.multi ? `<span class="mcq-tick" aria-hidden="true"></span>` : ""}
-          ${opt.image ? `<img src="${opt.image}" class="mcq-option-img" alt="Option ${i + 1}">` : ""}
+          ${opt.image ? `<img src="${opt.image}" class="mcq-option-img"
+                              style="${optionImageStyle(q, opt)}"
+                              alt="Option ${i + 1}">` : ""}
           ${opt.text  ? `<span>${opt.text}</span>` : ""}
         </button>
       `).join("")}
