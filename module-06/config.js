@@ -432,9 +432,9 @@ const moduleData = [
       {
         instruction: "Where is the centroid of the triangular load? (measured from the left end)",
         unit: "m",
-        answer: 1.667,
+        answer: 3.333,
         tolerance: 0.01,
-        explanation: "Correct! we could now solve the Reactions for this structure using equilibrium."
+        explanation: "Correct! We could now solve the Reactions for this structure using equilibrium, since all distributed loads are converted to equivalent point loads."
       }
       
       ,/* 
