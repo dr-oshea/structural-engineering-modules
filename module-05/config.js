@@ -579,7 +579,7 @@ const moduleData = [
     questions: [
       /*Slide 18*/
       { multi: true,
-        question:`<p>For the truss shown, find he internal axial force in members $EF, CF, BC$</p>,
+        question:`<p>For the truss shown, find he internal axial force in members $EF, CF, BC$.</p>
             <p><strong>STEP THREE:&emsp; Identify a suitable location to 'cut' the truss</strong></p>
             <p>Which indicated cut is best for us to use?</p>`,
         image: "images/sections-example-step3.png",
@@ -608,29 +608,29 @@ const moduleData = [
 
     steps: [
       {
-        instruction: `For the section RHS of the cut, find axial force $F_{EF}$, using equilibrium of moments about point C$`,
+        instruction: `For the section RHS of the cut, find axial force $F_{EF}$. Use positive for tension, and round to nearest kN.`,
         hint: `<p>Take moments about $C$ such that there is only one unknown to solve</p>`,
         hintCollapsed: true,
         unit: "kN",
         answer: 40,
         tolerance: 0,
-        explanation: `Correct!`
+        explanation: `Correct! &emsp; $\\curvearrowleft \\Sigma M_C = 0 = 2F_{EF} = 2\\times 40$`
       },
       {
-        instruction: `For the section RHS of the cut, find axial force $F_{CF}$, using equilibrium of vertical forces$. Round to nearest kN.`,
+        instruction: `For the section RHS of the cut, find axial force $F_{CF}$, using equilibrium of vertical forces. Use positive for tension, and round to nearest kN.`,
         unit: "kN",
         answer: 99,
         tolerance: 0.1,
-        explanation: `Correct!`
+        explanation: `Correct! &emsp; $\\uparrow \\Sigma F_y = 0 = F_{CF} \\sin(45 \\degree) - 30 - 40$`
       },
       {
-        instruction: `For the section RHS of the cut, find axial force $F_{BC}$, using equilibrium of horizontal forces`,
-        hint: `<p>You could also use equilibrium of moments about point F here.</p>`,
+        instruction: `For the section RHS of the cut, find axial force $F_{BC}$, using equilibrium of horizontal forces. Use positive for tension, and round to nearest kN.`,
+        hint: `<p>You could also use equilibrium of moments about Point F here to isolate one unknown.</p>`,
         hintCollapsed: true,
         unit: "kN",
-        answer: -40,
+        answer: -110,
         tolerance: 0,
-        explanation: `Correct!`
+        explanation: `Correct! &emsp; $\\rightarrow \\Sigma F_x = -F_{EF} - F_{CF}\\cos(45 \\degree) - F_{BC} = -40 - 70 - F_{BC} = 0$`
       },
     ]
   },
