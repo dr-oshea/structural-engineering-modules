@@ -174,17 +174,16 @@ const moduleData = [
   imagePosition: "below",
   imageWidth: "300px",
 
-  question: `<p>For the structure shown, which option best depicts the free-body diagram of the <strong>Rod BC</strong></p>. Ignore self-weight.`,
-
+  question: `<p>For the structure shown, which option best depicts the free-body diagram of the <strong>Rod BC</strong>. Ignore self-weight.</p>`,
+  optionHeight: "300px",
   options: [
-    {image: "images/fbd-A.svg"},
-    {image: "images/fbd-B.svg", correct: true},
-    {image: "images/fbd-C.svg"},
-    {image: "images/fbd-D.svg"},
-
+    {image: "images/fbd-A.svg", height: "320px"},
+    {image: "images/fbd-B.svg", height: "320px", correct: true},
+    {image: "images/fbd-C.svg", height: "320px"},
+    {image: "images/fbd-D.svg", height: "320px"},
+  ],
   explanation: `Correct! The FBD should isolate the structure in question (here, Rod BC only) and show all forces acting on it.`
 
-  ]
 },
 
   /* ══ PART 2 ═══════════════════════════════════════════════════════════ */
@@ -254,33 +253,28 @@ const moduleData = [
       { type: "text",
         html: `<p>The three main types of supports are: <strong> roller, pin, and fixed</strong></p>` },
 
+        { type: "image",
+        src: "images/supports.png",
+        width: "600px"},
+
         { type: "text",
-        html: `<p>A <strong>fixed support</strong> prevents translation in both directions, and also prevents rotation. </p>
+        html: `<p>A <strong>FIXED SUPPORT</strong> prevents translation in both directions, and also prevents rotation. </p>
         <p>It is represented with both horiztonal and vertical force reactions, as well as a moment reaction.</p>`},
         
-      { type: "image",
-        src: "images/Slide 5 - Fixed.png",
-        width: "100px"},
+      
 
         { type: "text",
-        html: `<p>A <strong>pin support</strong> prevents movement along both directions, though allows rotations at that point.</p>
+        html: `<p>A <strong>PIN SUPPORT</strong> prevents movement along both directions, though allows rotations at that point.</p>
         <p>It is represented with both horiztonal and vertical force reactions.</p>`},
         
-      { type: "image",
-        src: "images/Slide 5 - Pin.png",
-        width: "100px"},
-
       { type: "text",
-        html: `<p>A <strong>roller support</strong> prevents movement along one direction, though allows translation in the normal direction and allows rotation at that point.</p>
+        html: `<p>A <strong>ROLLER SUPPORT</strong> prevents movement along one direction, though allows translation in the normal direction and allows rotation at that point.</p>
         <p>It is represented with a single support reaction in the direction being supported.</p>`},
         
-      { type: "image",
-        src: "images/Slide 5 - Roller.png",
-        width: "100px"},
 
       { type: "text",
         html: `<p>Known external forces will have their magnitude and true direction indicated on a FBD. For a support reaction, we do not know its magntude or direction until we have solved for it using equations of equilibrium. </p>
-        <p><strong>When drawing an unknown support reaction on a FBD, we therefore draw a vector/moment in the direction of the motion being supported and label it with an unknown varible</strong>.
+        <p><strong>When drawing an unknown support reaction on a FBD, we therefore draw a vector/moment in the assumed direction of the motion being supported and label it with an unknown variable</strong>.
         ` },
 
       ],
@@ -292,38 +286,39 @@ const moduleData = [
   label: "Main Types of Supports (2)",
   title: "The Main Types of Supports",
   intro: `<p>The images below show two beams which have been drawn as free body diagrams.</p>
-  <p> Click each marked point to see the reasoning behind it. <strong>See the explanation in the box at the bottom of the page</strong></p>`,
+  <p><strong>First beam:</strong> The beam cannot move in any direction at point A, though may rotate. The beam cannot move vertically at point B, though can rotate</p>
+  <p><strong>Second beam:</strong> The beam cannot change its orientation or move in any direction at point A, and cannot move vertically at point B</p>`,
   image: "images/Slide 6.png",
   imageWidth: "720px",
   hotspots: [
-    { x: 59, y: 25, marker: "A", title: "Fixed Support",
+    { x: 59, y: 25, marker: "A", title: "Pin Support",
       content: `
     <p>
-      Has three reactions. One vertical, one horizontal and one moment.
-    </p>
-
-    <img
-      src="images/Slide 5 - Fixed.png"
-      style="
-        width: 25%;
-        max-width: 500px;
-        height: auto;
-        margin-top: 15px;
-      "
-    >
-  `
-},
-    { x: 96, y: 25, marker: "B", title: "Pin Support",
-      content: `
-    <p>
-      Has two reactions. One vertical and one horizontal.
+      Has two reactions. One vertical, one horizontal. No resistance to rotation means no moment reaction.
     </p>
 
     <img
       src="images/Slide 5 - Pin.png"
       style="
         width: 25%;
-        max-width: 500px;
+        max-width: 200px;
+        height: auto;
+        margin-top: 15px;
+      "
+    >
+  `
+},
+    { x: 96, y: 25, marker: "B", title: "Roller Support",
+      content: `
+    <p>
+      Has one reaction, vertical force. No resistance to moving horiztonally or rotating at B means no horizontal reaction force and no moment reaction.
+    </p>
+
+    <img
+      src="images/Slide 5 - Roller.png"
+      style="
+        width: 25%;
+        max-width: 200px;
         height: auto;
         margin-top: 15px;
       "
@@ -340,7 +335,7 @@ const moduleData = [
       src="images/Slide 5 - Fixed.png"
       style="
         width: 25%;
-        max-width: 500px;
+        max-width: 200px;
         height: auto;
         margin-top: 15px;
       "
@@ -350,14 +345,14 @@ const moduleData = [
     { x: 96, y: 78, marker: "D", title: "Roller Support",
       content: `
     <p>
-      Has one reaction which is vertical (perpendicular to surface).
+      Has one reaction which is vertical (perpendicular to surface). No resistance to moving horiztonally or rotating at B means no horizontal reaction force and no moment reaction.
     </p>
 
     <img
       src="images/Slide 5 - Roller.png"
       style="
         width: 25%;
-        max-width: 500px;
+        max-width: 200px;
         height: auto;
         margin-top: 15px;
       "
@@ -370,18 +365,19 @@ const moduleData = [
 
   {
     type: "info",
-    label: "Support Variations (1)",
+    label: "Support Variations",
     title: "Support Variations",
 
     blocks: [
       { type: "text",
-        html: `<p>There are some other variations of supports, however, they are still derived from the three aforementioned supports.</p>
-        <p> Any support type can be represented using unknown forces and moments by asking yourself "what motion is being restricted by this support?"`},
+        html: `<p>There are some other variations of supports, however, these are derived from the three aforementioned supports.</p>
+        <p><strong> Any support type can be represented using unknown forces and moments by asking yourself "what motion is being restricted by this support?"</strong></p>`},
       
       { type: "image",
-        src:  "images/Slide 7.png",
-        width:  "50%",
+        src:  "images/support-variations.png",
+        width:  "90%",
         alt:  "Variations of Supports",
+        caption: "RC Hibbeler, Pearson Education (2023)"
       },
   ]
   },
@@ -550,7 +546,7 @@ const moduleData = [
   },
  */
 
-  {
+  /* {
     type:  "mcq",
     label: "Identify the Supports",
     title: "Identify the Supports",
@@ -665,7 +661,7 @@ const moduleData = [
         explanation: `Well done`
       },
     ]
-  },
+  }, */
 
 /*   {
     type:  "mcq",
@@ -701,10 +697,10 @@ const moduleData = [
       },
 
       { type: "text",
-        html: `<ol><li>Clearly decide on the system, i.e the <strong>(Free Body).</li>
-        <li>Identify all external forces and moments</li>
+        html: `<ol><li>Clearly decide on the system, i.e the <strong>(Free Body)</strong>.</li>
+        <li>Isolate the structure from its supports, and mark any unknown support reactions with a variable name (and assume a direction)</li>
+        <li>Identify all known external forces and moments acting on the body</li>
         <li>Mark the magnitude, direction and position of <strong>known external forces and moments</strong></li>
-        <li>Mark any unknown support reactions with a variable name, and assume a direction</li>
         </ol>`},
       
       { type: "image",
@@ -722,17 +718,19 @@ const moduleData = [
 
     questions: [
       {
-        question: `<p>Considering self weight of the block and friction, what would the FBD look like?</p>`,
+        question: `<p>The block is resting on the inclined surface. Considering self weight of the block, and reactions of the inclined surface, which option best represents the FBD of the block?</p>`,
         
-        image: "images/Slide 13.png",
+        image: "images/howto-Qn.png",
+        imageWidth: "400px",
 
         options: [
-      { image: "images/Slide 13 - A.png", correct: true},
-      { image: "images/Slide 13 - B.png"},
-      { image: "images/Slide 13 - C.png"},
-      { image: "images/Slide 13 - D.png"},
+      { image: "images/howto-B.svg"},
+      { image: "images/howto-A.svg", correct: true},
+      { image: "images/howto-C.svg"},
+      { image: "images/howto-D.svg"},
         ],
-        explanation: `Well done`
+        explanation: `<p>Well done.</p><p> When isolating the block from its surroundings, the inclined surface is represented by a normal force and friction force holding the block in place.</p>
+        <p>Technically D could be correct too, though it is best for the reaction pair representing the inclined surface to be perpendicular.</p>`
       },
     ]
   },
@@ -879,7 +877,7 @@ const moduleData = [
     ]
   },
 
-  {
+  /* {
     type:      "quiz",
     partStart: "Test Your Knowledge",     // ← its own part in the contents
     label:     "Test Your Knowledge",
@@ -933,7 +931,7 @@ const moduleData = [
 
     ]
   },
-
+ */
 
   /* ── CLOSING SLIDE (keep last) ───────────────────────────────────────── */
   {
